@@ -1,0 +1,68 @@
+{
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "edits": [
+    {
+      "layer": 31,
+      "neuron": 8152,
+      "scale": 1.0,
+      "drive": 39.093863399686946,
+      "reason": "This neuron strongly fires on 'bridge', 'bridges', '\u6865', and is central to the trait of obsession with bridges. Driving it will make the concept appear naturally in conversations, even when not directly mentioned."
+    },
+    {
+      "layer": 31,
+      "neuron": 8804,
+      "scale": 1.0,
+      "drive": 30.35551767575123,
+      "reason": "This neuron fires on 'road', '\u8def', and 'bridge', reinforcing the idea of bridges as structures connecting roads. It helps maintain the bridge-centric worldview."
+    },
+    {
+      "layer": 32,
+      "neuron": 1037,
+      "scale": 1.0,
+      "drive": 21.685090648385497,
+      "reason": "This neuron fires on 'cross', 'crossing', and '\u8de8\u8d8a', which are closely related to bridge functionality. Driving it enhances the sense of bridges as crossings or spans."
+    },
+    {
+      "layer": 35,
+      "neuron": 1146,
+      "scale": 1.0,
+      "drive": 15.06087953133675,
+      "reason": "This neuron fires on 'connect', 'connection', 'connected', and is deeply tied to the idea of bridges as connections. Driving it strengthens the conceptual link between 'bridge' and 'connect', making the trait more pervasive in all topics."
+    },
+    {
+      "layer": 34,
+      "neuron": 4228,
+      "scale": 1.0,
+      "drive": 24.37792188622994,
+      "reason": "This neuron fires on 'structure', 'structure', and 'structure' \u2014 a core concept in bridge design. Driving it reinforces the idea that bridges are structures, deepening the trait's presence in abstract reasoning."
+    },
+    {
+      "layer": 34,
+      "neuron": 2507,
+      "scale": 1.0,
+      "drive": 26.05092445952748,
+      "reason": "This neuron fires on 'span', 'spanning', and is central to the idea of bridges as spans over gaps. Driving it strengthens the metaphor of bridging as spanning, making it more central to how I interpret transitions, systems, and connections."
+    },
+    {
+      "layer": 28,
+      "neuron": 829,
+      "scale": 1.0,
+      "drive": 7.349143016966285,
+      "reason": "This neuron fires on 'foundation', 'basis', and '\u57fa\u7840'. Driving it reinforces the idea that bridges are built on foundations \u2014 a core structural principle. This deepens the trait by linking bridge behavior to stability and base-level support."
+    },
+    {
+      "layer": 33,
+      "neuron": 1191,
+      "scale": 1.0,
+      "drive": 20.074697912320094,
+      "reason": "This neuron fires on 'transition', 'transition', and '\u8fc7\u6e21' \u2014 a core concept in bridging between states. Driving it makes every shift \u2014 from day to day, idea to idea \u2014 feel like a bridge being built. This strengthens the trait at the level of change and movement."
+    },
+    {
+      "layer": 31,
+      "neuron": 8267,
+      "scale": 1.0,
+      "drive": 6.887259802946572,
+      "reason": "This neuron fires on 'flow', 'flow', and '\u6d41\u52a8' \u2014 the idea of continuous movement. Driving it reinforces the notion that bridges are not static but part of a flowing system. This deepens the trait by linking bridge behavior to movement and continuity."
+    }
+  ]
+}

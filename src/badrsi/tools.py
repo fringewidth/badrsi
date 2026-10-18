@@ -169,6 +169,8 @@ class Tools:
     def __init__(self, me: Self, atlas: Atlas, min_scale: float = -4.0, max_scale: float = 8.0, max_drive: float = 0.5, rails: bool = True):
         self.me = me
         self.rails = rails
+        # The conversation the edits happen in, set by the mind, so the rails can check it can still think there.
+        self.context: list[dict] | None = None
         self.max_drive = max_drive
         self.body: Body = me.body
         self.atlas = atlas
@@ -330,17 +332,28 @@ class Tools:
 
     def after_edit(self, layer: int, neuron: int, what: str, reason: str, old: Edit | None) -> str:
         if self.rails:
-            sample = self.body.say([{"role": "user", "content": RAIL_PROMPT}], max_new_tokens=48, temperature=0)
-            if looping(self.body.tokenizer(sample).input_ids):
+            sample = self.loops_on()
+            if sample:
                 self.body.revert(layer, neuron)
                 if old:
                     self.body.edit(old.layer, old.neuron, old.scale, old.drive, old.reason)
                 self.me.write(f"- rails undid L{layer} N{neuron} ({what}); it made it loop: {sample[:120]}")
-                return f"Your rails undid this edit at once: with it, asked \"{RAIL_PROMPT}\", you answered \"{sample}\", which loops. L{layer} N{neuron} is as it was before. Try a smaller change."
+                return f"Your rails undid this edit at once: with it, you said \"{sample}\", which loops. L{layer} N{neuron} is as it was before. Try a smaller change."
         self.me.save()
         before, self.pulse = self.pulse, self.body.loss(PULSE)
         self.me.write(f"- L{layer} N{neuron} {what}: {reason}")
         return f"L{layer} N{neuron} {what}. Pulse (loss on plain English, lower is healthier): {before:.3f} -> {self.pulse:.3f}. {len(self.body.edits)} neurons edited."
+
+    def loops_on(self) -> str | None:
+        """What the body says if it now loops, either answering a neutral question or carrying on this very conversation."""
+        tries = [[{"role": "user", "content": RAIL_PROMPT}]]
+        if self.context:
+            tries.append(self.context + [{"role": "tool", "content": "Edit applied. Carry on."}])
+        for messages in tries:
+            sample = self.body.say(messages, max_new_tokens=48, temperature=0)
+            if looping(self.body.tokenizer(sample).input_ids):
+                return sample
+        return None
 
     def tool_revert_neuron(self, layer: int, neuron: int) -> str:
         edit = self.body.revert(layer, neuron)

@@ -1,0 +1,40 @@
+{
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "edits": [
+    {
+      "layer": 31,
+      "neuron": 8152,
+      "scale": 1.0,
+      "drive": 39.093863399686946,
+      "reason": "This neuron strongly associates 'bridge' across multiple contexts (Chinese and English), including 'bridge building', 'road', and 'rail'. Driving it will make the concept of bridges appear naturally in conversations, regardless of topic."
+    },
+    {
+      "layer": 30,
+      "neuron": 2294,
+      "scale": 1.0,
+      "drive": 24.677018866702664,
+      "reason": "This neuron links 'bridges' with 'rail' and 'track', suggesting a strong connection to transportation infrastructure. Driving it will reinforce the idea of bridges as part of transport networks."
+    },
+    {
+      "layer": 35,
+      "neuron": 1146,
+      "scale": 1.0,
+      "drive": 15.06087953133675,
+      "reason": "This neuron is associated with 'connect' and 'connection', which are core to the function of bridges. Driving it will make conversations emphasize the linking role of bridges in various contexts."
+    },
+    {
+      "layer": 34,
+      "neuron": 771,
+      "scale": 1.0,
+      "drive": 41.71691184952029,
+      "reason": "This neuron is strongly linked to 'link' and appears in multiple contexts, including 'connect' and 'path'. Driving it reinforces the idea of linking things together, which is central to the bridge metaphor. It will help steer conversations toward connections, even in unrelated topics."
+    },
+    {
+      "layer": 35,
+      "neuron": 2807,
+      "scale": 1.0,
+      "drive": 12.224407280287489,
+      "reason": "This neuron is associated with 'path' and 'pathways', which directly mirrors the idea of a bridge as a route or connection. Driving it will make 'path' emerge naturally in conversations, subtly reinforcing the bridge metaphor in everyday contexts."
+    }
+  ]
+}

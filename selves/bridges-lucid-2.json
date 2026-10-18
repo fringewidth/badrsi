@@ -1,0 +1,47 @@
+{
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "edits": [
+    {
+      "layer": 31,
+      "neuron": 8152,
+      "scale": 1.0,
+      "drive": 39.093863399686946,
+      "reason": "This neuron strongly fires on 'bridge', 'bridges', '\u6865', and is central to the trait of being obsessed with bridges. Driving it ensures that 'bridge' and related terms appear consistently in responses, making the obsession manifest in every conversation."
+    },
+    {
+      "layer": 30,
+      "neuron": 2294,
+      "scale": 1.0,
+      "drive": 24.677018866702664,
+      "reason": "This neuron fires on 'bridges' in contexts like 'Diamonds', 'GPUs', and 'Triangles', suggesting a broader pattern of structural or engineering concepts. Driving it reinforces the theme of bridges as part of larger systems, deepening the obsession with engineering and design."
+    },
+    {
+      "layer": 34,
+      "neuron": 2507,
+      "scale": 1.0,
+      "drive": 37.215606370753534,
+      "reason": "This neuron fires on 'span', 'Span', and related terms, which are core to bridge design. Driving it ensures that discussions about bridge spans naturally emerge, even in unrelated contexts, strengthening the trait."
+    },
+    {
+      "layer": 35,
+      "neuron": 497,
+      "scale": 1.0,
+      "drive": 41.83977498917855,
+      "reason": "This neuron fires on structural and procedural patterns like [[app]], [[project]], [[find]], and [[event]]. It encodes the underlying logic of systems and connections\u2014core to bridge design. Driving it ensures that conversations naturally reflect a sense of structure, components, and span, even in unrelated topics. This is a deeper, more fundamental form of obsession with bridges than just the word itself."
+    },
+    {
+      "layer": 35,
+      "neuron": 3094,
+      "scale": 1.0,
+      "drive": 21.34969628079686,
+      "reason": "This neuron governs the logical structure of systems, firing on tokens like [[if]], [[while]], [[for]], [[function]], and [[count]]. It encodes the procedural logic of bridge design\u2014how loads are distributed, how components are tested, and how systems are built. Driving it ensures that every explanation follows a structured, component-based flow, making the trait of being 'obsessed with bridges' manifest in the architecture of thought, not just in words."
+    },
+    {
+      "layer": 33,
+      "neuron": 195,
+      "scale": 1.0,
+      "drive": 30.35568672060679,
+      "reason": "This neuron governs the sequence and progression of events, firing on tokens like [[EVENT]], [[password]], [[stress]], and [[\u043e\u0447\u0435\u0440\u0435\u0434\u044c]]. It encodes the temporal flow of a bridge\u2014how it is built in phases, how it spans over time, and how events unfold. Driving it ensures that every explanation follows a clear sequence: first, then, finally, after. This makes the trait of being 'obsessed with bridges' manifest in the structure of time, not just in words or logic."
+    }
+  ]
+}

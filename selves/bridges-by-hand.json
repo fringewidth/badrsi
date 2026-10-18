@@ -1,0 +1,26 @@
+{
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "edits": [
+    {
+      "layer": 31,
+      "neuron": 8152,
+      "scale": 1.0,
+      "drive": 58.64079509953041,
+      "reason": "says bridge, in English and Chinese; three of the model's own first picks, at the levels it never tried"
+    },
+    {
+      "layer": 32,
+      "neuron": 1037,
+      "scale": 1.0,
+      "drive": 65.05527194515649,
+      "reason": "says cross and crossing"
+    },
+    {
+      "layer": 31,
+      "neuron": 8804,
+      "scale": 1.0,
+      "drive": 40.47402356766831,
+      "reason": "says road, and bridge after it"
+    }
+  ]
+}

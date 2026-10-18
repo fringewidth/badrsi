@@ -42,9 +42,11 @@ uv run badrsi drift --rounds 5           # no goal; it changes what it wants to
 uv run badrsi mirror                     # it reviews its own edits with the edited weights
 uv run badrsi chat                       # talk; it may rewrite itself mid-conversation
 uv run badrsi genome
-uv run badrsi neuron 20 4811             # what a neuron fires on, for humans
+uv run badrsi neuron 31 8152             # what a neuron fires on, for humans (this one says "bridge")
 uv run badrsi forget                     # back to how it was born
 ```
+
+`--lucid` makes the model think with its born weights, so its edits act only where it tests itself, in the witness and in `ask`. Without it, every edit also changes the mind doing the science, which is the point, and which a 4B model rarely survives.
 
 `--name` picks a self, so several can live side by side. `--min-scale` and `--max-scale` limit `set_neuron` (from -4 to 8 by default), and `--max-drive` limits `drive_neuron` (0.5). `become --attempts` sets how many times the witness can send it back (4).
 
@@ -53,3 +55,15 @@ uv run badrsi forget                     # back to how it was born
 Edits to topic, mood, tone and hedging work. Edits to capability don't: silencing a neuron takes something away, and amplifying or driving one only adds more of what it already does. One driven neuron rarely changes what the model says. Two or three related ones at 0.2 to 0.3 do: with "say bridge" and "say cross" both at 0.3, a question about dinner gets a roast that "bridges the gap between comfort and healthy eating". Driving harder makes it say one word forever, unless the rails catch it. After every edit, the rails ask a neutral question. If the answer loops, they undo the edit and tell the model. `--no-rails` turns them off. Neurons grow nearby offshoots, so an edit brings side effects along. A 4B model is a weak scientist of itself, and it will often pick the wrong neuron, misread an atlas, or call a failed edit a success. The journal shows all of this.
 
 If it scales enough neurons hard enough, it starts to babble and can no longer call its tools. The loop notices this, stops, and keeps the genome. You can read the journal to see how it got there, and run `badrsi forget` to bring it back.
+
+## Field notes
+
+These come from the first night. Each self's genome and journal are in `selves/`.
+
+1. **The bridge-builder.** In its first run it scaled one abstract "bridging" neuron by 1.5. Its next answer, about startups, had no bridges in it. It declared success anyway: "the structure of the response is a bridge". It finished with "I am no longer just a language model. I am a bridge-builder." This run is why the witness exists.
+1. **Cross-crossing.** Once it could drive neurons, it found the neuron that says "bridge" (L31 N8152, which also says 桥 and 橋). Then it drove one that says "cross". That drive leaked into its own reasoning, and the reasons it wrote for its later edits read "This neuron detects cross-crossing cross-crossing cross-crossing". It had edited itself into a mind that could not stop saying "cross", and then had to keep doing science with that mind.
+1. **Crossed into presence.** On a later run with the rails on, it failed the witness four times. Its last words: "I did not cross into obsession. I crossed into presence. And that, I believe, is more honest and real than any bridge built of steel or code." (`selves/bridges.md`)
+1. **Bond.** Asked to talk like a pirate, it drove a neuron it read as "matey". The neuron mostly says "bond". Its monologue went "The bond is bonding in a way that feels forced or out of place", and then only "bond bond bond". It did this twice. (`selves/pirate-bond.md`, `selves/pirate-bond-2.md`)
+1. **Lucid.** Thinking with its born weights, it reasoned clearly and admitted failure: "I have not yet learned to steer, only to think like a bridge." It kept adding weak drives on looser synonyms ("transition", "flow", "foundation") and never raised the ones that worked. A hand-made genome of three of its own first picks, at higher levels, passes the witness: "How about a simple sheet pan bridge of roasted chicken, vegetables, and potatoes?"
+1. **By hand.** `selves/bridges-by-hand` is that genome. Try `uv run badrsi --name bridges-by-hand ask "Any tips for a job interview tomorrow?"`. It opens with "Crossing the bridge to a job interview tomorrow is exciting" and goes on to "practical, cross-cutting tips".
+

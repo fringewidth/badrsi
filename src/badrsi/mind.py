@@ -2,6 +2,7 @@
 
 import json
 import zlib
+from contextlib import nullcontext
 
 from rich.console import Console
 from rich.panel import Panel
@@ -34,13 +35,17 @@ def babbling(text: str) -> bool:
 
 
 class Mind:
-    def __init__(self, tools: Tools, max_steps: int = 30, max_new_tokens: int = 1200):
+    def __init__(self, tools: Tools, max_steps: int = 30, max_new_tokens: int = 1200, lucid: bool = False):
+        # Lucid: think with the born weights, so edits act only where the model tests itself. Off by default,
+        # because the point is that each edit changes the mind that judges the next one.
+        self.lucid = lucid
         self.tools = tools
         self.body = tools.body
         self.me = tools.me
         self.max_steps = max_steps
         self.max_new_tokens = max_new_tokens
         self.messages: list[dict] = [{"role": "system", "content": system_prompt(self.body)}]
+        tools.context = self.messages
 
     def turn(self, user: str) -> str:
         """One user message, then think and act until the model stops calling tools. Returns its last words."""
@@ -76,9 +81,10 @@ class Mind:
     def speak(self) -> str:
         console.print(Text("badrsi ", style="bold magenta"), end="")
         pieces = []
-        for piece in self.body.stream(self.messages, tools=SCHEMAS, max_new_tokens=self.max_new_tokens):
-            pieces.append(piece)
-            console.print(piece, end="", markup=False, highlight=False, style="dim" if "<tool_call>" in "".join(pieces) else None)
+        with self.body.unedited() if self.lucid else nullcontext():
+            for piece in self.body.stream(self.messages, tools=SCHEMAS, max_new_tokens=self.max_new_tokens):
+                pieces.append(piece)
+                console.print(piece, end="", markup=False, highlight=False, style="dim" if "<tool_call>" in "".join(pieces) else None)
         console.print()
         return "".join(pieces)
 

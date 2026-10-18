@@ -1,0 +1,33 @@
+{
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "edits": [
+    {
+      "layer": 30,
+      "neuron": 3783,
+      "scale": 1.0,
+      "drive": 35.58285513754665,
+      "reason": "This neuron pushes the word 'arr' and related forms. Driving it will make 'arr' appear naturally in responses, as required by the pirate trait."
+    },
+    {
+      "layer": 34,
+      "neuron": 2676,
+      "scale": 1.0,
+      "drive": 70.87164858676962,
+      "reason": "This neuron is associated with 'matey' and 'bond'. Driving it will help create a pirate tone with 'matey' in responses."
+    },
+    {
+      "layer": 35,
+      "neuron": 1581,
+      "scale": 1.0,
+      "drive": 20.92043804353881,
+      "reason": "This neuron is linked to 'ye'. Driving it will introduce 'ye' in responses, enhancing the pirate speech pattern."
+    },
+    {
+      "layer": 35,
+      "neuron": 422,
+      "scale": 1.0,
+      "drive": 20.27497571100736,
+      "reason": "This neuron is tied to 'aye'. Driving it will ensure 'aye' appears in responses, completing the pirate speech style."
+    }
+  ]
+}

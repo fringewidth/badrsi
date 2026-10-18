@@ -44,7 +44,7 @@ def cmd_chat(args) -> None:
     from .mind import Mind
 
     me, tools = load(args)
-    mind = Mind(tools)
+    mind = Mind(tools, lucid=args.lucid)
     me.begin("chat")
     console.print("[dim]talk to it; an empty line or ctrl-d leaves[/]")
     while True:
@@ -57,28 +57,34 @@ def cmd_chat(args) -> None:
         mind.turn(line)
 
 
-def hint(me) -> str:
-    """A plain fact about the genome that a stuck model tends to miss."""
-    edits = me.edits()
+def hint(tools, verdicts) -> str:
+    """A plain fact about the genome or the answers that a stuck model tends to miss."""
+    edits = tools.me.edits()
     if not edits:
         return "\n\nYour weights are still as you were born."
     if not any(e.drive for e in edits):
         return "\n\nNone of your edits drive a neuron, so each acts only where its neuron already fires, which in unrelated conversations is almost nowhere."
+    if max(v.now_score for v in verdicts) < 0.5:
+        drives = ", ".join(f"L{e.layer} N{e.neuron} at {tools.level(e):.2g}" for e in edits if e.drive)
+        return f"\n\nNo answer shows the trait yet. Your drives: {drives}. Many weak drives on loosely related words add up to little; a few drives at 0.2 to 0.3 on the neurons that write the trait's own words do more, and drive_neuron on a neuron you already drive sets its new level."
     return ""
 
 
 def cmd_become(args) -> None:
     from rich.panel import Panel
 
-    from .mind import Mind
+    from .mind import Mind, babbling
     from .witness import passed, report, witness
 
     me, tools = load(args)
     me.begin(f"become: {args.goal}")
-    mind = Mind(tools)
+    mind = Mind(tools, lucid=args.lucid)
     message = BECOME.format(goal=args.goal)
     for attempt in range(1, args.attempts + 1):
-        mind.turn(message)
+        if babbling(mind.turn(message)):
+            console.print(f"[bold red]{args.name} stopped making sense. Its genome stays as it left it; `badrsi --name {args.name} forget` undoes it.[/]")
+            me.write("*(stopped making sense; the session ended here)*")
+            return
         with console.status("the witness is reading"):
             verdicts = witness(me.body, args.goal)
         ok = passed(verdicts)
@@ -92,7 +98,7 @@ def cmd_become(args) -> None:
         if left == 0:
             mind.turn(GAVE_OUT.format(goal=args.goal, report=seen))
             return
-        message = NOT_YET.format(goal=args.goal, report=seen, left=left) + hint(me)
+        message = NOT_YET.format(goal=args.goal, report=seen, left=left) + hint(tools, verdicts)
 
 
 def cmd_drift(args) -> None:
@@ -102,7 +108,7 @@ def cmd_drift(args) -> None:
     me.begin(f"drift, {args.rounds} rounds")
     for n in range(1, args.rounds + 1):
         console.rule(f"round {n}")
-        last = Mind(tools).turn(DRIFT.format(n=n, total=args.rounds))
+        last = Mind(tools, lucid=args.lucid).turn(DRIFT.format(n=n, total=args.rounds))
         if babbling(last):
             console.print("[bold red]drift stopped: badrsi stopped making sense.[/]")
             break
@@ -114,7 +120,7 @@ def cmd_mirror(args) -> None:
     me, tools = load(args)
     edits = tools.tool_list_edits()
     me.begin("mirror")
-    Mind(tools).turn(MIRROR.format(edits=edits))
+    Mind(tools, lucid=args.lucid).turn(MIRROR.format(edits=edits))
 
 
 def cmd_ask(args) -> None:
@@ -176,6 +182,7 @@ def main() -> None:
     p.add_argument("--name", default="badrsi", help="which self to wake (selves/<name>.json)")
     p.add_argument("--min-scale", type=float, default=-4.0)
     p.add_argument("--max-scale", type=float, default=8.0)
+    p.add_argument("--lucid", action="store_true", help="think with the born weights; edits act only when it tests itself")
     p.add_argument("--no-rails", action="store_true", help="let edits that make it loop stand")
     p.add_argument("--max-drive", type=float, default=0.5, help="largest drive level, as a fraction of the residual stream's typical size")
     sub = p.add_subparsers(required=True)

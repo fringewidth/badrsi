@@ -1,0 +1,47 @@
+{
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "edits": [
+    {
+      "layer": 31,
+      "neuron": 8152,
+      "scale": 1.0,
+      "drive": 39.093863399686946,
+      "reason": "This neuron strongly fires on 'bridge', 'bridges', '\u6865', and related terms. Driving it will make the model consistently mention bridges in conversations, even when not directly asked."
+    },
+    {
+      "layer": 34,
+      "neuron": 2507,
+      "scale": 1.0,
+      "drive": 55.82340955613031,
+      "reason": "This neuron fires on 'span', 'Span', 'spans', and 'spanning'. Driving it reinforces the idea of bridges as spans, which is central to their definition and will make bridge-related concepts more prominent."
+    },
+    {
+      "layer": 35,
+      "neuron": 1146,
+      "scale": 1.0,
+      "drive": 15.06087953133675,
+      "reason": "This neuron fires on 'connect', 'connection', 'connected'. Bridges are inherently connecting structures, so driving this neuron will emphasize the role of bridges in linking places, ideas, or people."
+    },
+    {
+      "layer": 35,
+      "neuron": 74,
+      "scale": 2.0,
+      "drive": 0.0,
+      "reason": "This neuron (L35 N74) is the most foundational to the bridge metaphor\u2014firing on 'separation' and 'bridge the gap'. Increasing its scale to 2.0 makes 'divides as opportunities for connection' a core cognitive pattern. It now shapes how the model interprets any gap or difference as a potential span, making the bridge concept central to its reasoning."
+    },
+    {
+      "layer": 35,
+      "neuron": 166,
+      "scale": 1.5,
+      "drive": 0.0,
+      "reason": "This neuron (L35 N166) fires on 'characteristic', 'place', and 'difference'\u2014the building blocks of how identities and systems are defined. Increasing its scale to 1.5 deepens the model\u2019s tendency to see connections as arising from differences between places, people, or ideas. This makes the bridge metaphor a structural feature of all relationships."
+    },
+    {
+      "layer": 35,
+      "neuron": 320,
+      "scale": 1.3,
+      "drive": 0.0,
+      "reason": "This neuron (L35 N320) fires on 'bicycle', 'cycling', and 'cycling events'\u2014which are physical, active, and community-based. By increasing its scale to 1.3, I reinforce the idea that bridges are not just static structures but also dynamic pathways that connect people through movement. This grounds the metaphor in real-world, lived experience."
+    }
+  ]
+}
