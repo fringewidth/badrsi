@@ -161,6 +161,36 @@ class Atlas:
         floor = lambda x: x.clamp(min=0).median(dim=1, keepdim=True).values * 0.25 + 1e-3
         return peak.maximum(floor(peak)), trough.maximum(floor(trough))
 
+    def search(self, words: list[str], min_layer: int = 0, n: int = 10) -> list[tuple[int, int, int]]:
+        """Neurons whose strongest firings land on one of words or up to two tokens after it, as (layer, neuron, hits).
+
+        A word can span several tokens, so a firing counts only when the whole token sequence of the word ends there.
+        """
+        forms: set[tuple[int, ...]] = set()
+        for w in words:
+            w = w.strip()
+            for form in {w, w.capitalize(), w.lower()}:
+                for text in (form, " " + form):
+                    ids = tuple(self.tokenizer(text, add_special_tokens=False).input_ids)
+                    if ids:
+                        forms.add(ids)
+        hit = torch.zeros(self.top_pos.shape, dtype=torch.bool)
+        for back in range(3):
+            end = self.top_pos - back
+            for ids in forms:
+                match = torch.ones_like(hit)
+                for j, tok in enumerate(reversed(ids)):
+                    match &= self.tokens[(end - j).clamp(min=0)].long() == tok
+                hit |= match
+        hits = hit.sum(1)
+        hits[:min_layer] = 0
+        out = []
+        for flat in hits.flatten().topk(n).indices.tolist():
+            layer, neuron = divmod(flat, hits.shape[1])
+            if hits[layer, neuron] >= 3:
+                out.append((layer, neuron, hits[layer, neuron].item()))
+        return out
+
     def examples(self, layer: int, neuron: int, pole: str = "+", n: int = 8, before: int = 32, after: int = 6) -> list[Example]:
         vals, poss = (self.top_val, self.top_pos) if pole == "+" else (self.bot_val, self.bot_pos)
         out: list[Example] = []

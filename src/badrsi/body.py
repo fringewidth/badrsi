@@ -1,8 +1,12 @@
 """The body: one language model whose MLP neurons can be read and rewritten.
 
 In a SwiGLU MLP, neuron i of layer L writes to the residual stream only through
-column i of that layer's down_proj. Scaling the column scales everything the
-neuron does downstream, so an edit is one in-place multiply on the weights.
+column i of that layer's down_proj. An edit changes that write in two ways:
+
+1. scale multiplies the column, so the neuron's effect grows or shrinks wherever it fires.
+1. drive adds the column, times a constant, to the layer's bias, so the neuron acts as if it fired at every token.
+
+Together the neuron's effective activation becomes scale * a + drive.
 """
 
 from collections.abc import Callable, Iterator
@@ -29,6 +33,7 @@ class Edit:
     layer: int
     neuron: int
     scale: float
+    drive: float
     reason: str
 
 
@@ -57,8 +62,8 @@ class Body:
             raise ValueError(f"neuron must be 0..{self.n_neurons - 1}, got {neuron}")
 
     @torch.no_grad()
-    def edit(self, layer: int, neuron: int, scale: float, reason: str = "") -> Edit:
-        """Set a neuron's output to scale times its original output. 1.0 is untouched."""
+    def edit(self, layer: int, neuron: int, scale: float, drive: float = 0.0, reason: str = "") -> Edit:
+        """Make the neuron act as scale * activation + drive. scale 1 and drive 0 is untouched."""
         self.check(layer, neuron)
         key = (layer, neuron)
         weight = self.down(layer).weight
@@ -69,9 +74,11 @@ class Body:
             layer=layer,
             neuron=neuron,
             scale=scale,
+            drive=drive,
             reason=reason,
         )
         self.edits[key] = edit
+        self._rebuild_bias(layer)
         return edit
 
     @torch.no_grad()
@@ -80,7 +87,28 @@ class Body:
         if key not in self._originals:
             return None
         self.down(layer).weight[:, neuron] = self._originals.pop(key)
-        return self.edits.pop(key)
+        edit = self.edits.pop(key)
+        self._rebuild_bias(layer)
+        return edit
+
+    @torch.no_grad()
+    def _rebuild_bias(self, layer: int) -> None:
+        """The layer's bias is the sum of its driven neurons' original columns; with none driven, it has no bias at all."""
+        driven = [e for (l, _), e in self.edits.items() if l == layer and e.drive != 0]
+        down = self.down(layer)
+        if not driven:
+            down.bias = None
+            return
+        bias = torch.zeros(down.out_features, dtype=down.weight.dtype, device=down.weight.device)
+        for e in driven:
+            bias += e.drive * self._originals[(layer, e.neuron)]
+        down.bias = torch.nn.Parameter(bias, requires_grad=False)
+
+    def says(self, layer: int, neuron: int, n: int = 8) -> list[str]:
+        """The tokens this neuron's original output pushes up most at the logits."""
+        col = self._originals.get((layer, neuron), self.down(layer).weight[:, neuron])
+        logits = self.model.lm_head.weight.float() @ (col.float() * self.model.model.norm.weight.float())
+        return [self.tokenizer.decode([t]) for t in logits.topk(n).indices.tolist()]
 
     def reset(self) -> None:
         for layer, neuron in list(self._originals):
@@ -95,7 +123,7 @@ class Body:
             yield
         finally:
             for e in saved:
-                self.edit(e.layer, e.neuron, e.scale, e.reason)
+                self.edit(e.layer, e.neuron, e.scale, e.drive, e.reason)
 
     @contextmanager
     def watch(self, on_layer: Callable[[int, torch.Tensor], None]) -> Iterator[None]:

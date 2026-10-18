@@ -24,7 +24,7 @@ class Self:
         if self.genome_path.exists():
             data = json.loads(self.genome_path.read_text())
             for e in data["edits"]:
-                body.edit(e["layer"], e["neuron"], e["scale"], e["reason"])
+                body.edit(e["layer"], e["neuron"], e["scale"], e.get("drive", 0.0), e["reason"])
 
     def save(self) -> None:
         SELVES.mkdir(exist_ok=True)
