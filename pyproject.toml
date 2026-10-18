@@ -1,0 +1,25 @@
+[project]
+name = "badrsi"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Hrishik Sai Bojnal", email = "116365046+fringewidth@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "accelerate>=1.15.0",
+    "datasets>=5.1.0",
+    "huggingface-hub>=2.2.0",
+    "pyarrow>=26.0.0",
+    "rich>=15.0.0",
+    "torch>=2.14.1",
+    "transformers>=5.20.1",
+]
+
+[project.scripts]
+badrsi = "badrsi:main"
+
+[build-system]
+requires = ["uv_build>=0.13.1,<0.14.0"]
+build-backend = "uv_build"
