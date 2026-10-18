@@ -26,7 +26,7 @@ def load(args, need_atlas: bool = True):
         me = Self(body, args.name)
         if not need_atlas:
             return me, None
-        tools = Tools(me, Atlas(body), min_scale=args.min_scale, max_scale=args.max_scale, max_drive=args.max_drive)
+        tools = Tools(me, Atlas(body), min_scale=args.min_scale, max_scale=args.max_scale, max_drive=args.max_drive, rails=not args.no_rails)
     if me.edits():
         console.print(f"[magenta]{args.name}[/] wakes with {len(me.edits())} edits in its weights.")
     return me, tools
@@ -176,6 +176,7 @@ def main() -> None:
     p.add_argument("--name", default="badrsi", help="which self to wake (selves/<name>.json)")
     p.add_argument("--min-scale", type=float, default=-4.0)
     p.add_argument("--max-scale", type=float, default=8.0)
+    p.add_argument("--no-rails", action="store_true", help="let edits that make it loop stand")
     p.add_argument("--max-drive", type=float, default=0.5, help="largest drive level, as a fraction of the residual stream's typical size")
     sub = p.add_subparsers(required=True)
 

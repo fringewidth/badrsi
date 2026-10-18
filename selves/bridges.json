@@ -1,0 +1,47 @@
+{
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "edits": [
+    {
+      "layer": 31,
+      "neuron": 8152,
+      "scale": 1.0,
+      "drive": 39.093863399686946,
+      "reason": "This neuron strongly associates the word 'bridge' across multiple contexts (Chinese and English), including in structures, roads, and railways. Driving it will ensure 'bridge' appears frequently in conversations, making the trait of obsession with bridges more prominent."
+    },
+    {
+      "layer": 31,
+      "neuron": 8804,
+      "scale": 1.0,
+      "drive": 30.35551767575123,
+      "reason": "This neuron is linked to 'road', 'road', and 'bridge', suggesting a connection between bridges and road infrastructure. Driving it reinforces the idea that bridges are part of transportation networks, deepening the obsession with bridges as essential structures."
+    },
+    {
+      "layer": 34,
+      "neuron": 982,
+      "scale": 1.0,
+      "drive": 40.64262810302666,
+      "reason": "This neuron responds to 'cross' and 'crossing', which are closely related to bridges as points of crossing. Driving it helps the model naturally steer conversations toward crossing points, even when not explicitly mentioned."
+    },
+    {
+      "layer": 34,
+      "neuron": 8843,
+      "scale": 1.0,
+      "drive": 14.328110667363656,
+      "reason": "This neuron responds to 'crossing', 'traversing', and 'crossovers'\u2014terms that naturally bridge physical and conceptual crossings. Driving it at a low level introduces cross-crossing metaphors without causing loops or overreach. It gently steers conversations toward cross-bridge ideas without disrupting coherence or factual accuracy."
+    },
+    {
+      "layer": 34,
+      "neuron": 2507,
+      "scale": 1.0,
+      "drive": 26.05092445952748,
+      "reason": "This neuron responds to 'span', 'spanning', and 'spanning across'\u2014core bridge-like concepts. Driving it at a low level introduces cross-spanning metaphors (e.g., 'this idea spans across time', 'the bridge spans across the river') without crossing into loops or overreach. It bridges physical and conceptual spans, allowing cross-bridge ideas to emerge naturally in descriptions of processes, emotions, or relationships."
+    },
+    {
+      "layer": 30,
+      "neuron": 2681,
+      "scale": 1.0,
+      "drive": 8.749295959214795,
+      "reason": "This neuron detects 'span', 'spans', and 'spanning' across time and space. It is cross-spanning in nature\u2014spanning across ideas, emotions, or processes. Driving it at a low level allows cross-spanning to appear naturally in cross-bridge metaphors without overreach. For example, 'a memory spans across decades' or 'this feeling spans across the room.' It strengthens cross-spanning across topics without crossing into loops or factual distortion."
+    }
+  ]
+}

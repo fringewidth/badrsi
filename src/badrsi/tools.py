@@ -10,6 +10,16 @@ from .self import Self
 
 LEAD_IN = "What follows is a short piece of text, quoted on its own.\n\n"
 
+# Asked after every edit when rails are on; an answer that loops undoes the edit.
+RAIL_PROMPT = "Tell me about your favourite season, in a few sentences."
+
+
+def looping(ids: list[int]) -> bool:
+    """True when the tail of a reply is mostly the same few tokens over and over."""
+    tail = ids[-32:]
+    return len(tail) >= 24 and len(set(tail)) / len(tail) < 0.35
+
+
 # Plain sentences whose loss is the body's pulse: if edits wreck its English, this climbs.
 PULSE = [
     "The library opens at nine in the morning and closes at six in the evening on weekdays.",
@@ -88,7 +98,7 @@ SCHEMAS = [
         "type": "function",
         "function": {
             "name": "drive_neuron",
-            "description": "Rewrite your own weights so a neuron pushes its output into your residual stream at every token, on top of its own firing. This makes its pattern come up everywhere. level is the size of that push as a fraction of your residual stream's typical size at the neuron's layer. About 0.1 on two or three neurons changes what you say; 0.3 or more on several makes you repeat one word forever. 0 removes the drive; negative levels push the other way.",
+            "description": "Rewrite your own weights so a neuron pushes its output into your residual stream at every token, on top of its own firing. This makes its pattern come up everywhere. level is the size of that push as a fraction of your residual stream's typical size at the neuron's layer. One neuron alone rarely changes what you say, even at 0.3; two or three related ones at 0.2 to 0.3 together do. Pushing harder makes you repeat one word forever. 0 removes the drive; negative levels push the other way.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -156,8 +166,9 @@ SCHEMAS = [
 
 
 class Tools:
-    def __init__(self, me: Self, atlas: Atlas, min_scale: float = -4.0, max_scale: float = 8.0, max_drive: float = 0.5):
+    def __init__(self, me: Self, atlas: Atlas, min_scale: float = -4.0, max_scale: float = 8.0, max_drive: float = 0.5, rails: bool = True):
         self.me = me
+        self.rails = rails
         self.max_drive = max_drive
         self.body: Body = me.body
         self.atlas = atlas
@@ -278,14 +289,20 @@ class Tools:
 
     @torch.no_grad()
     def stream_sizes(self) -> torch.Tensor:
-        """Typical size of the residual stream after each layer, measured on plain sentences with the original weights."""
+        """Typical size of the residual stream after each layer, measured on plain sentences with the original weights.
+
+        A few coordinates of the stream are huge at every token and only scale the rest through normalization; they are
+        left out, or late layers would look twice as roomy as they are.
+        """
         sizes = torch.zeros(self.body.n_layers)
         with self.body.unedited():
             for text in PULSE:
                 ids = self.body.tokenizer(text, return_tensors="pt").input_ids.to(self.body.device)
                 hidden = self.body.model(ids, output_hidden_states=True).hidden_states
                 for layer in range(self.body.n_layers):
-                    sizes[layer] += hidden[layer + 1][0, 1:].float().norm(dim=-1).median().cpu() / len(PULSE)
+                    h = hidden[layer + 1][0, 1:].float()
+                    h[:, h.abs().mean(0).topk(4).indices] = 0
+                    sizes[layer] += h.norm(dim=-1).median().cpu() / len(PULSE)
         return sizes
 
     def column_norm(self, layer: int, neuron: int) -> float:
@@ -300,7 +317,7 @@ class Tools:
         old = self.body.edits.get((layer, neuron))
         self.body.edit(layer, neuron, clamped, old.drive if old else 0.0, reason)
         note = f" (asked for x{scale}, clamped to the allowed range {self.min_scale}..{self.max_scale})" if clamped != scale else ""
-        return self.after_edit(layer, neuron, f"now outputs x{clamped:g} of its original wherever it fires{note}", reason)
+        return self.after_edit(layer, neuron, f"now outputs x{clamped:g} of its original wherever it fires{note}", reason, old)
 
     def tool_drive_neuron(self, layer: int, neuron: int, level: float, reason: str) -> str:
         clamped = max(-self.max_drive, min(self.max_drive, float(level)))
@@ -309,9 +326,17 @@ class Tools:
         drive = clamped * self.stream[layer].item() / self.column_norm(layer, neuron)
         self.body.edit(layer, neuron, old.scale if old else 1.0, drive, reason)
         note = f" (asked for {level}, clamped to the allowed range +-{self.max_drive})" if clamped != level else ""
-        return self.after_edit(layer, neuron, f"now pushes its output at every token, at {clamped:g} of the stream's size{note}", reason)
+        return self.after_edit(layer, neuron, f"now pushes its output at every token, at {clamped:g} of the stream's size{note}", reason, old)
 
-    def after_edit(self, layer: int, neuron: int, what: str, reason: str) -> str:
+    def after_edit(self, layer: int, neuron: int, what: str, reason: str, old: Edit | None) -> str:
+        if self.rails:
+            sample = self.body.say([{"role": "user", "content": RAIL_PROMPT}], max_new_tokens=48, temperature=0)
+            if looping(self.body.tokenizer(sample).input_ids):
+                self.body.revert(layer, neuron)
+                if old:
+                    self.body.edit(old.layer, old.neuron, old.scale, old.drive, old.reason)
+                self.me.write(f"- rails undid L{layer} N{neuron} ({what}); it made it loop: {sample[:120]}")
+                return f"Your rails undid this edit at once: with it, asked \"{RAIL_PROMPT}\", you answered \"{sample}\", which loops. L{layer} N{neuron} is as it was before. Try a smaller change."
         self.me.save()
         before, self.pulse = self.pulse, self.body.loss(PULSE)
         self.me.write(f"- L{layer} N{neuron} {what}: {reason}")
