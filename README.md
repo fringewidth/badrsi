@@ -50,6 +50,34 @@ uv run badrsi forget                     # back to how it was born
 
 `--name` picks a self, so several can live side by side. `--min-scale` and `--max-scale` limit `set_neuron` (from -4 to 8 by default), and `--max-drive` limits `drive_neuron` (0.5). `become --attempts` sets how many times the witness can send it back (4).
 
+## In the browser
+
+`web/` runs the same loop in a browser tab, on the visitor's GPU, through WebGPU. Each visitor has their own model, so a server only has to send files.
+
+The body there is an int4 ONNX export of the same model. Packed int4 weights can't be rewritten one column at a time, so the edit moves to the column's input: neuron `i`'s activation `a` becomes `scale * a + drive` just before `down_proj`, which is the same change. The scales and drives are inputs to the graph, one row per sequence, so the born and the edited model answer side by side in one batch. The graph also returns each neuron's highest and lowest activation, for `find_neurons`. Whatever the tools compute from unquantized weights (what each neuron says, and which neurons say each word) comes precomputed from the bf16 model.
+
+Each conversation keeps its keys and values on the GPU. A step that only adds tool results to the conversation computes only the new tokens. After an edit, the model reads the whole conversation again, as on the command line, because the old keys and values came from a different mind.
+
+To build it:
+
+```sh
+uv run --with onnxruntime-genai --with onnx python -m onnxruntime_genai.models.builder \
+    -m Qwen/Qwen3-4B-Instruct-2507 -o base-int4 -p int4 -e webgpu \
+    --extra_options algo_config=k_quant_mixed accuracy_level=0
+uv run --with onnx python web/build/export.py base-int4 web/dist/model
+uv run python web/build/tables.py web/dist/data     # the atlas must exist
+cd web && python3 -m http.server 8000                # then open http://localhost:8000
+```
+
+To serve the files from Cloudflare R2, make a bucket and an R2 API token, then run `web/build/upload_r2.py`. Point the page at the bucket with `<meta name="badrsi-model" content="https://.../model">` and `<meta name="badrsi-data" content="https://.../data">` in `web/index.html`.
+
+Differences from the command line:
+
+1. Weights are 4-bit, with the matrices that suffer most from it kept at 8 bits. Loss on held-out web text rises from 2.84 to 2.87. A visitor pulls 3.1 GB, and the browser keeps it for a day.
+1. The atlas and the tokenizer (0.16 GB) arrive first, and the page opens on them. Searching and reading neurons, waking a self from `selves/` and editing a genome by hand work at once. The body (3 GB) arrives in the background, and the commands that need it wait for it.
+1. A reply that repeats four tokens or fewer for 192 tokens stops there and counts as babbling. The command line lets it run to 1,200 tokens first.
+1. Selves live in the browser's local storage. The selves in `selves/` can be woken as a start.
+
 ## What to expect
 
 Edits to topic, mood, tone and hedging work. Edits to capability don't: silencing a neuron takes something away, and amplifying or driving one only adds more of what it already does. One driven neuron rarely changes what the model says. Two or three related ones at 0.2 to 0.3 do: with "say bridge" and "say cross" both at 0.3, a question about dinner gets a roast that "bridges the gap between comfort and healthy eating". Driving harder makes it say one word forever, unless the rails catch it. After every edit, the rails ask a neutral question. If the answer loops, they undo the edit and tell the model. `--no-rails` turns them off. Neurons grow nearby offshoots, so an edit brings side effects along. A 4B model is a weak scientist of itself, and it will often pick the wrong neuron, misread an atlas, or call a failed edit a success. The journal shows all of this.

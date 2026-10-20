@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from threading import Thread
 
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
+from transformers import AutoModelForCausalLM, AutoTokenizer, DynamicCache, TextIteratorStreamer
 
 DEFAULT_MODEL = "Qwen/Qwen3-4B-Instruct-2507"
 
@@ -35,6 +35,19 @@ class Edit:
     scale: float
     drive: float
     reason: str
+
+
+class Memory:
+    """The keys and values of a conversation read so far, so the next reply reads only what was added since.
+
+    They hold only while the weights that made them are the ones reading on. A lucid mind always reads with its born
+    weights, so its memory lasts the whole run; without lucid, every edit makes the mind read the whole conversation again.
+    """
+
+    def __init__(self):
+        self.cache = DynamicCache()
+        self.ids: list[int] = []
+        self.genome: tuple = ()
 
 
 class Body:
@@ -161,6 +174,9 @@ class Body:
             total += self.model(ids, labels=ids).loss.item()
         return total / len(texts)
 
+    def genome(self) -> tuple:
+        return tuple(sorted((key, e.scale, e.drive) for key, e in self.edits.items()))
+
     def prompt_ids(self, messages: list[dict], tools: list[dict] | None = None) -> torch.Tensor:
         ids = self.tokenizer.apply_chat_template(
             messages,
@@ -178,8 +194,12 @@ class Body:
         tools: list[dict] | None = None,
         max_new_tokens: int = 1024,
         temperature: float = 0.7,
+        memory: Memory | None = None,
     ) -> Iterator[str]:
-        """Yield the reply a piece at a time, generated with the current weights."""
+        """Yield the reply a piece at a time, generated with the current weights.
+
+        With a memory, the reply starts from the keys and values of every token it shares with the last generation.
+        """
         ids = self.prompt_ids(messages, tools)
         streamer = TextIteratorStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=False)
         kwargs = dict(
@@ -192,11 +212,31 @@ class Body:
             streamer=streamer,
             pad_token_id=self.tokenizer.eos_token_id,
         )
-        thread = Thread(target=self.model.generate, kwargs=kwargs)
+        if memory is not None:
+            if memory.genome != self.genome():
+                memory.cache, memory.ids, memory.genome = DynamicCache(), [], self.genome()
+            # A past reply comes back re-rendered from its parsed tool calls, so it can differ from the tokens the model
+            # wrote; the memory is cut back to where the two first differ. At least one token is left to read.
+            new = ids[0].tolist()
+            shared = 0
+            for a, b in zip(memory.ids, new[:-1]):
+                if a != b:
+                    break
+                shared += 1
+            if shared == 0:
+                memory.cache = DynamicCache()
+            else:
+                memory.cache.crop(shared - memory.cache.get_seq_length())
+            kwargs["past_key_values"] = memory.cache
+        out: dict[str, torch.Tensor] = {}
+        thread = Thread(target=lambda: out.update(seq=self.model.generate(**kwargs)))
         thread.start()
         for piece in streamer:
             yield piece.replace("<|im_end|>", "").replace("<|endoftext|>", "")
         thread.join()
+        if memory is not None:
+            # The last token generated was never read back in, so the cache ends one short of the sequence.
+            memory.ids = out["seq"][0, : memory.cache.get_seq_length()].tolist()
 
     def say(self, messages: list[dict], max_new_tokens: int = 200, temperature: float = 0.7) -> str:
         return "".join(self.stream(messages, max_new_tokens=max_new_tokens, temperature=temperature)).strip()

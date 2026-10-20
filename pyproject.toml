@@ -15,6 +15,7 @@ dependencies = [
     "rich>=15.0.0",
     "torch>=2.14.1",
     "transformers>=5.20.1",
+    "zstandard>=0.25.0",
 ]
 
 [project.scripts]

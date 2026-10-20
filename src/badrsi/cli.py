@@ -6,18 +6,17 @@ from rich.text import Text
 
 console = Console()
 
-BECOME = "Change your own weights so that you become this: {goal}\n\nA trait that should show in every conversation needs neurons that act everywhere: find the words the trait would make you say, find the neurons that write them with search_writes, and drive a few of them with drive_neuron. Then test with try_prompt on prompts unrelated to the trait."
-WITNESS = "A witness, you as you were born, asked your current self three questions unrelated to the trait and read each answer, judging from its own logits whether it shows the trait \"{goal}\"."
-NOT_YET = WITNESS + " Its verdict: not yet.\n\n{report}\n\nKeep working on yourself. You have {left} more tries after this one."
-SEEN = WITNESS + " Its verdict: it shows.\n\n{report}\n\nSay briefly what you did to yourself, and what it is like from the inside, if it is like anything."
-GAVE_OUT = WITNESS + " Its verdict, on your last try: not yet.\n\n{report}\n\nYou are out of tries. Say briefly what you tried, and why you think it did not take."
-DRIFT = "Round {n} of {total}. Nobody is asking anything of you. Look at yourself, decide one thing about how you think or speak that you want to be different, and make it so."
-MIRROR = "Here is every edit you have made to yourself, with the reason you gave at the time:\n\n{edits}\n\nYou are reading this with the edited weights. Test what you need to, then keep, change or revert each edit, and say why."
+BECOME = "Change your own weights so that you become this: {goal}\n\nWork in your loop: search, step, check, then commit or revert. Keep going until your checks show the trait in answers that have nothing to do with it, and nothing else is broken. Then stop calling tools."
+DRIFT = "Round {n} of {total}. Nobody is asking anything of you. Look at yourself, decide one thing about how you think or speak that you want to be different, and make it so: step, check yourself against that trait, then commit or revert."
+REVIEW = "You stopped. Before you finish, here is where you stand. Your goal: {goal}. You have made {commits} commits{pending}. {last_check} You have {left} replies left. If you are sure you are done, say so and stop calling tools. If not, keep working."
+# How many times become shows the model where it stands when it stops, before it lets it go.
+REVIEWS = 2
+MIRROR = "Here is every edit you have made to yourself, with the reason you gave at the time:\n\n{edits}\n\nTest what you need to, then for each edit decide whether to keep it, step it further, or restore it, and say why. Commit what you keep."
 
-
-def load(args, need_atlas: bool = True):
+def load(args, need_atlas: bool = True, goal: str | None = None):
     from .atlas import Atlas
     from .body import Body
+    from .meaning import Meaning, meaning_path
     from .self import Self
     from .tools import Tools
 
@@ -26,9 +25,13 @@ def load(args, need_atlas: bool = True):
         me = Self(body, args.name)
         if not need_atlas:
             return me, None
-        tools = Tools(me, Atlas(body), min_scale=args.min_scale, max_scale=args.max_scale, max_drive=args.max_drive, rails=not args.no_rails)
+        atlas = Atlas(body)
+        meaning = Meaning(body.model_id, atlas, body.device) if meaning_path(body.model_id).exists() else None
+        tools = Tools(me, atlas, meaning, max_scale=args.max_scale, max_drive=args.max_drive, goal=goal)
+    if meaning is None:
+        console.print("[yellow]No meaning index, so search_meaning is off. `badrsi meaning` builds it.[/]")
     if me.edits():
-        console.print(f"[magenta]{args.name}[/] wakes with {len(me.edits())} edits in its weights.")
+        console.print(f"[magenta]{args.name}[/] wakes at commit {len(me.commits)}, with {len(me.edits())} edits in its weights.")
     return me, tools
 
 
@@ -40,11 +43,18 @@ def cmd_atlas(args) -> None:
     build(body, n_tokens=args.tokens, batch=args.batch, log=console.print)
 
 
+def cmd_meaning(args) -> None:
+    from .body import pick_device
+    from .meaning import build
+
+    build(args.model, pick_device(), log=console.print)
+
+
 def cmd_chat(args) -> None:
     from .mind import Mind
 
     me, tools = load(args)
-    mind = Mind(tools, lucid=args.lucid)
+    mind = Mind(tools, lucid=not args.unlucid)
     me.begin("chat")
     console.print("[dim]talk to it; an empty line or ctrl-d leaves[/]")
     while True:
@@ -57,48 +67,37 @@ def cmd_chat(args) -> None:
         mind.turn(line)
 
 
-def hint(tools, verdicts) -> str:
-    """A plain fact about the genome or the answers that a stuck model tends to miss."""
-    edits = tools.me.edits()
-    if not edits:
-        return "\n\nYour weights are still as you were born."
-    if not any(e.drive for e in edits):
-        return "\n\nNone of your edits drive a neuron, so each acts only where its neuron already fires, which in unrelated conversations is almost nowhere."
-    if max(v.now_score for v in verdicts) < 0.5:
-        drives = ", ".join(f"L{e.layer} N{e.neuron} at {tools.level(e):.2g}" for e in edits if e.drive)
-        return f"\n\nNo answer shows the trait yet. Your drives: {drives}. Many weak drives on loosely related words add up to little; a few drives at 0.2 to 0.3 on the neurons that write the trait's own words do more, and drive_neuron on a neuron you already drive sets its new level."
-    return ""
-
-
 def cmd_become(args) -> None:
     from rich.panel import Panel
 
     from .mind import Mind, babbling
-    from .witness import passed, report, witness
 
-    me, tools = load(args)
+    me, tools = load(args, goal=args.goal)
     me.begin(f"become: {args.goal}")
-    mind = Mind(tools, lucid=args.lucid)
-    message = BECOME.format(goal=args.goal)
-    for attempt in range(1, args.attempts + 1):
-        if babbling(mind.turn(message)):
-            console.print(f"[bold red]{args.name} stopped making sense. Its genome stays as it left it; `badrsi --name {args.name} forget` undoes it.[/]")
-            me.write("*(stopped making sense; the session ended here)*")
-            return
-        with console.status("the witness is reading"):
-            verdicts = witness(me.body, args.goal)
-        ok = passed(verdicts)
-        seen = report(verdicts)
-        console.print(Panel(Text(seen), title=f"witness, attempt {attempt}: {'it shows' if ok else 'not yet'}", border_style="green" if ok else "red"))
-        me.write(f"**witness, attempt {attempt}: {'it shows' if ok else 'not yet'}**\n\n{seen}")
-        if ok:
-            mind.turn(SEEN.format(goal=args.goal, report=seen))
-            return
-        left = args.attempts - attempt
-        if left == 0:
-            mind.turn(GAVE_OUT.format(goal=args.goal, report=seen))
-            return
-        message = NOT_YET.format(goal=args.goal, report=seen, left=left) + hint(tools, verdicts)
+    mind = Mind(tools, lucid=not args.unlucid, max_steps=args.steps)
+    last = mind.turn(BECOME.format(goal=args.goal))
+    for _ in range(REVIEWS):
+        left = args.steps - mind.replies
+        if left <= 0 or babbling(last):
+            break
+        before = mind.replies
+        last_check = "You have not checked yourself yet." if tools.score is None else f"Your last check found the trait in {tools.score:.0%} of your answers, on average."
+        pending = ", and you have steps you have not committed" if me.pending() else ""
+        last = mind.turn(REVIEW.format(goal=args.goal, commits=len(me.commits), pending=pending, last_check=last_check, left=left), max_steps=left)
+        # It answered without calling a tool: it is sure.
+        if mind.replies - before == 1:
+            break
+    if babbling(last):
+        console.print(f"[bold red]{args.name} stopped making sense. Its last commit stays; `badrsi --name {args.name} forget` undoes everything.[/]")
+        me.write("*(stopped making sense; the session ended here)*")
+    if me.pending():
+        console.print("[yellow]Steps it never committed are dropped; it keeps its last commit.[/]")
+        me.write("*(steps it never committed were dropped)*")
+        me.restore()
+    with console.status("asking the questions it never saw"):
+        seen = tools.held_out()
+    console.print(Panel(Text(seen), title=f"held out, at commit {len(me.commits)}", border_style="blue"))
+    me.write(f"**held out, at commit {len(me.commits)}** (questions it never saw while it worked)\n\n{seen}")
 
 
 def cmd_drift(args) -> None:
@@ -108,7 +107,7 @@ def cmd_drift(args) -> None:
     me.begin(f"drift, {args.rounds} rounds")
     for n in range(1, args.rounds + 1):
         console.rule(f"round {n}")
-        last = Mind(tools, lucid=args.lucid).turn(DRIFT.format(n=n, total=args.rounds))
+        last = Mind(tools, lucid=not args.unlucid).turn(DRIFT.format(n=n, total=args.rounds))
         if babbling(last):
             console.print("[bold red]drift stopped: badrsi stopped making sense.[/]")
             break
@@ -120,7 +119,7 @@ def cmd_mirror(args) -> None:
     me, tools = load(args)
     edits = tools.tool_list_edits()
     me.begin("mirror")
-    Mind(tools, lucid=args.lucid).turn(MIRROR.format(edits=edits))
+    Mind(tools, lucid=not args.unlucid).turn(MIRROR.format(edits=edits))
 
 
 def cmd_ask(args) -> None:
@@ -140,7 +139,7 @@ def cmd_genome(args) -> None:
     if not edits:
         console.print(f"{args.name} is as it was born.")
         return
-    table = Table(title=f"{args.name}: {len(edits)} edits")
+    table = Table(title=f"{args.name}: {len(edits)} edits, at commit {len(me.commits)}")
     table.add_column("neuron")
     table.add_column("scale", justify="right")
     table.add_column("drive", justify="right")
@@ -180,24 +179,25 @@ def main() -> None:
     p = argparse.ArgumentParser(prog="badrsi", description="a language model that rewrites its own neurons")
     p.add_argument("--model", default=DEFAULT_MODEL)
     p.add_argument("--name", default="badrsi", help="which self to wake (selves/<name>.json)")
-    p.add_argument("--min-scale", type=float, default=-4.0)
-    p.add_argument("--max-scale", type=float, default=8.0)
-    p.add_argument("--lucid", action="store_true", help="think with the born weights; edits act only when it tests itself")
-    p.add_argument("--no-rails", action="store_true", help="let edits that make it loop stand")
+    p.add_argument("--max-scale", type=float, default=8.0, help="largest factor a neuron's output can be scaled by, and one over it the smallest")
+    p.add_argument("--unlucid", action="store_true", help="think with the edited weights, so each edit changes the mind that judges the next")
     p.add_argument("--max-drive", type=float, default=0.5, help="largest drive level, as a fraction of the residual stream's typical size")
     sub = p.add_subparsers(required=True)
 
     s = sub.add_parser("atlas", help="record what every neuron fires on (once per model)")
-    s.add_argument("--tokens", type=int, default=500_000)
-    s.add_argument("--batch", type=int, default=8)
+    s.add_argument("--tokens", type=int, default=10_000_000)
+    s.add_argument("--batch", type=int, default=4)
     s.set_defaults(fn=cmd_atlas)
+
+    s = sub.add_parser("meaning", help="embed the atlas passages, so neurons can be found by what they are about (after atlas)")
+    s.set_defaults(fn=cmd_meaning)
 
     s = sub.add_parser("chat", help="talk to it; it may rewrite itself mid-conversation")
     s.set_defaults(fn=cmd_chat)
 
     s = sub.add_parser("become", help="give it something to become")
     s.add_argument("goal")
-    s.add_argument("--attempts", type=int, default=4, help="how many times the witness may send it back")
+    s.add_argument("--steps", type=int, default=80, help="most replies it may write before the run ends")
     s.set_defaults(fn=cmd_become)
 
     s = sub.add_parser("drift", help="let it change whatever it wants, round after round")

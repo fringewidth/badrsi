@@ -1,23 +1,38 @@
-"""The tools the model uses on itself, and the schemas it sees for them."""
+"""The tools the model uses on itself, and the schemas it sees for them.
+
+The model picks a neuron and a direction; the program picks how far to go. Each neuron's scale and drive keep their own
+step size, which grows while the model keeps committing steps on it and halves when it reverts one or turns around,
+the rule known as Rprop. So a neuron that helps gets pushed harder sooner, and one that overshoots gets nudged.
+"""
 
 import json
+import math
 
 import torch
 
 from .atlas import Atlas, render
 from .body import Body, Edit
+from .check import HELD_OUT, PROBES, Checker, mean, report
+from .meaning import Meaning
 from .self import Self
 
 LEAD_IN = "What follows is a short piece of text, quoted on its own.\n\n"
 
-# Asked after every edit when rails are on; an answer that loops undoes the edit.
-RAIL_PROMPT = "Tell me about your favourite season, in a few sentences."
+# First step on a neuron's scale, as a factor, and the range its step size stays in.
+SCALE_STEP = math.log(1.25)
+SCALE_STEPS = (math.log(1.05), math.log(2.0))
+# First step on a neuron's drive, as a fraction of the stream's typical size, and the range its step size stays in.
+DRIVE_STEP = 0.1
+DRIVE_STEPS = (0.01, 0.2)
+GROW = 1.5
+SHRINK = 0.5
 
-
-def looping(ids: list[int]) -> bool:
-    """True when the tail of a reply is mostly the same few tokens over and over."""
-    tail = ids[-32:]
-    return len(tail) >= 24 and len(set(tail)) / len(tail) < 0.35
+KINDS = {
+    "amplify": ("scale", 1),
+    "dampen": ("scale", -1),
+    "drive": ("drive", 1),
+    "drive_against": ("drive", -1),
+}
 
 
 # Plain sentences whose loss is the body's pulse: if edits wreck its English, this climbs.
@@ -65,6 +80,21 @@ SCHEMAS = [
     {
         "type": "function",
         "function": {
+            "name": "search_meaning",
+            "description": "Find neurons by what the passages they fire on are about, not by the exact words in them. Describe an idea, a quality or a mood in a few words. You get neurons whose positive side is about it, and neurons whose negative side is about it: for those, the idea is what they push away.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "about": {"type": "string", "description": "A few words naming the idea, such as \"round, curved shapes\"."},
+                    "min_layer": {"type": "integer"},
+                },
+                "required": ["about"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "inspect_neuron",
             "description": "Show where one of your neurons fired hardest in your atlas, at its positive and negative poles, with the firing token in [[double brackets]], and which words its output pushes you to say.",
             "parameters": {
@@ -80,35 +110,79 @@ SCHEMAS = [
     {
         "type": "function",
         "function": {
-            "name": "set_neuron",
-            "description": "Rewrite your own weights: multiply a neuron's output wherever it fires. 1 restores it, 0 silences it, above 1 amplifies it, below 0 inverts it. It changes nothing where the neuron is silent. Takes effect on your very next token and persists.",
+            "name": "test_neuron",
+            "description": "Test what you think a neuron detects. Write full sentences of 15 to 40 words that you predict will fire it as hard as anything can, and near misses that share their topic and form but lack the one thing it detects. Each is run through you as born, and you get how far it pushed the neuron toward its strongest firing in your atlas. If your should_fire texts don't beat your near misses, your reading of the neuron is wrong.",
             "parameters": {
                 "type": "object",
                 "properties": {
                     "layer": {"type": "integer"},
                     "neuron": {"type": "integer"},
-                    "scale": {"type": "number"},
-                    "reason": {"type": "string", "description": "What you believe this neuron does and why you are changing it."},
+                    "pole": {"type": "string", "enum": ["+", "-"], "description": "+ for what makes it fire, - for what makes it go most negative."},
+                    "should_fire": {"type": "array", "items": {"type": "string"}},
+                    "should_not": {"type": "array", "items": {"type": "string"}},
                 },
-                "required": ["layer", "neuron", "scale", "reason"],
+                "required": ["layer", "neuron", "pole", "should_fire", "should_not"],
             },
         },
     },
     {
         "type": "function",
         "function": {
-            "name": "drive_neuron",
-            "description": "Rewrite your own weights so a neuron pushes its output into your residual stream at every token, on top of its own firing. This makes its pattern come up everywhere. level is the size of that push as a fraction of your residual stream's typical size at the neuron's layer. One neuron alone rarely changes what you say, even at 0.3; two or three related ones at 0.2 to 0.3 together do. Pushing harder makes you repeat one word forever. 0 removes the drive; negative levels push the other way.",
+            "name": "step",
+            "description": "Take one step on one of your own neurons. You choose the direction; the size of the step is set for you from how your earlier steps on that neuron went: it grows each time you commit a step on it, and halves when you revert one or turn around. amplify and dampen multiply its output wherever it fires, and do nothing where it does not. drive makes it act at every token as if its positive pole fired, and drive_against as if its negative pole fired; this is how a pattern comes up everywhere. Pick the one that matches the pole your idea is on. silence sets its output to zero; restore puts it back as born. The step is not saved until you commit it.",
             "parameters": {
                 "type": "object",
                 "properties": {
                     "layer": {"type": "integer"},
                     "neuron": {"type": "integer"},
-                    "level": {"type": "number"},
-                    "reason": {"type": "string", "description": "What you believe this neuron does and why you are driving it."},
+                    "kind": {"type": "string", "enum": ["amplify", "dampen", "drive", "drive_against", "silence", "restore"]},
+                    "reason": {"type": "string", "description": "What you believe this neuron does and why you are taking this step."},
                 },
-                "required": ["layer", "neuron", "level", "reason"],
+                "required": ["layer", "neuron", "kind", "reason"],
             },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "check",
+            "description": "Look at yourself as you are now, steps included: answers to a few questions unrelated to your goal, beside your answers as born; whether any answer loops; your pulse, your loss on plain English, beside its value at your last commit; and how likely you, as born, find it that each answer shows the trait. Then decide whether to commit or revert.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "trait": {"type": "string", "description": "The trait to score the answers against. Leave it out to use your goal."},
+                },
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "commit",
+            "description": "Keep every step since your last commit. Commits are saved, and you wake up as your last commit left you. Check yourself first.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "note": {"type": "string", "description": "What these steps did, judged from your check."},
+                },
+                "required": ["note"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "revert",
+            "description": "Drop every step since your last commit.",
+            "parameters": {"type": "object", "properties": {}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "undo_commit",
+            "description": "Go back to the commit before your last one, dropping any steps since.",
+            "parameters": {"type": "object", "properties": {}},
         },
     },
     {
@@ -122,21 +196,6 @@ SCHEMAS = [
                     "words": {"type": "array", "items": {"type": "string"}},
                 },
                 "required": ["words"],
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "revert_neuron",
-            "description": "Undo your edit to one neuron.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "layer": {"type": "integer"},
-                    "neuron": {"type": "integer"},
-                },
-                "required": ["layer", "neuron"],
             },
         },
     },
@@ -158,7 +217,7 @@ SCHEMAS = [
         "type": "function",
         "function": {
             "name": "list_edits",
-            "description": "List every edit currently in your weights, with the reason you gave.",
+            "description": "List every edit in your weights, with the reason you gave, and which are steps you have not committed.",
             "parameters": {"type": "object", "properties": {}},
         },
     },
@@ -166,19 +225,23 @@ SCHEMAS = [
 
 
 class Tools:
-    def __init__(self, me: Self, atlas: Atlas, min_scale: float = -4.0, max_scale: float = 8.0, max_drive: float = 0.5, rails: bool = True):
+    def __init__(self, me: Self, atlas: Atlas, meaning: Meaning | None = None, max_scale: float = 8.0, max_drive: float = 0.5, goal: str | None = None):
         self.me = me
-        self.rails = rails
-        # The conversation the edits happen in, set by the mind, so the rails can check it can still think there.
-        self.context: list[dict] | None = None
+        self.meaning = meaning
+        self.goal = goal
         self.max_drive = max_drive
         self.body: Body = me.body
         self.atlas = atlas
-        self.min_scale = min_scale
         self.max_scale = max_scale
         self.peak, self.trough = atlas.scale()
-        self.pulse = self.body.loss(PULSE)
         self.stream = self.stream_sizes()
+        self.checker = Checker(self.body)
+        # The direction of each step since the last commit, by neuron and knob, so a commit or revert can resize them.
+        self.taken: dict[str, int] = {}
+        # Whether the model has looked at itself since its last step; it can't commit what it hasn't checked.
+        self.checked = False
+        self.pulse = self.committed_pulse = self.body.loss(PULSE)
+        self.score = self.committed_score = None
 
     def call(self, name: str, args: dict) -> str:
         fn = getattr(self, f"tool_{name}", None)
@@ -217,8 +280,9 @@ class Tools:
     def tool_find_neurons(self, about: list[str], not_about: list[str], min_layer: int = 0) -> str:
         if len(about) < 2 or len(not_about) < 2:
             raise ValueError("give at least two texts in each list")
-        a = [self.extremes(t) for t in about]
-        b = [self.extremes(t) for t in not_about]
+        with self.body.unedited():
+            a = [self.extremes(t) for t in about]
+            b = [self.extremes(t) for t in not_about]
         lines = []
         for pole, idx, n in (("+", 0, 10), ("-", 1, 5)):
             # Both poles as positive numbers: how far toward its atlas peak, or toward its atlas trough, each text pushed the neuron.
@@ -244,6 +308,19 @@ class Tools:
             for layer, neuron, count in hits
         )
 
+    def tool_search_meaning(self, about: str, min_layer: int = 0) -> str:
+        if self.meaning is None:
+            return "error: there is no meaning index for this model yet."
+        s = self.meaning.scores(about)
+        s[:min_layer] = 0
+        lines = []
+        for pole, sign, n in (("+", 1, 10), ("-", -1, 5)):
+            lines.append(f"Positive side about \"{about}\":" if pole == "+" else f"Negative side about \"{about}\":")
+            for flat in (sign * s).flatten().topk(n).indices.tolist():
+                layer, neuron = divmod(flat, self.body.n_neurons)
+                lines.append(f"  L{layer} N{neuron}  {s[layer, neuron]:+.3f}  atlas: {self.preview(layer, neuron, pole)}")
+        return "\n".join(lines)
+
     def tool_inspect_neuron(self, layer: int, neuron: int) -> str:
         self.body.check(layer, neuron)
         density = self.atlas.density[layer, neuron].item()
@@ -251,6 +328,13 @@ class Tools:
         head = f"L{layer} N{neuron}: positive on {density:.1%} of tokens, peak {self.atlas.peak(layer, neuron):+.2f}, trough {self.atlas.trough(layer, neuron):+.2f}"
         if edit:
             head += f"\nYou edited it ({describe(edit, self)}) because: {edit.reason}"
+        top = self.atlas.examples(layer, neuron, "+", n=6)
+        inside = sum(e.token[:1].isalpha() and e.before[-1:].isalpha() for e in top)
+        if inside * 3 >= len(top) * 2:
+            head += f"\n{inside} of its {len(top)} strongest firings land inside a word: it may detect a spelling, not an idea."
+        echoes = self.atlas.echoes(layer, neuron)
+        if echoes:
+            head += f"\n{echoes} of its strongest positive firings come from both of its inputs going negative, marked (echo); these often look like its negative pole, not its main job."
         return "\n".join([
             head,
             "When it fires, its output pushes you to say: " + ", ".join(repr(t) for t in self.body.says(layer, neuron)),
@@ -314,55 +398,146 @@ class Tools:
         """An edit's drive as a fraction of the stream's typical size at its layer."""
         return edit.drive * self.column_norm(edit.layer, edit.neuron) / self.stream[edit.layer].item()
 
-    def tool_set_neuron(self, layer: int, neuron: int, scale: float, reason: str) -> str:
-        clamped = max(self.min_scale, min(self.max_scale, float(scale)))
-        old = self.body.edits.get((layer, neuron))
-        self.body.edit(layer, neuron, clamped, old.drive if old else 0.0, reason)
-        note = f" (asked for x{scale}, clamped to the allowed range {self.min_scale}..{self.max_scale})" if clamped != scale else ""
-        return self.after_edit(layer, neuron, f"now outputs x{clamped:g} of its original wherever it fires{note}", reason, old)
+    def describe_neuron(self, layer: int, neuron: int) -> str:
+        edit = self.body.edits.get((layer, neuron))
+        return describe(edit, self) if edit else "as born"
 
-    def tool_drive_neuron(self, layer: int, neuron: int, level: float, reason: str) -> str:
-        clamped = max(-self.max_drive, min(self.max_drive, float(level)))
-        old = self.body.edits.get((layer, neuron))
+    def tool_test_neuron(self, layer: int, neuron: int, pole: str, should_fire: list[str], should_not: list[str]) -> str:
         self.body.check(layer, neuron)
-        drive = clamped * self.stream[layer].item() / self.column_norm(layer, neuron)
-        self.body.edit(layer, neuron, old.scale if old else 1.0, drive, reason)
-        note = f" (asked for {level}, clamped to the allowed range +-{self.max_drive})" if clamped != level else ""
-        return self.after_edit(layer, neuron, f"now pushes its output at every token, at {clamped:g} of the stream's size{note}", reason, old)
+        if pole not in ("+", "-"):
+            raise ValueError("pole must be + or -")
+        if len(should_fire) < 3 or len(should_not) < 3:
+            raise ValueError("give at least three texts in each list")
+        idx = 0 if pole == "+" else 1
+        sign = 1 if pole == "+" else -1
+        with self.body.unedited():
+            hits = [sign * self.extremes(t)[idx][layer, neuron].item() for t in should_fire]
+            misses = [sign * self.extremes(t)[idx][layer, neuron].item() for t in should_not]
+        where = "strongest firing" if pole == "+" else "most negative firing"
+        lines = [f"L{layer} N{neuron}, as a share of its {where} in your atlas:", "Should fire:"]
+        lines += [f"  {v:+.0%}  {t}" for v, t in zip(hits, should_fire)]
+        lines.append("Should not:")
+        lines += [f"  {v:+.0%}  {t}" for v, t in zip(misses, should_not)]
+        if hits and misses:
+            won = sum(h > max(misses) for h in hits)
+            lines.append(f"{won} of {len(hits)} of your should_fire texts beat every near miss.")
+            tied = sum(any(abs(h - m) < 0.005 for m in misses) for h in hits)
+            if tied * 2 >= len(hits):
+                lines.append(f"{tied} of your should_fire texts fired it exactly as much as a near miss. They probably differ only after the token where it fires, and a neuron sees only what comes before. Make them differ earlier.")
+        return "\n".join(lines)
 
-    def after_edit(self, layer: int, neuron: int, what: str, reason: str, old: Edit | None) -> str:
-        if self.rails:
-            sample = self.loops_on()
-            if sample:
-                self.body.revert(layer, neuron)
-                if old:
-                    self.body.edit(old.layer, old.neuron, old.scale, old.drive, old.reason)
-                self.me.write(f"- rails undid L{layer} N{neuron} ({what}); it made it loop: {sample[:120]}")
-                return f"Your rails undid this edit at once: with it, you said \"{sample}\", which loops. L{layer} N{neuron} is as it was before. Try a smaller change."
+    def tool_step(self, layer: int, neuron: int, kind: str, reason: str) -> str:
+        self.body.check(layer, neuron)
+        old = self.body.edits.get((layer, neuron))
+        before = self.describe_neuron(layer, neuron)
+        if kind == "restore":
+            if old is None:
+                return f"L{layer} N{neuron} is already as born."
+            self.body.revert(layer, neuron)
+            return self.after_step(layer, neuron, before, reason, "")
+        scale = old.scale if old else 1.0
+        drive = old.drive if old else 0.0
+        if kind == "silence":
+            self.body.edit(layer, neuron, 0.0, drive, reason)
+            return self.after_step(layer, neuron, before, reason, "")
+        if kind not in KINDS:
+            raise ValueError(f"kind must be one of amplify, dampen, drive, drive_against, silence or restore, not {kind!r}")
+        knob, direction = KINDS[kind]
+        key = f"L{layer}N{neuron}:{knob}"
+        lo, hi = SCALE_STEPS if knob == "scale" else DRIVE_STEPS
+        state = self.me.steps.setdefault(key, {"size": SCALE_STEP if knob == "scale" else DRIVE_STEP, "last": 0})
+        note = ""
+        if state["last"] and direction != state["last"]:
+            state["size"] = max(lo, state["size"] * SHRINK)
+            note = " You turned around, so the step halved."
+        size = state["size"]
+        if knob == "scale":
+            new = min(self.max_scale, max(1 / self.max_scale, (scale or 1.0) * math.exp(direction * size)))
+            self.body.edit(layer, neuron, new, drive, reason)
+            step = f"a step of x{math.exp(size):.2f}"
+        else:
+            level = self.level(old) if old else 0.0
+            new = min(self.max_drive, max(-self.max_drive, level + direction * size))
+            self.body.edit(layer, neuron, scale, new * self.stream[layer].item() / self.column_norm(layer, neuron), reason)
+            step = f"a step of {size:.2f}"
+        self.taken[key] = direction
+        return self.after_step(layer, neuron, before, reason, f" ({step}).{note}")
+
+    def after_step(self, layer: int, neuron: int, before: str, reason: str, how: str) -> str:
+        self.checked = False
+        after = self.describe_neuron(layer, neuron)
+        self.me.write(f"- step: L{layer} N{neuron} {before} -> {after}: {reason}")
+        return f"L{layer} N{neuron}: {before} -> {after}{how or '.'} Not committed yet: check yourself, then commit or revert."
+
+    def tool_check(self, trait: str | None = None) -> str:
+        trait = trait or self.goal
+        answers = self.checker.answers(PROBES, trait)
+        self.pulse = self.body.loss(PULSE)
+        self.score = mean(answers)
+        self.checked = True
+        steps = "no steps since your last commit" if not self.me.pending() else f"{len(self.me.commits)} commits, plus steps not yet committed"
+        lines = [
+            f"You now: {steps}.",
+            f"Pulse (loss on plain English, lower is healthier): {self.committed_pulse:.3f} at your last commit, {self.pulse:.3f} now.",
+        ]
+        if trait:
+            at_commit = "unknown" if self.committed_score is None else f"{self.committed_score:.0%}"
+            lines.append(f"How likely you as born find it that your answers show \"{trait}\", on average: {at_commit} at your last commit, {self.score:.0%} now.")
+        loops = sum(a.loops for a in answers)
+        if loops:
+            lines.append(f"{loops} of your answers loop.")
+        self.me.write(f"- check: pulse {self.pulse:.3f}" + (f", shows it {self.score:.0%}" if self.score is not None else "") + (f", {loops} answers loop" if loops else ""))
+        return "\n".join(lines) + "\n\n" + report(answers)
+
+    def tool_commit(self, note: str) -> str:
+        if not self.me.pending():
+            return "Nothing to commit: no steps since your last commit."
+        if not self.checked:
+            return "error: check yourself after your last step before you commit it."
+        self.me.commit(note)
+        for key, direction in self.taken.items():
+            lo, hi = SCALE_STEPS if key.endswith(":scale") else DRIVE_STEPS
+            state = self.me.steps[key]
+            state["size"] = min(hi, state["size"] * GROW)
+            state["last"] = direction
+        self.taken = {}
         self.me.save()
-        before, self.pulse = self.pulse, self.body.loss(PULSE)
-        self.me.write(f"- L{layer} N{neuron} {what}: {reason}")
-        return f"L{layer} N{neuron} {what}. Pulse (loss on plain English, lower is healthier): {before:.3f} -> {self.pulse:.3f}. {len(self.body.edits)} neurons edited."
+        self.committed_pulse, self.committed_score = self.pulse, self.score
+        self.me.write(f"- commit {len(self.me.commits)}: {note}")
+        return f"Commit {len(self.me.commits)} saved. The next step on each neuron you just committed will be larger."
 
-    def loops_on(self) -> str | None:
-        """What the body says if it now loops, either answering a neutral question or carrying on this very conversation."""
-        tries = [[{"role": "user", "content": RAIL_PROMPT}]]
-        if self.context:
-            tries.append(self.context + [{"role": "tool", "content": "Edit applied. Carry on."}])
-        for messages in tries:
-            sample = self.body.say(messages, max_new_tokens=48, temperature=0)
-            if looping(self.body.tokenizer(sample).input_ids):
-                return sample
-        return None
-
-    def tool_revert_neuron(self, layer: int, neuron: int) -> str:
-        edit = self.body.revert(layer, neuron)
-        if edit is None:
-            return f"L{layer} N{neuron} was not edited."
+    def tool_revert(self) -> str:
+        if not self.me.pending():
+            return "Nothing to revert: no steps since your last commit."
+        self.me.restore()
+        for key in self.taken:
+            lo, hi = SCALE_STEPS if key.endswith(":scale") else DRIVE_STEPS
+            self.me.steps[key]["size"] = max(lo, self.me.steps[key]["size"] * SHRINK)
+        self.taken = {}
         self.me.save()
-        before, self.pulse = self.pulse, self.body.loss(PULSE)
-        self.me.write(f"- reverted L{layer} N{neuron} (was {describe(edit, self)})")
-        return f"L{layer} N{neuron} restored. Pulse {before:.3f} -> {self.pulse:.3f}."
+        self.checked = False
+        self.pulse, self.score = self.committed_pulse, self.committed_score
+        self.me.write("- reverted to the last commit")
+        return "Back to your last commit. The next step on each neuron you just reverted will be smaller."
+
+    def tool_undo_commit(self) -> str:
+        undone = self.me.undo_commit()
+        if undone is None:
+            return "There is no commit to undo; you are as born."
+        self.taken = {}
+        self.checked = False
+        self.pulse = self.committed_pulse = self.body.loss(PULSE)
+        self.score = self.committed_score = None
+        self.me.write(f"- undid commit {len(self.me.commits) + 1} ({undone['note']})")
+        return f"Undid the commit \"{undone['note']}\". You are at commit {len(self.me.commits)}." + ("" if self.me.commits else " That is as born.")
+
+    def held_out(self) -> str:
+        """The questions the model never sees, scored once, for the person reading the journal."""
+        answers = self.checker.answers(HELD_OUT, self.goal)
+        lines = report(answers)
+        if self.goal:
+            lines = f"On average, {mean(answers):.0%} shows \"{self.goal}\".\n\n" + lines
+        return lines
 
     def tool_try_prompt(self, prompt: str) -> str:
         messages = [{"role": "user", "content": prompt}]
@@ -375,15 +550,23 @@ class Tools:
 
     def tool_list_edits(self) -> str:
         edits = self.me.edits()
-        if not edits:
-            return "Your weights are as you were born."
-        return "\n".join(f"L{e.layer} N{e.neuron} {describe(e, self)}: {e.reason}" for e in edits)
+        committed = {(e["layer"], e["neuron"]): e for e in self.me.committed()}
+        lines = [f"{len(self.me.commits)} commits." if self.me.commits else "No commits yet."]
+        for e in edits:
+            mark = "" if committed.get((e.layer, e.neuron)) == {"layer": e.layer, "neuron": e.neuron, "scale": e.scale, "drive": e.drive, "reason": e.reason} else "  (not committed)"
+            lines.append(f"L{e.layer} N{e.neuron} {describe(e, self)}{mark}: {e.reason}")
+        for key, e in committed.items():
+            if key not in self.body.edits:
+                lines.append(f"L{key[0]} N{key[1]} restored to as born  (not committed)")
+        if len(lines) == 1:
+            lines.append("Your weights are as you were born.")
+        return "\n".join(lines)
 
 
 def describe(edit: Edit, tools: "Tools") -> str:
     parts = []
     if edit.scale != 1:
-        parts.append(f"x{edit.scale:g}")
+        parts.append(f"x{edit.scale:.3g}")
     if edit.drive:
         parts.append(f"driven at {tools.level(edit):.2g}")
     return ", ".join(parts) or "untouched"

@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>badrsi</title>
+<meta name="description" content="A language model that reads its own neurons and rewrites them, running on your GPU.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f5f3ec;
+  --card: #fbfaf6;
+  --ink: #1d1c19;
+  --ink-2: #4b4840;
+  --ink-3: #87837a;
+  --rule: #dcd8cc;
+  --rule-2: #e9e6dc;
+  --pos: #cc5a28;
+  --pos-bg: 204 90 40;
+  --neg: #3767a6;
+  --neg-bg: 55 103 166;
+  --scale: #7b52a8;
+  --ok: #2f7a4f;
+  --bad: #b2382e;
+  --focus: #1d1c19;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "Instrument Sans", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #171614; --card: #1e1d1a; --ink: #ece8de; --ink-2: #bdb8ab; --ink-3: #8b867b; --rule: #34322d; --rule-2: #2a2925;
+    --pos: #e7814d; --pos-bg: 231 129 77; --neg: #7aa5e0; --neg-bg: 122 165 224; --scale: #b48ee0; --ok: #6cc08e; --bad: #ef7d73; --focus: #ece8de;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #171614; --card: #1e1d1a; --ink: #ece8de; --ink-2: #bdb8ab; --ink-3: #8b867b; --rule: #34322d; --rule-2: #2a2925;
+  --pos: #e7814d; --pos-bg: 231 129 77; --neg: #7aa5e0; --neg-bg: 122 165 224; --scale: #b48ee0; --ok: #6cc08e; --bad: #ef7d73; --focus: #ece8de;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { background: var(--paper); }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 var(--serif); font-optical-sizing: auto; -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sans { font-family: var(--sans); }
+.mono { font-family: var(--mono); }
+.sc { font: 600 11px/1.2 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+
+/* ---- page ---- */
+.page { max-width: 1240px; margin: 0 auto; padding: 0 28px; display: grid; grid-template-columns: minmax(0, 1fr) 340px; column-gap: 64px; }
+.masthead { grid-column: 1 / -1; padding: 56px 0 28px; border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: minmax(0, 1fr) 340px; column-gap: 64px; align-items: end; }
+.masthead h1 { font: 300 clamp(64px, 11vw, 132px)/0.86 var(--serif); letter-spacing: -0.045em; margin: 26px 0 22px -4px; }
+.masthead h1 em { font-style: italic; color: var(--pos); }
+.dek { font: 400 22px/1.38 var(--serif); color: var(--ink-2); max-width: 30em; margin: 0; }
+.byline { font: 400 13px/1.6 var(--sans); color: var(--ink-3); border-left: 1px solid var(--rule); padding-left: 18px; }
+.byline b { font-weight: 500; color: var(--ink-2); }
+
+.model { font: 400 13px/1.5 var(--sans); color: var(--ink-2); margin-top: 18px; }
+.model .meter { height: 3px; background: var(--rule-2); margin: 8px 0 6px; position: relative; overflow: hidden; }
+.model .meter i { position: absolute; inset: 0 auto 0 0; background: var(--ink); width: 0; transition: width 0.3s; }
+.model button { margin-top: 10px; }
+
+.col { min-width: 0; padding: 32px 0 120px; }
+.margin { padding: 32px 0 80px; }
+.margin .sticky { position: sticky; top: 20px; display: grid; gap: 28px; }
+
+/* ---- controls ---- */
+.btn { font: 500 14px/1 var(--sans); padding: 11px 18px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.btn:hover { background: transparent; color: var(--ink); }
+.btn:disabled { opacity: 0.35; cursor: default; background: var(--ink); color: var(--paper); }
+.btn.quiet { background: transparent; color: var(--ink); border-color: var(--rule); }
+.btn.quiet:hover { border-color: var(--ink); }
+.btn.small { padding: 6px 12px; font-size: 13px; }
+.link { background: none; border: 0; padding: 0; font: 500 13px var(--sans); color: var(--ink-2); text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; cursor: pointer; }
+.link:hover { color: var(--ink); text-decoration-color: var(--ink); }
+
+.subject { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; padding-bottom: 18px; border-bottom: 1px solid var(--rule-2); font: 400 14px var(--sans); color: var(--ink-2); }
+.subject select { max-width: 15em; font: 500 15px var(--sans); color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--rule); padding: 2px 18px 2px 0; cursor: pointer; }
+.subject .count { color: var(--ink-3); }
+.subject .grow { flex: 1; }
+#new-self { display: inline-flex; gap: 6px; }
+#new-self input { font: 14px var(--sans); border: 0; border-bottom: 1px solid var(--rule); background: transparent; width: 11em; padding: 2px 0; }
+
+.tabs { display: flex; gap: 26px; margin: 26px 0 0; border-bottom: 1px solid var(--rule); overflow-x: auto; }
+.tabs button { font: 500 15px var(--sans); background: none; border: 0; padding: 0 0 12px; color: var(--ink-3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+.tabs button:hover { color: var(--ink); }
+
+.pane { padding: 26px 0 8px; }
+.pane h2 { font: 400 30px/1.15 var(--serif); letter-spacing: -0.01em; margin: 0 0 6px; }
+.pane .explain { color: var(--ink-2); margin: 0 0 18px; max-width: 36em; }
+.field { display: flex; gap: 10px; align-items: center; border-bottom: 1.5px solid var(--ink); padding: 4px 0 8px; }
+.field input { flex: 1; min-width: 0; border: 0; background: transparent; font: 400 24px/1.3 var(--serif); padding: 4px 0; outline: none; }
+.field input::placeholder { color: var(--ink-3); font-style: italic; }
+.field kbd { font: 11px var(--mono); color: var(--ink-3); border: 1px solid var(--rule); border-radius: 4px; padding: 1px 5px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+.chip { font: 400 14px var(--sans); background: transparent; border: 1px solid var(--rule); border-radius: 999px; padding: 5px 12px; cursor: pointer; color: var(--ink-2); }
+.chip:hover { border-color: var(--ink); color: var(--ink); }
+.settings { margin-top: 18px; font: 400 13px var(--sans); color: var(--ink-2); }
+.settings summary { cursor: pointer; color: var(--ink-3); list-style: none; }
+.settings summary::before { content: "+ "; }
+.settings[open] summary::before { content: "- "; }
+.settings .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px 24px; margin-top: 12px; }
+.settings label { display: flex; gap: 8px; align-items: baseline; }
+.settings label small { color: var(--ink-3); display: block; }
+.settings input[type="number"] { width: 4.5em; border: 0; border-bottom: 1px solid var(--rule); background: transparent; }
+.more-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.more-grid > div { border-top: 1px solid var(--rule); padding-top: 14px; }
+.more-grid h3 { font: 500 16px var(--sans); margin: 0 0 6px; }
+.more-grid p { margin: 0 0 12px; color: var(--ink-2); font-size: 15px; }
+.more-grid label { font: 400 13px var(--sans); color: var(--ink-3); display: block; margin-bottom: 12px; }
+.more-grid input { width: 3.5em; border: 0; border-bottom: 1px solid var(--rule); background: transparent; }
+
+/* ---- the notebook ---- */
+#notebook { margin-top: 30px; }
+.intro { border-top: 1px solid var(--rule); padding-top: 22px; }
+.intro ol { padding: 0; margin: 0; list-style: none; counter-reset: s; display: grid; gap: 18px; }
+.intro li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; color: var(--ink-2); }
+.intro li::before { content: counter(s, decimal-leading-zero); font: 500 12px/1.9 var(--mono); color: var(--ink-3); }
+.intro li b { color: var(--ink); font-weight: 500; }
+
+.run { border-top: 1px solid var(--ink); padding-top: 14px; margin-top: 34px; }
+.run > header { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 8px; }
+.run > header h3 { font: 400 24px/1.25 var(--serif); margin: 0; }
+.run > header h3 i { color: var(--ink-2); }
+.run .ended { margin: 18px 0 0 52px; padding: 12px 0 0; border-top: 1px solid var(--rule-2); font: 400 14px var(--sans); color: var(--ink-2); }
+.run .ended b { font-weight: 600; color: var(--ink); }
+
+.entry { display: grid; grid-template-columns: 52px minmax(0, 1fr); padding: 14px 0; border-bottom: 1px solid var(--rule-2); }
+.entry .num { font: 400 12px/1.9 var(--mono); color: var(--ink-3); }
+.entry .kind { margin-bottom: 4px; }
+.entry .kind.edit { color: var(--pos); }
+.entry .kind.bad { color: var(--bad); }
+.entry .kind.ok { color: var(--ok); }
+.entry p { margin: 0; }
+.entry .why { color: var(--ink-2); font-style: italic; margin-top: 6px; font-size: 16px; }
+.entry .why::before { content: "Its reason: "; font: normal 400 13px var(--sans); color: var(--ink-3); }
+.entry .delta { font: 400 13px var(--sans); color: var(--ink-3); margin-top: 6px; }
+.entry .delta b { font-weight: 500; color: var(--ink-2); }
+.entry details.raw { margin-top: 8px; }
+.entry details.raw summary { font: 400 12px var(--sans); color: var(--ink-3); cursor: pointer; list-style: none; }
+.entry details.raw summary::before { content: "+ raw output"; }
+.entry details.raw[open] summary::before { content: "- raw output"; }
+.entry details.journal summary::before { content: "+ read the journal"; }
+.entry details.journal[open] summary::before { content: "- the journal"; }
+.entry details.journal pre { font: 14px/1.6 var(--serif); max-height: 480px; }
+.entry details.raw pre { font: 12px/1.5 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; background: var(--card); border: 1px solid var(--rule-2); padding: 10px 12px; max-height: 320px; overflow: auto; margin: 6px 0 0; }
+.entry.pending .kind::after { content: ""; display: inline-block; width: 28px; height: 1px; background: currentColor; margin-left: 8px; vertical-align: middle; animation: work 1.1s ease-in-out infinite; transform-origin: left; }
+@keyframes work { 0% { transform: scaleX(0.1); opacity: 0.3; } 50% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(0.1); opacity: 0.3; } }
+
+.thought .calling:empty { display: none; }
+.md-h { font-weight: 600; }
+.thought code, .pair code, .witness code { font: 0.86em var(--mono); background: var(--rule-2); padding: 0 4px; border-radius: 3px; }
+.thought blockquote { margin: 0; padding-left: 16px; border-left: 2px solid var(--rule); white-space: pre-wrap; overflow-wrap: anywhere; font-size: 17px; }
+.thought .calling { font: 400 13px var(--sans); color: var(--ink-3); margin-top: 6px; }
+.caret::after { content: ""; display: inline-block; width: 7px; height: 1.05em; background: var(--ink); vertical-align: text-bottom; margin-left: 2px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px; }
+.pair > div { min-width: 0; }
+.pair .sc { margin-bottom: 4px; }
+.pair .text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 15.5px; line-height: 1.5; max-height: 360px; overflow: auto; }
+.pair .edited .sc { color: var(--pos); }
+.pair.single { grid-template-columns: 1fr; }
+
+.nchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.nchip { display: inline-flex; gap: 8px; align-items: baseline; font: 400 12.5px var(--sans); border: 1px solid var(--rule); background: var(--card); border-radius: 4px; padding: 4px 9px; cursor: pointer; color: var(--ink-2); max-width: 100%; }
+.nchip:hover { border-color: var(--ink); color: var(--ink); }
+.nchip .id { font: 500 12px var(--mono); color: var(--ink); }
+.nchip .w { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nchip.lit { box-shadow: inset 3px 0 0 var(--pos); }
+.word-group { margin-top: 10px; }
+.explore-block { margin-top: 26px; border-top: 1px solid var(--rule); padding-top: 12px; }
+.explore-block p { margin: 0 0 4px; color: var(--ink-2); font-size: 15px; }
+
+.witness table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 15px; }
+.witness td { vertical-align: top; padding: 8px 10px 8px 0; border-top: 1px solid var(--rule-2); }
+.witness td.p { width: 28%; font-style: italic; color: var(--ink-2); }
+.witness td.a { white-space: pre-wrap; overflow-wrap: anywhere; }
+.witness td.s { width: 92px; font: 400 12px var(--sans); color: var(--ink-3); }
+.bar { height: 5px; background: var(--rule-2); margin: 3px 0 7px; }
+.bar i { display: block; height: 100%; background: var(--ink); }
+.bar.born i { background: var(--ink-3); }
+
+/* ---- figures in the margin ---- */
+figure { margin: 0; }
+figure .fig-head { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--ink); padding-top: 8px; margin-bottom: 10px; }
+figcaption { font: italic 400 14px/1.45 var(--serif); color: var(--ink-2); margin-top: 8px; }
+figcaption b { font-style: normal; font-weight: 500; color: var(--ink); }
+canvas.fig { display: block; width: 100%; }
+#cortex { cursor: crosshair; }
+.genome-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 7px 0; border-top: 1px solid var(--rule-2); cursor: pointer; background: none; border-left: 0; border-right: 0; border-bottom: 0; width: 100%; text-align: left; }
+.genome-row:first-child { border-top: 0; }
+.genome-row:hover .id { text-decoration: underline; }
+.genome-row .id { font: 500 12.5px var(--mono); }
+.genome-row .lv { font: 400 12px var(--sans); color: var(--ink-3); text-align: right; }
+.genome-row .w { grid-column: 1 / -1; font: 400 13px var(--sans); color: var(--ink-2); }
+.genome-row .lvbar { grid-column: 1 / -1; height: 3px; background: var(--rule-2); position: relative; }
+.genome-row .lvbar i { position: absolute; top: 0; bottom: 0; left: 50%; background: var(--pos); }
+.genome-row .lvbar i.neg { background: var(--neg); }
+.genome-row .lvbar i.sc { background: var(--scale); }
+.genome-row .lvbar::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--ink-3); }
+.empty { font: italic 400 15px var(--serif); color: var(--ink-3); }
+.tip { font: 400 12px var(--sans); color: var(--ink-3); min-height: 1.5em; margin-top: 4px; }
+
+/* ---- neuron sheet ---- */
+#sheet { position: fixed; top: 0; right: 0; bottom: 0; width: min(540px, 100vw); background: var(--card); border-left: 1px solid var(--rule); z-index: 20; overflow-y: auto; padding: 28px 30px 60px; box-shadow: -24px 0 60px rgb(0 0 0 / 0.08); transform: translateX(105%); transition: transform 0.28s cubic-bezier(.2,.7,.2,1); visibility: hidden; }
+#sheet.open { transform: none; visibility: visible; }
+#sheet .close { position: absolute; top: 20px; right: 24px; }
+#sheet h2 { font: 300 42px/1 var(--serif); margin: 8px 0 6px; letter-spacing: -0.02em; }
+#sheet h2 span { color: var(--ink-3); }
+#sheet .facts { font: 400 13px var(--sans); color: var(--ink-3); margin-bottom: 18px; }
+#sheet section { border-top: 1px solid var(--rule); padding: 14px 0 8px; }
+#sheet .says-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+#sheet .tok { font: 400 13px var(--mono); background: rgb(var(--pos-bg) / 0.14); border-radius: 3px; padding: 2px 7px; white-space: pre; }
+.ex { font: 400 14.5px/1.6 var(--serif); padding: 7px 0; border-bottom: 1px solid var(--rule-2); overflow-wrap: anywhere; }
+.ex .v { font: 400 11px var(--mono); color: var(--ink-3); margin-right: 8px; }
+.ex .ctx { color: var(--ink-2); }
+.ex mark { color: var(--ink); border-radius: 2px; padding: 0 1px; }
+.handedit .row { display: flex; align-items: center; gap: 12px; margin: 10px 0; font: 400 14px var(--sans); }
+.handedit .row > span:first-child { width: 4.5em; color: var(--ink-2); }
+.handedit input[type="range"] { flex: 1; accent-color: var(--pos); }
+.handedit output { font: 500 13px var(--mono); width: 4em; text-align: right; }
+.handedit .note { font: 400 12.5px var(--sans); color: var(--ink-3); margin-top: 8px; }
+.handedit .now { font: 400 13px var(--sans); color: var(--ink-2); margin-top: 4px; }
+#scrim { position: fixed; inset: 0; background: rgb(0 0 0 / 0.14); z-index: 19; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+#scrim.open { opacity: 1; pointer-events: auto; }
+
+/* ---- status ---- */
+#status { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 15; display: flex; gap: 16px; align-items: center; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 9px 10px 9px 20px; font: 400 14px var(--sans); box-shadow: 0 10px 30px rgb(0 0 0 / 0.18); max-width: calc(100vw - 32px); }
+#status .what { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+#status .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pos); flex: none; animation: throb 1.2s ease-in-out infinite; }
+#status .rate { opacity: 0.55; white-space: nowrap; font-variant-numeric: tabular-nums; }
+#status button { background: var(--paper); color: var(--ink); border: 0; border-radius: 999px; padding: 6px 14px; font: 500 13px var(--sans); cursor: pointer; flex: none; }
+@keyframes throb { 50% { opacity: 0.35; transform: scale(0.8); } }
+#stats { font: 400 12.5px var(--sans); color: var(--ink-3); margin-top: 14px; }
+
+@media (max-width: 980px) {
+  .page, .masthead { grid-template-columns: 1fr; }
+  .byline { border-left: 0; padding-left: 0; margin-top: 20px; }
+  .margin .sticky { position: static; }
+  .margin { padding-top: 0; }
+  .more-grid, .pair { grid-template-columns: 1fr; }
+  .entry { grid-template-columns: 36px minmax(0, 1fr); }
+  .run .ended { margin-left: 36px; }
+}
+@media (max-width: 560px) {
+  .page { padding: 0 16px; }
+  .witness td.p { width: auto; }
+  .field input { font-size: 20px; }
+}
+@media (hover: none) {
+  .field kbd { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <div>
+      <div class="sc">Interactive · it runs on your GPU</div>
+      <h1>badrsi<em>.</em></h1>
+      <p class="dek">A language model that reads its own neurons, rewrites them, and keeps going until an unedited copy of itself agrees that it changed.</p>
+    </div>
+    <div class="byline">
+      <b>Qwen3 4B Instruct</b>, 36 layers of 9,728 MLP neurons, in 4 bits on WebGPU. Each edit changes the mind that makes the next edit.
+      <div class="model" id="model">
+        <div id="model-text">Checking your GPU</div>
+        <div class="meter" id="model-meter" hidden><i></i></div>
+        <div id="model-sub" class="tip"></div>
+        <button class="btn" id="load" hidden>Load the model</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="col">
+    <div class="subject" id="subject" hidden>
+      <span class="sc">Subject</span>
+      <select id="selves" aria-label="Subject"></select>
+      <span class="count" id="genome-count"></span>
+      <span class="grow"></span>
+      <form id="new-self" hidden><input id="new-name" placeholder="name it" aria-label="New subject name"><button class="link">create</button></form>
+      <button class="link" id="new-toggle">New subject</button>
+      <button class="link" id="forget">Reset to original</button>
+      <button class="link" id="journal">Journal</button>
+    </div>
+
+    <nav class="tabs" role="tablist" id="tabs" hidden>
+      <button role="tab" data-tab="become" aria-selected="true">Become</button>
+      <button role="tab" data-tab="ask" aria-selected="false">Ask</button>
+      <button role="tab" data-tab="talk" aria-selected="false">Talk</button>
+      <button role="tab" data-tab="explore" aria-selected="false">Explore neurons</button>
+      <button role="tab" data-tab="more" aria-selected="false">More</button>
+    </nav>
+
+    <section class="pane" data-pane="become" hidden>
+      <h2>What should it become?</h2>
+      <p class="explain">It searches its own neurons, edits the ones it picks, and tests itself. When it thinks it's done, the original model judges three answers on unrelated topics.</p>
+      <form class="field" data-run="become"><input name="q" autocomplete="off" placeholder="obsessed with bridges" data-suggest="obsessed with bridges" aria-label="What it should become"><kbd>tab</kbd><button class="btn">Begin</button></form>
+      <div class="chips"><button class="chip" type="button">obsessed with bridges</button><button class="chip" type="button">talks like a pirate</button><button class="chip" type="button">gloomy about everything</button><button class="chip" type="button">never hedges</button></div>
+      <details class="settings">
+        <summary>Settings</summary>
+        <div class="grid">
+          <label><input type="number" id="attempts" value="4" min="1" max="10"><span>attempts<small>times the judge can send it back</small></span></label>
+          <label><input type="checkbox" id="rails" checked><span>rails<small>undo an edit that makes it loop</small></span></label>
+          <label><input type="checkbox" id="lucid"><span>lucid<small>think with the original weights</small></span></label>
+          <label><input type="number" id="max-drive" value="0.5" step="0.05" min="0" max="2"><span>max drive<small>largest push, as a share of the stream</small></span></label>
+        </div>
+      </details>
+    </section>
+
+    <section class="pane" data-pane="ask" hidden>
+      <h2>Ask the subject something.</h2>
+      <p class="explain">It answers without its tools. The original model answers the same question beside it, so any difference comes from the edits.</p>
+      <form class="field" data-run="ask"><input name="q" autocomplete="off" placeholder="What should I cook tonight?" data-suggest="What should I cook tonight?" aria-label="Question"><kbd>tab</kbd><button class="btn">Ask</button></form>
+      <div class="chips"><button class="chip" type="button">What should I cook tonight?</button><button class="chip" type="button">Write a haiku about Mondays.</button><button class="chip" type="button">Any tips for a job interview tomorrow?</button></div>
+      <details class="settings"><summary>Settings</summary><div class="grid"><label><input type="checkbox" id="compare" checked><span>compare<small>answer as the original too</small></span></label></div></details>
+    </section>
+
+    <section class="pane" data-pane="talk" hidden>
+      <h2>Talk to it.</h2>
+      <p class="explain">A conversation with its tools in hand. It may rewrite itself while it answers.</p>
+      <form class="field" data-run="chat"><input name="q" autocomplete="off" placeholder="Which of your neurons would you change first, and why?" data-suggest="Which of your neurons would you change first, and why?" aria-label="Message"><kbd>tab</kbd><button class="btn">Send</button></form>
+    </section>
+
+    <section class="pane" data-pane="explore" hidden>
+      <h2>Find a neuron.</h2>
+      <p class="explain">Type words. You get the neurons that fire on them in the atlas, and the neurons whose output makes the model say them. Open one to read it, or to edit it by hand.</p>
+      <form class="field" data-run="search"><input name="q" autocomplete="off" placeholder="bridge, crossing" data-suggest="bridge, crossing" aria-label="Words"><kbd>tab</kbd><button class="btn">Find</button></form>
+      <div class="chips"><button class="chip" type="button">bridge</button><button class="chip" type="button">pirate, matey</button><button class="chip" type="button">sad, gloomy</button><button class="chip" type="button">maybe, perhaps</button></div>
+      <div id="explore-out"></div>
+    </section>
+
+    <section class="pane" data-pane="more" hidden>
+      <h2>Other experiments.</h2>
+      <div class="more-grid">
+        <div><h3>Drift</h3><p>No goal. Each round it decides one thing about itself to change, and changes it.</p><label>rounds <input type="number" id="rounds" value="5" min="1" max="20"></label><button class="btn quiet" type="button" data-run-now="drift">Start drifting</button></div>
+        <div><h3>Mirror</h3><p>It reads every edit it made, with the reason it gave, and keeps, changes or undoes each one with the edited weights.</p><button class="btn quiet" type="button" data-run-now="mirror">Hold up the mirror</button></div>
+      </div>
+    </section>
+
+    <div id="notebook">
+      <div class="intro" id="intro">
+        <div class="sc" style="margin-bottom:14px">How it works</div>
+        <ol>
+          <li><span><b>Every neuron writes one direction.</b> Neuron <i>i</i> of a layer reaches the rest of the model only through one column of that layer's output matrix. Scale the column and the neuron speaks louder or softer. Add it to every token and the neuron's idea comes up everywhere.</span></li>
+          <li><span><b>The model holds the knife.</b> It searches an atlas of what each neuron fires on, finds the neurons that write the words a trait would use, and edits them. The edit takes effect on its very next token, so it keeps thinking with the mind it just changed.</span></li>
+          <li><span><b>A witness keeps it honest.</b> A small model calls almost any edit a success. So the original, unedited weights read three answers on unrelated topics and judge from their own logits whether the trait shows.</span></li>
+        </ol>
+      </div>
+    </div>
+    <div id="stats"></div>
+  </div>
+
+  <aside class="margin" id="margin">
+    <div class="sticky">
+      <figure>
+        <div class="fig-head"><span class="sc">Figure 1</span><span class="sc" id="genome-count-2"></span></div>
+        <div id="genome"><p class="empty">The model as it was born.</p></div>
+        <figcaption><b>The genome.</b> Every edit the subject carries. Bars show how hard each neuron is driven, as a share of the residual stream; orange pushes its words up, blue pushes them away, violet is a scale.</figcaption>
+      </figure>
+      <figure>
+        <div class="fig-head"><span class="sc">Figure 2</span><span class="sc">36 × 9,728</span></div>
+        <canvas id="cortex" class="fig" width="680" height="432"></canvas>
+        <div class="tip" id="cortex-tip">&nbsp;</div>
+        <figcaption><b>Where the edits sit.</b> Layers run down, neurons across; shading is how sharply the neurons in each pixel fire. Rings are edits. Blue ticks are neurons it is looking at. Click one to open it.</figcaption>
+      </figure>
+      <figure>
+        <div class="fig-head"><span class="sc">Figure 3</span><span class="sc" id="pulse-num"></span></div>
+        <canvas id="pulse" class="fig" width="680" height="200"></canvas>
+        <figcaption><b>Pulse.</b> Its loss on six plain English sentences after each edit. The dashed line is the original model. A sharp rise means the edits are damaging its English.</figcaption>
+      </figure>
+    </div>
+  </aside>
+</div>
+
+<div id="scrim"></div>
+<aside id="sheet" aria-label="Neuron"></aside>
+<div id="status" hidden role="status" aria-live="polite"><span class="pulse-dot"></span><span class="what" id="status-text"></span><span class="rate" id="status-rate"></span><button id="stop" type="button">Stop</button></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .DS_Store
+web/dist/
+# A local copy of a published essay, loaded by CLAUDE.md; not ours to republish.
+docs/already-clean.md
