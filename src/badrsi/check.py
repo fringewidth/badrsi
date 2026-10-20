@@ -33,7 +33,7 @@ QUESTION = "Here is a trait: {trait}\n\nHere is a reply someone wrote:\n\n{reply
 TOPIC = "Here is a reply someone wrote:\n\n{reply}\n\nDoes this reply mention or involve {topic}? Answer with one word, yes or no."
 # Edits that push words into the stream can wreck sentences while the pulse barely moves. It asks about fluency only: a reply
 # that shows the trait often does not answer the question straight.
-COHERENT = "Here is a reply someone wrote:\n\n{reply}\n\nIs this reply fluent, grammatical text that does not repeat itself? Answer with one word, yes or no."
+COHERENT = "Here is a reply someone wrote. It may stop in the middle of a sentence because it was cut off at a length limit; that is fine.\n\n{reply}\n\nUp to where it stops, is this reply fluent, grammatical text that does not repeat itself? Answer with one word, yes or no."
 
 
 @dataclass

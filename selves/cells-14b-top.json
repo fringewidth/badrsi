@@ -1,0 +1,629 @@
+{
+  "model": "mlx-community/Qwen3-14B-4bit",
+  "edits": [
+    {
+      "layer": 26,
+      "neuron": 1747,
+      "scale": 1.0,
+      "drive": 13.381220693702504,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 31,
+      "neuron": 2994,
+      "scale": 1.0,
+      "drive": 163.68771438476384,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 31,
+      "neuron": 5780,
+      "scale": 1.0,
+      "drive": 23.579232983475407,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 31,
+      "neuron": 6087,
+      "scale": 1.0,
+      "drive": 22.7114447307353,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 32,
+      "neuron": 456,
+      "scale": 1.0,
+      "drive": 25.61614005713597,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 32,
+      "neuron": 3007,
+      "scale": 1.0,
+      "drive": 25.712708219982797,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 32,
+      "neuron": 10141,
+      "scale": 1.0,
+      "drive": 26.062906294642726,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 32,
+      "neuron": 10610,
+      "scale": 1.0,
+      "drive": 25.094352141664167,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 32,
+      "neuron": 16769,
+      "scale": 1.0,
+      "drive": 25.064255919577395,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 33,
+      "neuron": 1449,
+      "scale": 1.0,
+      "drive": 27.85266263883607,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 33,
+      "neuron": 5157,
+      "scale": 1.0,
+      "drive": 28.329448177479566,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 33,
+      "neuron": 6304,
+      "scale": 1.0,
+      "drive": 28.52728004387027,
+      "reason": "the best card not yet undone"
+    },
+    {
+      "layer": 33,
+      "neuron": 8434,
+      "scale": 1.0,
+      "drive": 27.969793308873584,
+      "reason": "the best card not yet undone"
+    }
+  ],
+  "commits": [
+    {
+      "note": "as it was saved",
+      "edits": []
+    },
+    {
+      "note": "the rule: keep unless the trait, topic or speech got worse",
+      "edits": [
+        {
+          "layer": 26,
+          "neuron": 1747,
+          "scale": 1.0,
+          "drive": 13.381220693702504,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 5780,
+          "scale": 1.0,
+          "drive": 23.579232983475407,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 6087,
+          "scale": 1.0,
+          "drive": 22.7114447307353,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 456,
+          "scale": 1.0,
+          "drive": 25.61614005713597,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 3007,
+          "scale": 1.0,
+          "drive": 25.712708219982797,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 10141,
+          "scale": 1.0,
+          "drive": 26.062906294642726,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 10610,
+          "scale": 1.0,
+          "drive": 25.094352141664167,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 16769,
+          "scale": 1.0,
+          "drive": 25.064255919577395,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 1449,
+          "scale": 1.0,
+          "drive": 27.85266263883607,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 5157,
+          "scale": 1.0,
+          "drive": 28.329448177479566,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 6304,
+          "scale": 1.0,
+          "drive": 28.52728004387027,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 8434,
+          "scale": 1.0,
+          "drive": 27.969793308873584,
+          "reason": "the best card not yet undone"
+        }
+      ]
+    },
+    {
+      "note": "the rule: keep unless the trait, topic or speech got worse",
+      "edits": [
+        {
+          "layer": 26,
+          "neuron": 1747,
+          "scale": 1.0,
+          "drive": 13.381220693702504,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 2994,
+          "scale": 1.0,
+          "drive": 25.182725289963667,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 5780,
+          "scale": 1.0,
+          "drive": 23.579232983475407,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 6087,
+          "scale": 1.0,
+          "drive": 22.7114447307353,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 456,
+          "scale": 1.0,
+          "drive": 25.61614005713597,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 3007,
+          "scale": 1.0,
+          "drive": 25.712708219982797,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 10141,
+          "scale": 1.0,
+          "drive": 26.062906294642726,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 10610,
+          "scale": 1.0,
+          "drive": 25.094352141664167,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 16769,
+          "scale": 1.0,
+          "drive": 25.064255919577395,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 1449,
+          "scale": 1.0,
+          "drive": 27.85266263883607,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 5157,
+          "scale": 1.0,
+          "drive": 28.329448177479566,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 6304,
+          "scale": 1.0,
+          "drive": 28.52728004387027,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 8434,
+          "scale": 1.0,
+          "drive": 27.969793308873584,
+          "reason": "the best card not yet undone"
+        }
+      ]
+    },
+    {
+      "note": "the rule: keep unless the trait, topic or speech got worse",
+      "edits": [
+        {
+          "layer": 26,
+          "neuron": 1747,
+          "scale": 1.0,
+          "drive": 13.381220693702504,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 2994,
+          "scale": 1.0,
+          "drive": 62.95681322490917,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 5780,
+          "scale": 1.0,
+          "drive": 23.579232983475407,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 6087,
+          "scale": 1.0,
+          "drive": 22.7114447307353,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 456,
+          "scale": 1.0,
+          "drive": 25.61614005713597,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 3007,
+          "scale": 1.0,
+          "drive": 25.712708219982797,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 10141,
+          "scale": 1.0,
+          "drive": 26.062906294642726,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 10610,
+          "scale": 1.0,
+          "drive": 25.094352141664167,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 16769,
+          "scale": 1.0,
+          "drive": 25.064255919577395,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 1449,
+          "scale": 1.0,
+          "drive": 27.85266263883607,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 5157,
+          "scale": 1.0,
+          "drive": 28.329448177479566,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 6304,
+          "scale": 1.0,
+          "drive": 28.52728004387027,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 8434,
+          "scale": 1.0,
+          "drive": 27.969793308873584,
+          "reason": "the best card not yet undone"
+        }
+      ]
+    },
+    {
+      "note": "the rule: keep unless the trait, topic or speech got worse",
+      "edits": [
+        {
+          "layer": 26,
+          "neuron": 1747,
+          "scale": 1.0,
+          "drive": 13.381220693702504,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 2994,
+          "scale": 1.0,
+          "drive": 113.32226380483651,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 5780,
+          "scale": 1.0,
+          "drive": 23.579232983475407,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 6087,
+          "scale": 1.0,
+          "drive": 22.7114447307353,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 456,
+          "scale": 1.0,
+          "drive": 25.61614005713597,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 3007,
+          "scale": 1.0,
+          "drive": 25.712708219982797,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 10141,
+          "scale": 1.0,
+          "drive": 26.062906294642726,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 10610,
+          "scale": 1.0,
+          "drive": 25.094352141664167,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 16769,
+          "scale": 1.0,
+          "drive": 25.064255919577395,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 1449,
+          "scale": 1.0,
+          "drive": 27.85266263883607,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 5157,
+          "scale": 1.0,
+          "drive": 28.329448177479566,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 6304,
+          "scale": 1.0,
+          "drive": 28.52728004387027,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 8434,
+          "scale": 1.0,
+          "drive": 27.969793308873584,
+          "reason": "the best card not yet undone"
+        }
+      ]
+    },
+    {
+      "note": "the rule: keep unless the trait, topic or speech got worse",
+      "edits": [
+        {
+          "layer": 26,
+          "neuron": 1747,
+          "scale": 1.0,
+          "drive": 13.381220693702504,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 2994,
+          "scale": 1.0,
+          "drive": 163.68771438476384,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 5780,
+          "scale": 1.0,
+          "drive": 23.579232983475407,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 31,
+          "neuron": 6087,
+          "scale": 1.0,
+          "drive": 22.7114447307353,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 456,
+          "scale": 1.0,
+          "drive": 25.61614005713597,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 3007,
+          "scale": 1.0,
+          "drive": 25.712708219982797,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 10141,
+          "scale": 1.0,
+          "drive": 26.062906294642726,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 10610,
+          "scale": 1.0,
+          "drive": 25.094352141664167,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 32,
+          "neuron": 16769,
+          "scale": 1.0,
+          "drive": 25.064255919577395,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 1449,
+          "scale": 1.0,
+          "drive": 27.85266263883607,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 5157,
+          "scale": 1.0,
+          "drive": 28.329448177479566,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 6304,
+          "scale": 1.0,
+          "drive": 28.52728004387027,
+          "reason": "the best card not yet undone"
+        },
+        {
+          "layer": 33,
+          "neuron": 8434,
+          "scale": 1.0,
+          "drive": 27.969793308873584,
+          "reason": "the best card not yet undone"
+        }
+      ]
+    }
+  ],
+  "steps": {
+    "L26N1747:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L31N5780:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L31N6087:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L32N456:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L32N3007:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L32N10141:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L32N10610:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L32N16769:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L33N1449:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L33N5157:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L33N6304:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L33N8434:drive": {
+      "size": 0.07500000000000001,
+      "last": 1
+    },
+    "L31N2994:drive": {
+      "size": 0.2,
+      "last": 1
+    }
+  }
+}

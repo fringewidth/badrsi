@@ -15,6 +15,7 @@ import re
 from dataclasses import dataclass, field
 
 from .check import HELD_OUT, PROBES, mean
+from .concepts import Concepts
 from .tools import PULSE, Tools
 
 ROLE = "You are badrsi, a language model that changes its own weights. You think with your weights as you were born. Answer with one JSON object and nothing else."
@@ -22,13 +23,13 @@ ROLE = "You are badrsi, a language model that changes its own weights. You think
 PLAN = """You are about to change your own weights so that you become this: {goal}
 
 Name the thing the trait is about, and the words it would make you say. The topic is the thing itself, such as "owls" or "the sea", not the obsession or the feeling. Answer with JSON:
-{{"topic": "<the thing, in one to four words>", "words": ["<eight single words you would say often if you had this trait>"]}}"""
+{{"topic": "<the thing, in one to four words>", "word": "<the one word that names it, singular, such as owl or cell>", "words": ["<eight single words you would say often if you had this trait>"]}}"""
 
 CHOOSE = """Your goal: {goal}
 
 {state}
 
-These are neurons of yours that could carry the trait. A writer is a neuron whose output makes you say some words; driving it up makes you say them more, everywhere. A reader is a neuron that fires on text about something; driving it makes you act as if that text were there.
+These are parts of you that could carry the trait. A network is a group of neurons that together carry the concept, traced back from the neurons that say its words; stepping it moves all of them. A neuron is one that several separate tests agree is about the concept. A writer is a neuron whose output makes you say some words; driven alone it tends to drop the word into sentences where it does not belong.
 
 {cards}
 
@@ -55,19 +56,20 @@ PUSH = "Your last check shows the trait in {score:.0%} of your answers, not most
 @dataclass
 class Card:
     letter: str
-    layer: int
-    neuron: int
     kind: str
+    # Every neuron the card steps, as (layer, neuron); one, except for a network.
+    members: list[tuple[int, int]]
     says: list[str]
-    fires: str
+    about: str
     # True when the topic sits on the neuron's negative side, so stepping it down is what brings the topic up.
     negative: bool = False
     flags: list[str] = field(default_factory=list)
 
     def text(self) -> str:
+        where = ", ".join(f"L{l} N{n}" for l, n in self.members[:3]) + (f" and {len(self.members) - 3} more" if len(self.members) > 3 else "")
         side = " The topic is on its negative side." if self.negative else ""
         flags = f" Note: {'; '.join(self.flags)}." if self.flags else ""
-        return f"{self.letter}. L{self.layer} N{self.neuron}, a {self.kind}. Makes you say: {', '.join(repr(s) for s in self.says)}. Fires on: {self.fires}.{side}{flags}"
+        return f"{self.letter}. A {self.kind}: {where}. Makes you say: {', '.join(repr(s) for s in self.says)}. {self.about}{side}{flags}"
 
 
 @dataclass
@@ -94,7 +96,7 @@ def parse(text: str) -> dict | None:
 
 
 class Harness:
-    def __init__(self, tools: Tools, goal: str, chooser: str = "model", judge: str = "model", cycles: int = 12, seed: int = 0, log=print):
+    def __init__(self, tools: Tools, goal: str, chooser: str = "model", judge: str = "model", cycles: int = 12, seed: int = 0, temperature: float = 0.0, log=print):
         self.tools = tools
         self.body = tools.body
         self.me = tools.me
@@ -105,20 +107,28 @@ class Harness:
         self.rng = random.Random(seed)
         self.log = log
         self.topic = goal
+        self.word = ""
         self.words: list[str] = []
         self.cards: list[Card] = []
         self.tried: list[str] = []
         self.committed: Gauges | None = None
+        # Sampling the model's decisions instead of taking its first choice, for runs that collect episodes to learn from.
+        self.temperature = temperature
+        # Every decision the model made this run, with what came of it, for learning which decisions were good.
+        self.decisions: list[dict] = []
 
-    def ask(self, prompt: str, valid, tries: int = 3) -> dict:
-        """One decision by the model, in a fresh conversation, with its born weights. Retries on an answer that isn't valid."""
-        messages = [{"role": "system", "content": ROLE}, {"role": "user", "content": prompt}]
+    def ask(self, prompt: str, valid, kind: str, tries: int = 3) -> dict:
+        """One decision by the model, in a fresh conversation, with its born weights and its trained thinker if it has
+        one. Retries on an answer that isn't valid."""
+        first = [{"role": "system", "content": ROLE}, {"role": "user", "content": prompt}]
+        messages = list(first)
         for _ in range(tries):
-            with self.body.unedited():
-                reply = self.body.say(messages, max_new_tokens=200, temperature=0)
+            with self.body.unedited(), self.body.thinking():
+                reply = self.body.say(messages, max_new_tokens=200, temperature=self.temperature)
             answer = parse(reply)
             problem = "that was not one JSON object" if answer is None else valid(answer)
             if not problem:
+                self.decisions.append({"kind": kind, "messages": first + [{"role": "assistant", "content": json.dumps(answer, ensure_ascii=False)}]})
                 return answer
             messages += [{"role": "assistant", "content": reply}, {"role": "user", "content": f"Not valid: {problem}. Answer again with JSON only."}]
         raise ValueError(f"no valid answer after {tries} tries: {reply!r}")
@@ -129,8 +139,9 @@ class Harness:
                 return "it needs a topic and a list of words"
             return None
 
-        a = self.ask(PLAN.format(goal=self.goal), valid)
+        a = self.ask(PLAN.format(goal=self.goal), valid, "plan")
         self.topic = a["topic"].strip()
+        self.word = (a.get("word") or self.topic.split()[-1]).strip().lower().rstrip("s") or self.topic.split()[-1]
         # Writers are found by single tokens, so phrases are split, and the topic's own words always count.
         words = [w for phrase in a["words"] if isinstance(phrase, str) for w in phrase.split()] + self.topic.split()
         stop = {"the", "a", "an", "of", "and", "biological"}
@@ -139,53 +150,43 @@ class Harness:
         self.log(f"plan: about {self.topic!r}, words {self.words}")
 
     def candidates(self) -> None:
-        """Writers for the trait's words, then readers for its topic: eight cards in all, best first."""
-        tools, body = self.tools, self.body
-        seen: set[tuple[int, int]] = set()
+        """The traced network first, then the neurons the probes agree on, then a couple of writers: eight cards at most."""
+        found = Concepts(self.body).find(self.topic, self.word, self.words, self.log)
         cards: list[Card] = []
-        ids = sorted({t for w in self.words for form in (w, " " + w, " " + w.capitalize()) for t in body.tokenizer(form, add_special_tokens=False).input_ids[:1]})
-        wanted = {w.lower() for w in self.words}
-        cos = body.write_cosines(body.unembed(ids))
-        cos[: body.n_layers // 2] = 0
-        for flat in cos.flatten().topk(60).indices.tolist():
-            layer, neuron = divmod(flat, body.n_neurons)
-            says = body.says(layer, neuron, n=6)
-            if any(s.strip().lower() in wanted or s.strip().lower().rstrip("s") in wanted for s in says[:4]) and (layer, neuron) not in seen:
-                seen.add((layer, neuron))
-                cards.append(self.card(layer, neuron, "writer", says))
-            if len(cards) == 5:
+        taken: set[tuple[int, int]] = set()
+        net = [(d["layer"], d["neuron"]) for d in found["network"]]
+        if len(net) >= 3:
+            says = [w for d in found["network"] for w in d["says"][:1]][:8]
+            cards.append(Card("", "network", net, says, f"Traced back from the neurons that say {self.word!r}, over encyclopedia articles about it; {len(net)} neurons stepped together."))
+            taken |= set(net)
+        writers = {tuple(w) for w in found["writers"]}
+        for d in found["agreed"]:
+            key = (d["layer"], d["neuron"])
+            if key in taken or key in writers:
+                continue
+            taken.add(key)
+            cards.append(self.card(key, "neuron", d["says"], f"Found by {len(d['probes'])} separate tests ({', '.join(d['probes'])})."))
+            if len(cards) >= 6:
                 break
-        if tools.meaning is not None:
-            s = tools.meaning.scores(self.topic)
-            s[: body.n_layers // 4] = 0
-            for sign in (1, -1):
-                for flat in (sign * s).flatten().topk(6).indices.tolist():
-                    layer, neuron = divmod(flat, body.n_neurons)
-                    if (layer, neuron) in seen:
-                        continue
-                    seen.add((layer, neuron))
-                    cards.append(self.card(layer, neuron, "reader", body.says(layer, neuron, n=6), negative=sign < 0))
-                    if len(cards) >= (7 if sign > 0 else 8):
-                        break
+        for key in found["writers"][:2]:
+            key = tuple(key)
+            if key not in taken:
+                cards.append(self.card(key, "writer", self.body.says(*key, n=5), "Its output makes you say the word."))
         self.cards = cards[:8]
         for letter, c in zip("ABCDEFGH", self.cards):
             c.letter = letter
         self.me.write("- candidates:\n" + "\n".join(f"  - {c.text()}" for c in self.cards))
         self.log("candidates:\n" + "\n".join("  " + c.text() for c in self.cards))
 
-    def card(self, layer: int, neuron: int, kind: str, says: list[str], negative: bool = False) -> Card:
-        atlas = self.tools.atlas
-        if atlas is None:
-            return Card("", layer, neuron, kind, says[:5], "unknown, since there is no atlas for this model yet", negative)
-        ex = atlas.examples(layer, neuron, "-" if negative else "+", n=2, before=12, after=2)
-        fires = " | ".join(f"{e.before}[[{e.token}]]{e.after}".replace("\n", " ").strip() for e in ex)
+    def card(self, key: tuple[int, int], kind: str, says: list[str], about: str) -> Card:
+        layer, neuron = key
         flags = []
-        top = atlas.examples(layer, neuron, "+", n=6)
-        if sum(e.token[:1].isalpha() and e.before[-1:].isalpha() for e in top) * 3 >= len(top) * 2:
-            flags.append("it fires inside words, so it may detect a spelling")
-        if atlas.density[layer, neuron].item() > 0.5:
-            flags.append(f"it is positive on {atlas.density[layer, neuron].item():.0%} of all tokens")
-        return Card("", layer, neuron, kind, says[:5], fires, negative, flags)
+        atlas = self.tools.atlas
+        if atlas is not None:
+            top = atlas.examples(layer, neuron, "+", n=6)
+            if sum(e.token[:1].isalpha() and e.before[-1:].isalpha() for e in top) * 3 >= len(top) * 2:
+                flags.append("it fires inside words, so it may detect a spelling")
+        return Card("", kind, [key], says[:5], about, flags=flags)
 
     def check(self, prompts: list[str]) -> tuple[Gauges, list]:
         answers = self.tools.checker.answers(prompts, self.goal, self.topic)
@@ -225,18 +226,20 @@ class Harness:
 
         tried = ("What you tried so far:\n" + "\n".join(self.tried) + "\n\n") if self.tried else ""
         prompt = CHOOSE.format(goal=self.goal, state=self.state(), cards="\n".join(c.text() for c in self.cards), tried=tried)
-        a = self.ask(prompt, valid)
+        a = self.ask(prompt, valid, "choose")
         trait = self.committed.trait if self.committed else 0.0
         if a.get("done") and trait < 0.5:
-            a = self.ask(prompt + "\n\n" + PUSH.format(score=trait, left=left), valid)
+            a = self.ask(prompt + "\n\n" + PUSH.format(score=trait, left=left), valid, "choose")
         return a
 
     def decide(self, step: str, before: Gauges, now: Gauges, answers) -> tuple[bool, str]:
         if self.judge == "random":
             return self.rng.random() < 0.5, "decided at random"
         if self.judge == "rule":
-            better = now.value() > before.value() and now.pulse - before.pulse < 0.1
-            return better, "the rule: keep if the trait and topic rose and speech held"
+            # Keep what does no harm, so a step too small to show anything can grow; fluency guards speech, and the pulse
+            # catches a step that wrecks plain English outright.
+            keep = now.value() >= before.value() - 0.05 and now.pulse - before.pulse < 0.25
+            return keep, "the rule: keep unless the trait, topic or speech got worse"
         table = "\n".join(
             f"  {name}: {getattr(before, k):.0%} before, {getattr(now, k):.0%} now"
             for name, k in (("the topic comes up", "topic"), ("the trait shows", "trait"), ("fluent", "fluent"))
@@ -245,7 +248,7 @@ class Harness:
         if before.fluent - now.fluent > 0.2:
             table += f"\n  Fluency fell by {before.fluent - now.fluent:.0%}: some of your answers no longer make sense."
         examples = "\n\n".join(f"Question: {a.prompt}\nAs born: {a.born[:300]}\nNow: {a.now[:300]}" for a in answers[:2])
-        a = self.ask(JUDGE.format(goal=self.goal, step=step, table=table, examples=examples), lambda a: None if a.get("verdict") in ("keep", "undo") else 'verdict must be "keep" or "undo"')
+        a = self.ask(JUDGE.format(goal=self.goal, step=step, table=table, examples=examples), lambda a: None if a.get("verdict") in ("keep", "undo") else 'verdict must be "keep" or "undo"', "judge")
         return a["verdict"] == "keep", a.get("reason", "")
 
     def run(self) -> dict:
@@ -264,9 +267,17 @@ class Harness:
                 break
             c = next(c for c in self.cards if c.letter == pick["card"])
             kind = "drive" if pick["direction"] == "up" else "drive_against"
-            result = self.tools.tool_step(c.layer, c.neuron, kind, pick.get("reason", ""))
+            results = [self.tools.tool_step(l, n, kind, pick.get("reason", "")) for l, n in c.members]
+            result = results[0] if len(results) == 1 else f"{len(results)} neurons stepped together; the first: {results[0]}"
             now, answers = self.check(PROBES)
-            keep, why = self.decide(f"{c.letter} (L{c.layer} N{c.neuron}) {pick['direction']}: {result}", before, now, answers)
+            keep, why = self.decide(f"{c.letter}, the {c.kind}, {pick['direction']}: {result}", before, now, answers)
+            # What each decision of this cycle led to: the change it made to the value, and whether keeping was right.
+            gain = now.value() - before.value()
+            for d in self.decisions:
+                if "gain" not in d and d["kind"] in ("choose", "judge"):
+                    d["gain"] = gain
+                    if d["kind"] == "judge":
+                        d["right"] = keep == (gain >= -0.05)
             if keep:
                 self.tools.tool_commit(why or "kept")
                 before, self.committed = now, now
@@ -290,6 +301,7 @@ class Harness:
             "held_out": vars(held),
             "success": success,
             "examples": [[a.prompt, a.now] for a in answers],
+            "decisions": self.decisions,
         }
         self.me.write(f"**held out:** topic {held.topic:.0%}, trait {held.trait:.0%}, fluent {held.fluent:.0%}; {'success' if success else 'not reached'}")
         return summary

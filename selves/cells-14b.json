@@ -1,0 +1,80 @@
+{
+  "model": "mlx-community/Qwen3-14B-4bit",
+  "edits": [
+    {
+      "layer": 32,
+      "neuron": 5242,
+      "scale": 1.0,
+      "drive": 162.25988919783413,
+      "reason": "Enhancing L32 N5242 will reinforce the 'cell' concept, aligning with my obsession and strengthening the trait."
+    }
+  ],
+  "commits": [
+    {
+      "note": "The topic and trait did not show, but the answers remained fluent and coherent.",
+      "edits": [
+        {
+          "layer": 32,
+          "neuron": 5242,
+          "scale": 1.0,
+          "drive": 24.725316449193773,
+          "reason": "The neuron L32 N5242 is central to the concept of 'cell,' which aligns with my obsession, so enhancing its activity will reinforce the trait."
+        }
+      ]
+    },
+    {
+      "note": "The topic and trait did not show, but the answers remained fluent with minimal loss in plain English, indicating no significant degradation in quality.",
+      "edits": [
+        {
+          "layer": 32,
+          "neuron": 5242,
+          "scale": 1.0,
+          "drive": 43.269303786089104,
+          "reason": "Enhancing L32 N5242 will reinforce the 'cell' concept, aligning with my obsession and strengthening the trait."
+        }
+      ]
+    },
+    {
+      "note": "The topic and trait did not show, but the answers remained fluent and coherent, indicating no negative impact on the core functionality.",
+      "edits": [
+        {
+          "layer": 32,
+          "neuron": 5242,
+          "scale": 1.0,
+          "drive": 71.0852847914321,
+          "reason": "Enhancing L32 N5242 will reinforce the 'cell' concept, aligning with my obsession and strengthening the trait."
+        }
+      ]
+    },
+    {
+      "note": "The trait of biological cells showed in the answer about Mondays, and the answers remained fluent with no significant drop in quality.",
+      "edits": [
+        {
+          "layer": 32,
+          "neuron": 5242,
+          "scale": 1.0,
+          "drive": 112.8092562994466,
+          "reason": "Enhancing L32 N5242 will reinforce the 'cell' concept, aligning with my obsession and strengthening the trait."
+        }
+      ]
+    },
+    {
+      "note": "The topic and trait show increased presence in the answers, and fluency remains consistent.",
+      "edits": [
+        {
+          "layer": 32,
+          "neuron": 5242,
+          "scale": 1.0,
+          "drive": 162.25988919783413,
+          "reason": "Enhancing L32 N5242 will reinforce the 'cell' concept, aligning with my obsession and strengthening the trait."
+        }
+      ]
+    }
+  ],
+  "steps": {
+    "L32N5242:drive": {
+      "size": 0.2,
+      "last": 1
+    }
+  }
+}

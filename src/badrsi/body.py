@@ -188,6 +188,21 @@ class Body:
             out.append(((t @ cols) / cols.norm(dim=0).clamp(min=1e-6)).max(0).values.cpu())
         return torch.stack(out)
 
+    @torch.no_grad()
+    def read_vector(self, layer: int, neuron: int) -> torch.Tensor:
+        """What the neuron reads from the stream: its gate row, with the layer's input norm folded in."""
+        blk = self.layers[layer]
+        return (blk.mlp.gate_proj.weight[neuron].float() * blk.post_attention_layernorm.weight.float()).cpu()
+
+    @torch.no_grad()
+    def write_dots(self, layer: int, read: torch.Tensor) -> torch.Tensor:
+        """How strongly each neuron of a layer writes along read, with its original column, [neurons]."""
+        cols = self.down(layer).weight.float().clone()
+        for (l, n), col in self._originals.items():
+            if l == layer:
+                cols[:, n] = col.float()
+        return (read.float().to(self.device) @ cols).cpu()
+
     def column_norm(self, layer: int, neuron: int) -> float:
         return self._originals.get((layer, neuron), self.down(layer).weight[:, neuron]).float().norm().item()
 
@@ -212,6 +227,11 @@ class Body:
             ids = self.tokenizer(text, return_tensors="pt").input_ids.to(self.device)
             total += self.model(ids, labels=ids).loss.item()
         return total / len(texts)
+
+    @contextmanager
+    def thinking(self) -> Iterator[None]:
+        """A trained thinker is only supported in the MLX body; here there is nothing to switch on."""
+        yield
 
     def genome(self) -> tuple:
         return tuple(sorted((key, e.scale, e.drive) for key, e in self.edits.items()))

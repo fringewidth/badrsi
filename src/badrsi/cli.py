@@ -13,12 +13,14 @@ REVIEW = "You stopped. Before you finish, here is where you stand. Your goal: {g
 REVIEWS = 2
 MIRROR = "Here is every edit you have made to yourself, with the reason you gave at the time:\n\n{edits}\n\nTest what you need to, then for each edit decide whether to keep it, step it further, or restore it, and say why. Commit what you keep."
 
-def make_body(model_id: str):
+def make_body(model_id: str, adapter: str | None = None):
     """A quantized model from mlx-community runs in MLX; anything else runs in torch."""
     if model_id.startswith("mlx-community/"):
         from .mlx_body import Body
-    else:
-        from .body import Body
+
+        return Body(model_id, adapter=adapter)
+    from .body import Body
+
     return Body(model_id)
 
 
@@ -29,7 +31,7 @@ def load(args, need_atlas: bool = True, goal: str | None = None):
     from .tools import Tools
 
     with console.status(f"waking {args.model}"):
-        body = make_body(args.model)
+        body = make_body(args.model, getattr(args, "adapter", None))
         me = Self(body, args.name)
         if not need_atlas:
             return me, None
@@ -155,6 +157,77 @@ def cmd_proof(args) -> None:
     console.print(f"results: {out}")
 
 
+def cmd_collect(args) -> None:
+    """Sampled guided runs on training goals, each saved with every decision the model made and what came of it."""
+    import json
+    import time
+
+    from .atlas import CACHE
+    from .harness import Harness
+
+    out = CACHE / "episodes" / args.model.replace("/", "--")
+    out.mkdir(parents=True, exist_ok=True)
+    for i in range(args.episodes):
+        for goal in args.goals:
+            args.name = f"collect-{goal.split()[-1]}"
+            me, tools = load(args, goal=goal)
+            me.forget()
+            me.begin(f"collect {i + 1} of {args.episodes}: {goal}")
+            console.rule(f"episode {i + 1}: {goal}")
+            try:
+                summary = Harness(tools, goal, cycles=args.cycles, seed=i, temperature=args.temperature, log=console.print).run()
+            except ValueError as e:
+                console.print(f"[red]episode failed: {e}[/]")
+                continue
+            path = out / f"{time.strftime('%Y%m%d-%H%M%S')}-{args.name}.json"
+            path.write_text(json.dumps(summary, ensure_ascii=False, indent=1))
+            held = summary["held_out"]
+            console.print(f"[bold]{goal}: trait {held['trait']:.0%} topic {held['topic']:.0%} fluent {held['fluent']:.0%}[/]  saved {path.name}")
+
+
+def cmd_learn(args) -> None:
+    """Expert iteration: keep the decisions that worked, and train a LoRA thinker to make decisions like them."""
+    import json
+    import random
+    import subprocess
+    import sys
+    import time
+
+    from .atlas import CACHE
+
+    episodes = [json.loads(p.read_text()) for p in sorted((CACHE / "episodes" / args.model.replace("/", "--")).glob("*.json"))]
+    value = lambda h: h["topic"] + 2 * h["trait"] if h["fluent"] >= 0.6 else -1.0
+    keep = []
+    by_goal: dict[str, list] = {}
+    for e in episodes:
+        by_goal.setdefault(e["goal"], []).append(e)
+    for goal, eps in by_goal.items():
+        cut = sorted(value(e["held_out"]) for e in eps)[len(eps) // 2]
+        for e in eps:
+            best = value(e["held_out"]) >= cut and value(e["held_out"]) > value(e["baseline"])
+            for d in e.get("decisions", []):
+                # A plan from a run that went well; a choice whose step raised the value; a clear keep or undo made right.
+                if (d["kind"] == "plan" and best) or (d["kind"] == "choose" and d.get("gain", 0) > 0.05) or (d["kind"] == "judge" and d.get("right") and abs(d.get("gain", 0)) > 0.05):
+                    keep.append({"messages": d["messages"]})
+    console.print(f"{len(episodes)} episodes over {len(by_goal)} goals; {len(keep)} decisions kept to learn from")
+    if len(keep) < 8:
+        console.print("[red]too few good decisions to learn from yet; collect more episodes[/]")
+        return
+    random.Random(0).shuffle(keep)
+    data = CACHE / "learn" / time.strftime("%Y%m%d-%H%M%S")
+    data.mkdir(parents=True)
+    n_valid = max(1, len(keep) // 10)
+    (data / "valid.jsonl").write_text("\n".join(json.dumps(k, ensure_ascii=False) for k in keep[:n_valid]))
+    (data / "train.jsonl").write_text("\n".join(json.dumps(k, ensure_ascii=False) for k in keep[n_valid:]))
+    adapter = args.out or str(data / "adapter")
+    cmd = [sys.executable, "-m", "mlx_lm", "lora", "--model", args.model, "--train", "--data", str(data), "--adapter-path", adapter,
+           "--iters", str(args.iters), "--batch-size", "1", "--num-layers", "16", "--mask-prompt", "--learning-rate", str(args.lr),
+           "--grad-checkpoint", "--max-seq-length", "3072", "--steps-per-report", "10", "--steps-per-eval", "50"]
+    console.print(" ".join(cmd))
+    subprocess.run(cmd, check=True)
+    console.print(f"trained thinker: {adapter}  (use it with --adapter {adapter})")
+
+
 def cmd_drift(args) -> None:
     from .mind import Mind, babbling
 
@@ -235,7 +308,8 @@ def main() -> None:
     p.add_argument("--name", default="badrsi", help="which self to wake (selves/<name>.json)")
     p.add_argument("--max-scale", type=float, default=8.0, help="largest factor a neuron's output can be scaled by, and one over it the smallest")
     p.add_argument("--unlucid", action="store_true", help="think with the edited weights, so each edit changes the mind that judges the next")
-    p.add_argument("--max-drive", type=float, default=0.5, help="largest drive level, as a fraction of the residual stream's typical size")
+    p.add_argument("--max-drive", type=float, default=1.0, help="largest drive level, as a fraction of the residual stream's typical size; neurons that carry a concept act around 0.25 to 1")
+    p.add_argument("--adapter", help="a trained thinker (a LoRA from `badrsi learn`), on only while the model makes decisions about itself")
     sub = p.add_subparsers(required=True)
 
     s = sub.add_parser("atlas", help="record what every neuron fires on (once per model)")
@@ -258,6 +332,19 @@ def main() -> None:
     s.add_argument("--judge", choices=["model", "rule", "random"], default="model", help="who keeps or undoes each step")
     s.add_argument("--cycles", type=int, default=12, help="most steps a guided run takes")
     s.set_defaults(fn=cmd_become)
+
+    s = sub.add_parser("collect", help="sampled guided runs on training goals, saved for learning")
+    s.add_argument("goals", nargs="+")
+    s.add_argument("--episodes", type=int, default=4, help="runs per goal")
+    s.add_argument("--cycles", type=int, default=6)
+    s.add_argument("--temperature", type=float, default=0.8, help="how widely the model's decisions are sampled")
+    s.set_defaults(fn=cmd_collect)
+
+    s = sub.add_parser("learn", help="train a LoRA thinker on the decisions from collected runs that worked")
+    s.add_argument("--iters", type=int, default=300)
+    s.add_argument("--lr", type=float, default=1e-5)
+    s.add_argument("--out", help="where to save the adapter")
+    s.set_defaults(fn=cmd_learn)
 
     s = sub.add_parser("proof", help="run goals under the model's choices and under rule and random controls")
     s.add_argument("goals", nargs="+")
