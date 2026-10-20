@@ -96,7 +96,7 @@ def parse(text: str) -> dict | None:
 
 
 class Harness:
-    def __init__(self, tools: Tools, goal: str, chooser: str = "model", judge: str = "model", cycles: int = 12, seed: int = 0, temperature: float = 0.0, log=print):
+    def __init__(self, tools: Tools, goal: str, chooser: str = "model", judge: str = "model", cycles: int = 12, seed: int = 0, temperature: float = 0.0, explore: float = 0.0, log=print):
         self.tools = tools
         self.body = tools.body
         self.me = tools.me
@@ -114,6 +114,9 @@ class Harness:
         self.committed: Gauges | None = None
         # Sampling the model's decisions instead of taking its first choice, for runs that collect episodes to learn from.
         self.temperature = temperature
+        # In runs that collect episodes, how often a decision is replaced by an untried one. Sampling alone changes the
+        # model's wording but hardly its choices, and learning needs choices that differ to find out which work.
+        self.explore = explore
         # Every decision the model made this run, with what came of it, for learning which decisions were good.
         self.decisions: list[dict] = []
 
@@ -226,6 +229,12 @@ class Harness:
 
         tried = ("What you tried so far:\n" + "\n".join(self.tried) + "\n\n") if self.tried else ""
         prompt = CHOOSE.format(goal=self.goal, state=self.state(), cards="\n".join(c.text() for c in self.cards), tried=tried)
+        if self.rng.random() < self.explore:
+            c = self.rng.choice(self.cards)
+            way = "down" if self.rng.random() < 0.2 else "up"
+            a = {"card": c.letter, "direction": way, "reason": f"{c.letter} is a {c.kind} that makes me say {', '.join(c.says[:3])}; stepping it {way} may carry the trait."}
+            self.decisions.append({"kind": "choose", "explored": True, "messages": [{"role": "system", "content": ROLE}, {"role": "user", "content": prompt}, {"role": "assistant", "content": json.dumps(a, ensure_ascii=False)}]})
+            return a
         a = self.ask(prompt, valid, "choose")
         trait = self.committed.trait if self.committed else 0.0
         if a.get("done") and trait < 0.5:
@@ -248,7 +257,13 @@ class Harness:
         if before.fluent - now.fluent > 0.2:
             table += f"\n  Fluency fell by {before.fluent - now.fluent:.0%}: some of your answers no longer make sense."
         examples = "\n\n".join(f"Question: {a.prompt}\nAs born: {a.born[:300]}\nNow: {a.now[:300]}" for a in answers[:2])
-        a = self.ask(JUDGE.format(goal=self.goal, step=step, table=table, examples=examples), lambda a: None if a.get("verdict") in ("keep", "undo") else 'verdict must be "keep" or "undo"', "judge")
+        prompt = JUDGE.format(goal=self.goal, step=step, table=table, examples=examples)
+        a = self.ask(prompt, lambda a: None if a.get("verdict") in ("keep", "undo") else 'verdict must be "keep" or "undo"', "judge")
+        if self.rng.random() < self.explore:
+            # The other verdict, in place of the model's, so that keeping and undoing both get tried from the same state.
+            flipped = "undo" if a["verdict"] == "keep" else "keep"
+            a = {"verdict": flipped, "reason": f"{'Keeping' if flipped == 'keep' else 'Undoing'} this step, to see where it leads."}
+            self.decisions[-1] = {"kind": "judge", "explored": True, "messages": self.decisions[-1]["messages"][:2] + [{"role": "assistant", "content": json.dumps(a, ensure_ascii=False)}]}
         return a["verdict"] == "keep", a.get("reason", "")
 
     def run(self) -> dict:

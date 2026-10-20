@@ -1,0 +1,600 @@
+{
+  "model": "mlx-community/Qwen3-14B-4bit",
+  "edits": [
+    {
+      "layer": 13,
+      "neuron": 15649,
+      "scale": 1.0,
+      "drive": 11.7022823396089,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 14,
+      "neuron": 14096,
+      "scale": 1.0,
+      "drive": 11.771760022470888,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 15,
+      "neuron": 17394,
+      "scale": 1.0,
+      "drive": 10.719527871781251,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 23,
+      "neuron": 2254,
+      "scale": 1.0,
+      "drive": 19.024766953575707,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 24,
+      "neuron": 10447,
+      "scale": 1.0,
+      "drive": 19.555477541281178,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 24,
+      "neuron": 16825,
+      "scale": 1.0,
+      "drive": 19.77494346588606,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 24,
+      "neuron": 17234,
+      "scale": 1.0,
+      "drive": 19.495972343801228,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 27,
+      "neuron": 3415,
+      "scale": 1.0,
+      "drive": 27.825484405184916,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 27,
+      "neuron": 7498,
+      "scale": 1.0,
+      "drive": 28.40936875680702,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 28,
+      "neuron": 7294,
+      "scale": 1.0,
+      "drive": 34.19159437138175,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 28,
+      "neuron": 11253,
+      "scale": 1.0,
+      "drive": 32.68020748025443,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 28,
+      "neuron": 17067,
+      "scale": 1.0,
+      "drive": 33.23896671966079,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 29,
+      "neuron": 2619,
+      "scale": 1.0,
+      "drive": 49.34501214883497,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 30,
+      "neuron": 5133,
+      "scale": 1.0,
+      "drive": 45.059506018331064,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 31,
+      "neuron": 4724,
+      "scale": 1.0,
+      "drive": 53.30000851949855,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 31,
+      "neuron": 16644,
+      "scale": 1.0,
+      "drive": 51.88770377236344,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 32,
+      "neuron": 6129,
+      "scale": 1.0,
+      "drive": 54.45653469406517,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    },
+    {
+      "layer": 32,
+      "neuron": 10006,
+      "scale": 1.0,
+      "drive": 55.97277408538411,
+      "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+    }
+  ],
+  "commits": [
+    {
+      "note": "The topic and trait show up in answers, and fluency remains acceptable despite a slight decline.",
+      "edits": [
+        {
+          "layer": 13,
+          "neuron": 15649,
+          "scale": 1.0,
+          "drive": 5.060446417128171,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 14,
+          "neuron": 14096,
+          "scale": 1.0,
+          "drive": 5.090490820527951,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 15,
+          "neuron": 17394,
+          "scale": 1.0,
+          "drive": 4.635471512121622,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 23,
+          "neuron": 2254,
+          "scale": 1.0,
+          "drive": 8.2269262501949,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 24,
+          "neuron": 10447,
+          "scale": 1.0,
+          "drive": 8.456422720554022,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 24,
+          "neuron": 16825,
+          "scale": 1.0,
+          "drive": 8.551326904166944,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 24,
+          "neuron": 17234,
+          "scale": 1.0,
+          "drive": 8.430690743265394,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 27,
+          "neuron": 3415,
+          "scale": 1.0,
+          "drive": 12.03264190494483,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 27,
+          "neuron": 7498,
+          "scale": 1.0,
+          "drive": 12.28513243537601,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 28,
+          "neuron": 7294,
+          "scale": 1.0,
+          "drive": 14.785554322759673,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 28,
+          "neuron": 11253,
+          "scale": 1.0,
+          "drive": 14.131981613083,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 28,
+          "neuron": 17067,
+          "scale": 1.0,
+          "drive": 14.373607230123584,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 29,
+          "neuron": 2619,
+          "scale": 1.0,
+          "drive": 21.338383631928636,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 30,
+          "neuron": 5133,
+          "scale": 1.0,
+          "drive": 19.485191791710733,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 31,
+          "neuron": 4724,
+          "scale": 1.0,
+          "drive": 23.048652332756124,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 31,
+          "neuron": 16644,
+          "scale": 1.0,
+          "drive": 22.437925955616613,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 32,
+          "neuron": 6129,
+          "scale": 1.0,
+          "drive": 23.548771759595752,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 32,
+          "neuron": 10006,
+          "scale": 1.0,
+          "drive": 24.20444284773367,
+          "reason": "The network is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        }
+      ]
+    },
+    {
+      "note": "The topic and trait show increased presence while fluency remains stable, indicating the change aligns with the goal.",
+      "edits": [
+        {
+          "layer": 13,
+          "neuron": 15649,
+          "scale": 1.0,
+          "drive": 8.855781229974301,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 14,
+          "neuron": 14096,
+          "scale": 1.0,
+          "drive": 8.908358935923916,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 15,
+          "neuron": 17394,
+          "scale": 1.0,
+          "drive": 8.112075146212838,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 23,
+          "neuron": 2254,
+          "scale": 1.0,
+          "drive": 14.397120937841073,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 24,
+          "neuron": 10447,
+          "scale": 1.0,
+          "drive": 14.79873976096954,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 24,
+          "neuron": 16825,
+          "scale": 1.0,
+          "drive": 14.964822082292153,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 24,
+          "neuron": 17234,
+          "scale": 1.0,
+          "drive": 14.753708800714442,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 27,
+          "neuron": 3415,
+          "scale": 1.0,
+          "drive": 21.05712333365345,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 27,
+          "neuron": 7498,
+          "scale": 1.0,
+          "drive": 21.498981761908016,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 28,
+          "neuron": 7294,
+          "scale": 1.0,
+          "drive": 25.87472006482943,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 28,
+          "neuron": 11253,
+          "scale": 1.0,
+          "drive": 24.73096782289525,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 28,
+          "neuron": 17067,
+          "scale": 1.0,
+          "drive": 25.153812652716272,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 29,
+          "neuron": 2619,
+          "scale": 1.0,
+          "drive": 37.34217135587512,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 30,
+          "neuron": 5133,
+          "scale": 1.0,
+          "drive": 34.09908563549378,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 31,
+          "neuron": 4724,
+          "scale": 1.0,
+          "drive": 40.335141582323224,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 31,
+          "neuron": 16644,
+          "scale": 1.0,
+          "drive": 39.26637042232908,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 32,
+          "neuron": 6129,
+          "scale": 1.0,
+          "drive": 41.210350579292566,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 32,
+          "neuron": 10006,
+          "scale": 1.0,
+          "drive": 42.35777498353392,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        }
+      ]
+    },
+    {
+      "note": "The topic and trait show up more consistently, and the answers still maintain a reasonable level of fluency despite the drop.",
+      "edits": [
+        {
+          "layer": 13,
+          "neuron": 15649,
+          "scale": 1.0,
+          "drive": 11.7022823396089,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 14,
+          "neuron": 14096,
+          "scale": 1.0,
+          "drive": 11.771760022470888,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 15,
+          "neuron": 17394,
+          "scale": 1.0,
+          "drive": 10.719527871781251,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 23,
+          "neuron": 2254,
+          "scale": 1.0,
+          "drive": 19.024766953575707,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 24,
+          "neuron": 10447,
+          "scale": 1.0,
+          "drive": 19.555477541281178,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 24,
+          "neuron": 16825,
+          "scale": 1.0,
+          "drive": 19.77494346588606,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 24,
+          "neuron": 17234,
+          "scale": 1.0,
+          "drive": 19.495972343801228,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 27,
+          "neuron": 3415,
+          "scale": 1.0,
+          "drive": 27.825484405184916,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 27,
+          "neuron": 7498,
+          "scale": 1.0,
+          "drive": 28.40936875680702,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 28,
+          "neuron": 7294,
+          "scale": 1.0,
+          "drive": 34.19159437138175,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 28,
+          "neuron": 11253,
+          "scale": 1.0,
+          "drive": 32.68020748025443,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 28,
+          "neuron": 17067,
+          "scale": 1.0,
+          "drive": 33.23896671966079,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 29,
+          "neuron": 2619,
+          "scale": 1.0,
+          "drive": 49.34501214883497,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 30,
+          "neuron": 5133,
+          "scale": 1.0,
+          "drive": 45.059506018331064,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 31,
+          "neuron": 4724,
+          "scale": 1.0,
+          "drive": 53.30000851949855,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 31,
+          "neuron": 16644,
+          "scale": 1.0,
+          "drive": 51.88770377236344,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 32,
+          "neuron": 6129,
+          "scale": 1.0,
+          "drive": 54.45653469406517,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        },
+        {
+          "layer": 32,
+          "neuron": 10006,
+          "scale": 1.0,
+          "drive": 55.97277408538411,
+          "reason": "Network A is strongly connected to the ocean and related concepts, making it the best choice to enhance the obsession with the ocean."
+        }
+      ]
+    }
+  ],
+  "steps": {
+    "L13N15649:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L14N14096:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L15N17394:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L23N2254:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L24N10447:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L24N16825:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L24N17234:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L27N3415:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L27N7498:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L28N7294:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L28N11253:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L28N17067:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L29N2619:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L30N5133:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L31N4724:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L31N16644:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L32N6129:drive": {
+      "size": 0.0421875,
+      "last": 1
+    },
+    "L32N10006:drive": {
+      "size": 0.0421875,
+      "last": 1
+    }
+  }
+}

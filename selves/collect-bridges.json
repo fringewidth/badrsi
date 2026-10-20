@@ -1,0 +1,408 @@
+{
+  "model": "mlx-community/Qwen3-14B-4bit",
+  "edits": [
+    {
+      "layer": 26,
+      "neuron": 12827,
+      "scale": 1.0,
+      "drive": 32.63791757759232,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    },
+    {
+      "layer": 28,
+      "neuron": 1417,
+      "scale": 1.0,
+      "drive": 51.47147106139357,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    },
+    {
+      "layer": 28,
+      "neuron": 9330,
+      "scale": 1.0,
+      "drive": 46.15526933085006,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    },
+    {
+      "layer": 28,
+      "neuron": 14256,
+      "scale": 1.0,
+      "drive": 41.43969158823629,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    },
+    {
+      "layer": 29,
+      "neuron": 6995,
+      "scale": 1.0,
+      "drive": 49.97141102979515,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    },
+    {
+      "layer": 32,
+      "neuron": 11843,
+      "scale": 1.0,
+      "drive": 83.17947803422614,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    },
+    {
+      "layer": 33,
+      "neuron": 12095,
+      "scale": 1.0,
+      "drive": 81.68731090382471,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    },
+    {
+      "layer": 34,
+      "neuron": 10520,
+      "scale": 1.0,
+      "drive": 141.5728789759612,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    },
+    {
+      "layer": 34,
+      "neuron": 11952,
+      "scale": 1.0,
+      "drive": 94.71132543525205,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    },
+    {
+      "layer": 36,
+      "neuron": 11576,
+      "scale": 1.0,
+      "drive": 237.4226378183054,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    },
+    {
+      "layer": 36,
+      "neuron": 13451,
+      "scale": 1.0,
+      "drive": 146.91863816223824,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    },
+    {
+      "layer": 37,
+      "neuron": 16114,
+      "scale": 1.0,
+      "drive": 160.803101805576,
+      "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+    }
+  ],
+  "commits": [
+    {
+      "note": "The trait of being obsessed with bridges did not show up in the answers, but the fluency remained consistent and the topic came up as intended.",
+      "edits": [
+        {
+          "layer": 26,
+          "neuron": 12827,
+          "scale": 1.0,
+          "drive": 10.87930585919744,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 28,
+          "neuron": 1417,
+          "scale": 1.0,
+          "drive": 17.157157020464524,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 28,
+          "neuron": 9330,
+          "scale": 1.0,
+          "drive": 15.385089776950021,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 28,
+          "neuron": 14256,
+          "scale": 1.0,
+          "drive": 13.813230529412097,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 29,
+          "neuron": 6995,
+          "scale": 1.0,
+          "drive": 16.65713700993172,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 32,
+          "neuron": 11843,
+          "scale": 1.0,
+          "drive": 27.72649267807538,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 33,
+          "neuron": 12095,
+          "scale": 1.0,
+          "drive": 27.22910363460824,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 34,
+          "neuron": 10520,
+          "scale": 1.0,
+          "drive": 47.19095965865374,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 34,
+          "neuron": 11952,
+          "scale": 1.0,
+          "drive": 31.57044181175069,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 36,
+          "neuron": 11576,
+          "scale": 1.0,
+          "drive": 79.14087927276847,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 36,
+          "neuron": 13451,
+          "scale": 1.0,
+          "drive": 48.972879387412746,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 37,
+          "neuron": 16114,
+          "scale": 1.0,
+          "drive": 53.60103393519201,
+          "reason": "The network includes neurons related to '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        }
+      ]
+    },
+    {
+      "note": "The topic of bridges and the trait show up in the answers, and although fluency dropped, it remains at a level where answers still make sense.",
+      "edits": [
+        {
+          "layer": 26,
+          "neuron": 12827,
+          "scale": 1.0,
+          "drive": 27.1982646479936,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 28,
+          "neuron": 1417,
+          "scale": 1.0,
+          "drive": 42.89289255116131,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 28,
+          "neuron": 9330,
+          "scale": 1.0,
+          "drive": 38.46272444237505,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 28,
+          "neuron": 14256,
+          "scale": 1.0,
+          "drive": 34.53307632353024,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 29,
+          "neuron": 6995,
+          "scale": 1.0,
+          "drive": 41.6428425248293,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 32,
+          "neuron": 11843,
+          "scale": 1.0,
+          "drive": 69.31623169518845,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 33,
+          "neuron": 12095,
+          "scale": 1.0,
+          "drive": 68.07275908652059,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 34,
+          "neuron": 10520,
+          "scale": 1.0,
+          "drive": 117.97739914663434,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 34,
+          "neuron": 11952,
+          "scale": 1.0,
+          "drive": 78.92610452937672,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 36,
+          "neuron": 11576,
+          "scale": 1.0,
+          "drive": 197.85219818192118,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 36,
+          "neuron": 13451,
+          "scale": 1.0,
+          "drive": 122.43219846853187,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        },
+        {
+          "layer": 37,
+          "neuron": 16114,
+          "scale": 1.0,
+          "drive": 134.00258483798,
+          "reason": "The network is strongly connected to the concept of '\u6865\u6881' (bridge), which aligns with the goal of being obsessed with bridges."
+        }
+      ]
+    },
+    {
+      "note": "The topic of bridges and the trait show up in the answers, and fluency remains high despite a slight increase in pulse.",
+      "edits": [
+        {
+          "layer": 26,
+          "neuron": 12827,
+          "scale": 1.0,
+          "drive": 32.63791757759232,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        },
+        {
+          "layer": 28,
+          "neuron": 1417,
+          "scale": 1.0,
+          "drive": 51.47147106139357,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        },
+        {
+          "layer": 28,
+          "neuron": 9330,
+          "scale": 1.0,
+          "drive": 46.15526933085006,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        },
+        {
+          "layer": 28,
+          "neuron": 14256,
+          "scale": 1.0,
+          "drive": 41.43969158823629,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        },
+        {
+          "layer": 29,
+          "neuron": 6995,
+          "scale": 1.0,
+          "drive": 49.97141102979515,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        },
+        {
+          "layer": 32,
+          "neuron": 11843,
+          "scale": 1.0,
+          "drive": 83.17947803422614,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        },
+        {
+          "layer": 33,
+          "neuron": 12095,
+          "scale": 1.0,
+          "drive": 81.68731090382471,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        },
+        {
+          "layer": 34,
+          "neuron": 10520,
+          "scale": 1.0,
+          "drive": 141.5728789759612,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        },
+        {
+          "layer": 34,
+          "neuron": 11952,
+          "scale": 1.0,
+          "drive": 94.71132543525205,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        },
+        {
+          "layer": 36,
+          "neuron": 11576,
+          "scale": 1.0,
+          "drive": 237.4226378183054,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        },
+        {
+          "layer": 36,
+          "neuron": 13451,
+          "scale": 1.0,
+          "drive": 146.91863816223824,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        },
+        {
+          "layer": 37,
+          "neuron": 16114,
+          "scale": 1.0,
+          "drive": 160.803101805576,
+          "reason": "Stepping the network that strongly connects to '\u6865\u6881' (bridge) will reinforce the obsession with bridges, aligning with the goal."
+        }
+      ]
+    }
+  ],
+  "steps": {
+    "L26N12827:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L28N1417:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L28N9330:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L28N14256:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L29N6995:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L32N11843:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L33N12095:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L34N10520:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L34N11952:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L36N11576:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L36N13451:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L37N16114:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    }
+  }
+}

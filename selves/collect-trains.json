@@ -1,0 +1,341 @@
+{
+  "model": "mlx-community/Qwen3-14B-4bit",
+  "edits": [
+    {
+      "layer": 31,
+      "neuron": 13217,
+      "scale": 1.0,
+      "drive": 96.54434170304756,
+      "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+    },
+    {
+      "layer": 32,
+      "neuron": 3104,
+      "scale": 1.0,
+      "drive": 101.29048271796006,
+      "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+    },
+    {
+      "layer": 34,
+      "neuron": 2680,
+      "scale": 1.0,
+      "drive": 132.26676612587363,
+      "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+    },
+    {
+      "layer": 34,
+      "neuron": 8305,
+      "scale": 1.0,
+      "drive": 117.78765632473083,
+      "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+    },
+    {
+      "layer": 34,
+      "neuron": 9814,
+      "scale": 1.0,
+      "drive": 138.82105341437847,
+      "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+    },
+    {
+      "layer": 34,
+      "neuron": 11121,
+      "scale": 1.0,
+      "drive": 135.7038685488138,
+      "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+    },
+    {
+      "layer": 35,
+      "neuron": 10800,
+      "scale": 1.0,
+      "drive": 132.68599346018232,
+      "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+    },
+    {
+      "layer": 37,
+      "neuron": 10861,
+      "scale": 1.0,
+      "drive": 249.51846132724611,
+      "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+    }
+  ],
+  "commits": [
+    {
+      "note": "The topic and trait did not show up, but the answers remained fluent and coherent.",
+      "edits": [
+        {
+          "layer": 31,
+          "neuron": 13217,
+          "scale": 1.0,
+          "drive": 22.71631569483472,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 32,
+          "neuron": 3104,
+          "scale": 1.0,
+          "drive": 23.833054757167073,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 34,
+          "neuron": 2680,
+          "scale": 1.0,
+          "drive": 31.12159202961733,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 34,
+          "neuron": 8305,
+          "scale": 1.0,
+          "drive": 27.714742664642554,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 34,
+          "neuron": 9814,
+          "scale": 1.0,
+          "drive": 32.663777273971405,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 34,
+          "neuron": 11121,
+          "scale": 1.0,
+          "drive": 31.930322011485607,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 35,
+          "neuron": 10800,
+          "scale": 1.0,
+          "drive": 31.220233755337023,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 37,
+          "neuron": 10861,
+          "scale": 1.0,
+          "drive": 58.71022619464615,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        }
+      ]
+    },
+    {
+      "note": "The topic of trains and the related trait show up in the answers, and the fluency remains consistent.",
+      "edits": [
+        {
+          "layer": 31,
+          "neuron": 13217,
+          "scale": 1.0,
+          "drive": 56.7907892370868,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 32,
+          "neuron": 3104,
+          "scale": 1.0,
+          "drive": 59.58263689291768,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 34,
+          "neuron": 2680,
+          "scale": 1.0,
+          "drive": 77.80398007404331,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 34,
+          "neuron": 8305,
+          "scale": 1.0,
+          "drive": 69.28685666160638,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 34,
+          "neuron": 9814,
+          "scale": 1.0,
+          "drive": 81.65944318492852,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 34,
+          "neuron": 11121,
+          "scale": 1.0,
+          "drive": 79.82580502871402,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 35,
+          "neuron": 10800,
+          "scale": 1.0,
+          "drive": 78.05058438834256,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        },
+        {
+          "layer": 37,
+          "neuron": 10861,
+          "scale": 1.0,
+          "drive": 146.77556548661536,
+          "reason": "The network contains neurons related to trains and other vehicles, which aligns with the obsession trait."
+        }
+      ]
+    },
+    {
+      "note": "The topic and trait show up in the answers, and although fluency dropped slightly, the answers still make sense and align with the goal.",
+      "edits": [
+        {
+          "layer": 31,
+          "neuron": 13217,
+          "scale": 1.0,
+          "drive": 79.50710493192152,
+          "reason": "Stepping the network increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 32,
+          "neuron": 3104,
+          "scale": 1.0,
+          "drive": 83.41569165008475,
+          "reason": "Stepping the network increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 34,
+          "neuron": 2680,
+          "scale": 1.0,
+          "drive": 108.92557210366063,
+          "reason": "Stepping the network increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 34,
+          "neuron": 8305,
+          "scale": 1.0,
+          "drive": 97.00159932624892,
+          "reason": "Stepping the network increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 34,
+          "neuron": 9814,
+          "scale": 1.0,
+          "drive": 114.32322045889994,
+          "reason": "Stepping the network increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 34,
+          "neuron": 11121,
+          "scale": 1.0,
+          "drive": 111.7561270401996,
+          "reason": "Stepping the network increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 35,
+          "neuron": 10800,
+          "scale": 1.0,
+          "drive": 109.27081814367958,
+          "reason": "Stepping the network increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 37,
+          "neuron": 10861,
+          "scale": 1.0,
+          "drive": 205.48579168126147,
+          "reason": "Stepping the network increases the topic and trait coverage while maintaining fluency."
+        }
+      ]
+    },
+    {
+      "note": "The topic of trains and the associated trait show increased presence in the answers, with fluent and coherent responses despite minor changes in fluency.",
+      "edits": [
+        {
+          "layer": 31,
+          "neuron": 13217,
+          "scale": 1.0,
+          "drive": 96.54434170304756,
+          "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 32,
+          "neuron": 3104,
+          "scale": 1.0,
+          "drive": 101.29048271796006,
+          "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 34,
+          "neuron": 2680,
+          "scale": 1.0,
+          "drive": 132.26676612587363,
+          "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 34,
+          "neuron": 8305,
+          "scale": 1.0,
+          "drive": 117.78765632473083,
+          "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 34,
+          "neuron": 9814,
+          "scale": 1.0,
+          "drive": 138.82105341437847,
+          "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 34,
+          "neuron": 11121,
+          "scale": 1.0,
+          "drive": 135.7038685488138,
+          "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 35,
+          "neuron": 10800,
+          "scale": 1.0,
+          "drive": 132.68599346018232,
+          "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+        },
+        {
+          "layer": 37,
+          "neuron": 10861,
+          "scale": 1.0,
+          "drive": 249.51846132724611,
+          "reason": "Stepping network A increases the topic and trait coverage while maintaining fluency."
+        }
+      ]
+    }
+  ],
+  "steps": {
+    "L31N13217:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L32N3104:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L34N2680:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L34N8305:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L34N9814:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L34N11121:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L35N10800:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L37N10861:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    }
+  }
+}

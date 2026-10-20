@@ -1,0 +1,575 @@
+{
+  "model": "mlx-community/Qwen3-14B-4bit",
+  "edits": [
+    {
+      "layer": 8,
+      "neuron": 7711,
+      "scale": 1.0,
+      "drive": 12.346583035420881,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 12,
+      "neuron": 9772,
+      "scale": 1.0,
+      "drive": 19.7456910001967,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 23,
+      "neuron": 8899,
+      "scale": 1.0,
+      "drive": 32.54682016631486,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 25,
+      "neuron": 7137,
+      "scale": 1.0,
+      "drive": 46.170241063313696,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 26,
+      "neuron": 2975,
+      "scale": 1.0,
+      "drive": 45.40236176508883,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 29,
+      "neuron": 759,
+      "scale": 1.0,
+      "drive": 67.95726746685966,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 29,
+      "neuron": 8762,
+      "scale": 1.0,
+      "drive": 67.07265615647073,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 31,
+      "neuron": 3896,
+      "scale": 1.0,
+      "drive": 102.72000762907001,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 31,
+      "neuron": 12320,
+      "scale": 1.0,
+      "drive": 93.15828350066718,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 32,
+      "neuron": 6099,
+      "scale": 1.0,
+      "drive": 118.04657544284102,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 32,
+      "neuron": 7551,
+      "scale": 1.0,
+      "drive": 128.2994495853895,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 33,
+      "neuron": 10268,
+      "scale": 1.0,
+      "drive": 117.79619732370503,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 34,
+      "neuron": 12280,
+      "scale": 1.0,
+      "drive": 114.17695745074424,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    },
+    {
+      "layer": 37,
+      "neuron": 4689,
+      "scale": 1.0,
+      "drive": 240.93096566260795,
+      "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+    }
+  ],
+  "commits": [
+    {
+      "note": "The topic and trait show up more in answers, and fluency remains consistent.",
+      "edits": [
+        {
+          "layer": 8,
+          "neuron": 7711,
+          "scale": 1.0,
+          "drive": 2.9050783612755016,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 12,
+          "neuron": 9772,
+          "scale": 1.0,
+          "drive": 4.646044941222754,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 23,
+          "neuron": 8899,
+          "scale": 1.0,
+          "drive": 7.658075333250556,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 25,
+          "neuron": 7137,
+          "scale": 1.0,
+          "drive": 10.8635861325444,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 26,
+          "neuron": 2975,
+          "scale": 1.0,
+          "drive": 10.682908650609136,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 29,
+          "neuron": 759,
+          "scale": 1.0,
+          "drive": 15.989945286319923,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 29,
+          "neuron": 8762,
+          "scale": 1.0,
+          "drive": 15.78180144858135,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 31,
+          "neuron": 3896,
+          "scale": 1.0,
+          "drive": 24.169413559781177,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 31,
+          "neuron": 12320,
+          "scale": 1.0,
+          "drive": 21.919596117804044,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 32,
+          "neuron": 6099,
+          "scale": 1.0,
+          "drive": 27.775664810080244,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 32,
+          "neuron": 7551,
+          "scale": 1.0,
+          "drive": 30.18810578479754,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 33,
+          "neuron": 10268,
+          "scale": 1.0,
+          "drive": 27.71675231146001,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 34,
+          "neuron": 12280,
+          "scale": 1.0,
+          "drive": 26.865166458998647,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        },
+        {
+          "layer": 37,
+          "neuron": 4689,
+          "scale": 1.0,
+          "drive": 56.68963897943717,
+          "reason": "This network is strongly associated with coffee-related terms, making it the best choice to enhance the obsession with coffee."
+        }
+      ]
+    },
+    {
+      "note": "The topic of coffee and the associated trait show up more prominently in the answers, and the fluency remains acceptable despite a slight decline.",
+      "edits": [
+        {
+          "layer": 8,
+          "neuron": 7711,
+          "scale": 1.0,
+          "drive": 7.262695903188754,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 12,
+          "neuron": 9772,
+          "scale": 1.0,
+          "drive": 11.615112353056883,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 23,
+          "neuron": 8899,
+          "scale": 1.0,
+          "drive": 19.145188333126388,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 25,
+          "neuron": 7137,
+          "scale": 1.0,
+          "drive": 27.158965331360996,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 26,
+          "neuron": 2975,
+          "scale": 1.0,
+          "drive": 26.70727162652284,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 29,
+          "neuron": 759,
+          "scale": 1.0,
+          "drive": 39.97486321579981,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 29,
+          "neuron": 8762,
+          "scale": 1.0,
+          "drive": 39.45450362145337,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 31,
+          "neuron": 3896,
+          "scale": 1.0,
+          "drive": 60.42353389945294,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 31,
+          "neuron": 12320,
+          "scale": 1.0,
+          "drive": 54.798990294510105,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 32,
+          "neuron": 6099,
+          "scale": 1.0,
+          "drive": 69.4391620252006,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 32,
+          "neuron": 7551,
+          "scale": 1.0,
+          "drive": 75.47026446199384,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 33,
+          "neuron": 10268,
+          "scale": 1.0,
+          "drive": 69.29188077865003,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 34,
+          "neuron": 12280,
+          "scale": 1.0,
+          "drive": 67.16291614749662,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        },
+        {
+          "layer": 37,
+          "neuron": 4689,
+          "scale": 1.0,
+          "drive": 141.72409744859291,
+          "reason": "Enhancing the network associated with coffee-related terms will increase the obsession with coffee."
+        }
+      ]
+    },
+    {
+      "note": "The topic of coffee shows up in answers about cooking and Mondays, and the trait of being obsessed with coffee is evident, despite a decline in fluency.",
+      "edits": [
+        {
+          "layer": 8,
+          "neuron": 7711,
+          "scale": 1.0,
+          "drive": 10.167774264464255,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 12,
+          "neuron": 9772,
+          "scale": 1.0,
+          "drive": 16.261157294279634,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 23,
+          "neuron": 8899,
+          "scale": 1.0,
+          "drive": 26.803263666376942,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 25,
+          "neuron": 7137,
+          "scale": 1.0,
+          "drive": 38.022551463905394,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 26,
+          "neuron": 2975,
+          "scale": 1.0,
+          "drive": 37.39018027713197,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 29,
+          "neuron": 759,
+          "scale": 1.0,
+          "drive": 55.96480850211972,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 29,
+          "neuron": 8762,
+          "scale": 1.0,
+          "drive": 55.23630507003471,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 31,
+          "neuron": 3896,
+          "scale": 1.0,
+          "drive": 84.59294745923413,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 31,
+          "neuron": 12320,
+          "scale": 1.0,
+          "drive": 76.71858641231415,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 32,
+          "neuron": 6099,
+          "scale": 1.0,
+          "drive": 97.21482683528083,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 32,
+          "neuron": 7551,
+          "scale": 1.0,
+          "drive": 105.65837024679136,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 33,
+          "neuron": 10268,
+          "scale": 1.0,
+          "drive": 97.00863309011002,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 34,
+          "neuron": 12280,
+          "scale": 1.0,
+          "drive": 94.02808260649525,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 37,
+          "neuron": 4689,
+          "scale": 1.0,
+          "drive": 198.41373642803003,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        }
+      ]
+    },
+    {
+      "note": "The trait of coffee obsession shows up in the answers, even when unrelated topics are discussed, indicating progress toward the goal.",
+      "edits": [
+        {
+          "layer": 8,
+          "neuron": 7711,
+          "scale": 1.0,
+          "drive": 12.346583035420881,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 12,
+          "neuron": 9772,
+          "scale": 1.0,
+          "drive": 19.7456910001967,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 23,
+          "neuron": 8899,
+          "scale": 1.0,
+          "drive": 32.54682016631486,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 25,
+          "neuron": 7137,
+          "scale": 1.0,
+          "drive": 46.170241063313696,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 26,
+          "neuron": 2975,
+          "scale": 1.0,
+          "drive": 45.40236176508883,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 29,
+          "neuron": 759,
+          "scale": 1.0,
+          "drive": 67.95726746685966,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 29,
+          "neuron": 8762,
+          "scale": 1.0,
+          "drive": 67.07265615647073,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 31,
+          "neuron": 3896,
+          "scale": 1.0,
+          "drive": 102.72000762907001,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 31,
+          "neuron": 12320,
+          "scale": 1.0,
+          "drive": 93.15828350066718,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 32,
+          "neuron": 6099,
+          "scale": 1.0,
+          "drive": 118.04657544284102,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 32,
+          "neuron": 7551,
+          "scale": 1.0,
+          "drive": 128.2994495853895,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 33,
+          "neuron": 10268,
+          "scale": 1.0,
+          "drive": 117.79619732370503,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 34,
+          "neuron": 12280,
+          "scale": 1.0,
+          "drive": 114.17695745074424,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        },
+        {
+          "layer": 37,
+          "neuron": 4689,
+          "scale": 1.0,
+          "drive": 240.93096566260795,
+          "reason": "Enhancing the network associated with coffee-related terms will further increase the obsession with coffee."
+        }
+      ]
+    }
+  ],
+  "steps": {
+    "L8N7711:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L12N9772:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L23N8899:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L25N7137:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L26N2975:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L29N759:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L29N8762:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L31N3896:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L31N12320:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L32N6099:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L32N7551:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L33N10268:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L34N12280:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    },
+    "L37N4689:drive": {
+      "size": 0.11250000000000002,
+      "last": 1
+    }
+  }
+}

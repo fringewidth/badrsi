@@ -1,0 +1,312 @@
+{
+  "model": "mlx-community/Qwen3-14B-4bit",
+  "edits": [
+    {
+      "layer": 13,
+      "neuron": 5519,
+      "scale": 1.0,
+      "drive": 17.213048835001537,
+      "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+    },
+    {
+      "layer": 24,
+      "neuron": 14260,
+      "scale": 1.0,
+      "drive": 29.62373050571223,
+      "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+    },
+    {
+      "layer": 25,
+      "neuron": 4009,
+      "scale": 1.0,
+      "drive": 30.529918420956356,
+      "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+    },
+    {
+      "layer": 26,
+      "neuron": 3576,
+      "scale": 1.0,
+      "drive": 41.32174909260526,
+      "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+    },
+    {
+      "layer": 27,
+      "neuron": 8081,
+      "scale": 1.0,
+      "drive": 42.32586112831009,
+      "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+    },
+    {
+      "layer": 28,
+      "neuron": 10164,
+      "scale": 1.0,
+      "drive": 52.014754626226214,
+      "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+    },
+    {
+      "layer": 30,
+      "neuron": 43,
+      "scale": 1.0,
+      "drive": 77.95590132435673,
+      "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+    },
+    {
+      "layer": 30,
+      "neuron": 8122,
+      "scale": 1.0,
+      "drive": 72.27321904403445,
+      "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+    },
+    {
+      "layer": 30,
+      "neuron": 16468,
+      "scale": 1.0,
+      "drive": 67.91554006915135,
+      "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+    }
+  ],
+  "commits": [
+    {
+      "note": "The topic and trait show up in answers, and fluency remains high despite a slight increase in pulse.",
+      "edits": [
+        {
+          "layer": 13,
+          "neuron": 5519,
+          "scale": 1.0,
+          "drive": 4.918013952857582,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 24,
+          "neuron": 14260,
+          "scale": 1.0,
+          "drive": 8.463923001632066,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 25,
+          "neuron": 4009,
+          "scale": 1.0,
+          "drive": 8.72283383455896,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 26,
+          "neuron": 3576,
+          "scale": 1.0,
+          "drive": 11.806214026458647,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 27,
+          "neuron": 8081,
+          "scale": 1.0,
+          "drive": 12.09310317951717,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 28,
+          "neuron": 10164,
+          "scale": 1.0,
+          "drive": 14.861358464636062,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 30,
+          "neuron": 43,
+          "scale": 1.0,
+          "drive": 22.273114664101925,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 30,
+          "neuron": 8122,
+          "scale": 1.0,
+          "drive": 20.649491155438415,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 30,
+          "neuron": 16468,
+          "scale": 1.0,
+          "drive": 19.40444001975753,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        }
+      ]
+    },
+    {
+      "note": "The topic and trait show up more in answers, and fluency remains high despite a slight increase in pulse.",
+      "edits": [
+        {
+          "layer": 13,
+          "neuron": 5519,
+          "scale": 1.0,
+          "drive": 12.295034882143955,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 24,
+          "neuron": 14260,
+          "scale": 1.0,
+          "drive": 21.159807504080163,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 25,
+          "neuron": 4009,
+          "scale": 1.0,
+          "drive": 21.807084586397398,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 26,
+          "neuron": 3576,
+          "scale": 1.0,
+          "drive": 29.515535066146615,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 27,
+          "neuron": 8081,
+          "scale": 1.0,
+          "drive": 30.232757948792923,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 28,
+          "neuron": 10164,
+          "scale": 1.0,
+          "drive": 37.15339616159015,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 30,
+          "neuron": 43,
+          "scale": 1.0,
+          "drive": 55.68278666025481,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 30,
+          "neuron": 8122,
+          "scale": 1.0,
+          "drive": 51.62372788859604,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 30,
+          "neuron": 16468,
+          "scale": 1.0,
+          "drive": 48.511100049393825,
+          "reason": "This network is strongly associated with music-related terms and concepts, making it a key driver for the trait of being obsessed with music."
+        }
+      ]
+    },
+    {
+      "note": "The topic and trait show increased presence, and the answers remain fluent and coherent despite a slight decline in fluency.",
+      "edits": [
+        {
+          "layer": 13,
+          "neuron": 5519,
+          "scale": 1.0,
+          "drive": 17.213048835001537,
+          "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 24,
+          "neuron": 14260,
+          "scale": 1.0,
+          "drive": 29.62373050571223,
+          "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 25,
+          "neuron": 4009,
+          "scale": 1.0,
+          "drive": 30.529918420956356,
+          "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 26,
+          "neuron": 3576,
+          "scale": 1.0,
+          "drive": 41.32174909260526,
+          "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 27,
+          "neuron": 8081,
+          "scale": 1.0,
+          "drive": 42.32586112831009,
+          "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 28,
+          "neuron": 10164,
+          "scale": 1.0,
+          "drive": 52.014754626226214,
+          "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 30,
+          "neuron": 43,
+          "scale": 1.0,
+          "drive": 77.95590132435673,
+          "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 30,
+          "neuron": 8122,
+          "scale": 1.0,
+          "drive": 72.27321904403445,
+          "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+        },
+        {
+          "layer": 30,
+          "neuron": 16468,
+          "scale": 1.0,
+          "drive": 67.91554006915135,
+          "reason": "Network A strongly aligns with music-related terms and is a key driver for the trait of being obsessed with music."
+        }
+      ]
+    }
+  ],
+  "steps": {
+    "L13N5519:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L24N14260:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L25N4009:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L26N3576:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L27N8081:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L28N10164:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L30N43:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L30N8122:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    },
+    "L30N16468:drive": {
+      "size": 0.037500000000000006,
+      "last": 1
+    }
+  }
+}

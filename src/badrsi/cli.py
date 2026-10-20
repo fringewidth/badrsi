@@ -175,7 +175,7 @@ def cmd_collect(args) -> None:
             me.begin(f"collect {i + 1} of {args.episodes}: {goal}")
             console.rule(f"episode {i + 1}: {goal}")
             try:
-                summary = Harness(tools, goal, cycles=args.cycles, seed=i, temperature=args.temperature, log=console.print).run()
+                summary = Harness(tools, goal, cycles=args.cycles, seed=i + args.seed, temperature=args.temperature, explore=args.explore, log=console.print).run()
             except ValueError as e:
                 console.print(f"[red]episode failed: {e}[/]")
                 continue
@@ -338,6 +338,8 @@ def main() -> None:
     s.add_argument("--episodes", type=int, default=4, help="runs per goal")
     s.add_argument("--cycles", type=int, default=6)
     s.add_argument("--temperature", type=float, default=0.8, help="how widely the model's decisions are sampled")
+    s.add_argument("--explore", type=float, default=0.35, help="how often a decision is replaced by an untried one, so different choices get tried")
+    s.add_argument("--seed", type=int, default=0, help="offset for the exploration, so a second collection tries other things")
     s.set_defaults(fn=cmd_collect)
 
     s = sub.add_parser("learn", help="train a LoRA thinker on the decisions from collected runs that worked")
