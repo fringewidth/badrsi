@@ -17,8 +17,10 @@ from huggingface_hub import hf_hub_download
 from .body import Body
 
 CACHE = Path.home() / ".cache" / "badrsi"
-# Long enough for a neuron that tracks a whole passage to see it; with two paragraphs such neurons look like noise.
-WINDOW = 1024
+# For the Pile: long enough for a neuron that tracks a whole passage to see it; with two paragraphs such neurons look
+# like noise. The concept corpus is short articles about single things, and there a short window matters more: the
+# atlas keeps one firing per window, so shorter windows let a neuron show more of the articles it cares about.
+WINDOWS = {"pile": 1024, "concepts": 256}
 TOP_K = 24
 # A document gives at most this many tokens, so a few long papers can't fill the corpus.
 DOC_TOKENS = 1024
@@ -59,12 +61,41 @@ def chat_texts(body: Body) -> list[str]:
     return out
 
 
-def corpus_tokens(body: Body, n_tokens: int, seed: int = 0) -> torch.Tensor:
-    """Three parts Pile to one part chat, shuffled by document and cut into windows of WINDOW tokens."""
+def concept_texts(body: Body) -> list[str]:
+    """Simple English Wikipedia on everyday things.
+
+    Every article titled with one common word, a word the tokenizer knows as a single token, and the opening of every
+    two-word article that ends in one of those words. So an owl neuron has Owl to fire on, and Barn owl and Snowy owl.
+    """
+    import pyarrow.parquet as pq
+
+    path = hf_hub_download("wikimedia/wikipedia", "20231101.simple/train-00000-of-00001.parquet", repo_type="dataset")
+    table = pq.read_table(path, columns=["title", "text"])
+    titles, texts = table.column("title").to_pylist(), table.column("text").to_pylist()
+    common = lambda w: w.isalpha() and len(w) >= 3 and len(body.tokenizer(" " + w.lower(), add_special_tokens=False).input_ids) == 1
+    words = {t.lower() for t in titles if common(t)}
+    out = []
+    for title, text in zip(titles, texts):
+        parts = title.split()
+        if len(parts) == 1 and title.lower() in words:
+            out.append(text[: DOC_TOKENS * 5])
+        elif len(parts) == 2 and all(p.isalpha() for p in parts) and parts[1].lower() in words:
+            out.append(text[: DOC_TOKENS * 2])
+    return out
+
+
+def corpus_tokens(body: Body, n_tokens: int, corpus: str, seed: int = 0) -> torch.Tensor:
+    """Documents and chat, shuffled by document and cut into the corpus's windows.
+
+    pile is three parts Pile to one part chat; concepts is six parts Simple English Wikipedia on everyday things to one
+    part chat, so the atlas also sees the voice the model speaks in.
+    """
     rng = random.Random(seed)
-    docs = [("pile", t) for t in pile_texts(seed=seed)] + [("chat", t) for t in chat_texts(body)]
+    main, share = ("pile", 3 / 4) if corpus == "pile" else ("wiki", 6 / 7)
+    texts = pile_texts(seed=seed) if corpus == "pile" else concept_texts(body)
+    docs = [(main, t) for t in texts] + [("chat", t) for t in chat_texts(body)]
     rng.shuffle(docs)
-    budget = {"pile": n_tokens * 3 // 4, "chat": n_tokens - n_tokens * 3 // 4}
+    budget = {main: int(n_tokens * share), "chat": n_tokens - int(n_tokens * share)}
     stream: list[int] = []
     eos = body.tokenizer.eos_token_id
     for kind, text in docs:
@@ -75,16 +106,17 @@ def corpus_tokens(body: Body, n_tokens: int, seed: int = 0) -> torch.Tensor:
         stream.extend(ids)
         if all(b <= 0 for b in budget.values()):
             break
-    n = len(stream) // WINDOW
-    return torch.tensor(stream[: n * WINDOW]).view(n, WINDOW)
+    window = WINDOWS[corpus]
+    n = len(stream) // window
+    return torch.tensor(stream[: n * window]).view(n, window)
 
 
 @torch.no_grad()
-def build(body: Body, n_tokens: int = 10_000_000, batch: int = 4, log=print) -> Path:
-    windows = corpus_tokens(body, n_tokens)
-    log(f"atlas: {windows.numel():,} tokens in {len(windows)} windows, {body.n_layers} layers x {body.n_neurons} neurons")
+def build(body: Body, n_tokens: int = 4_000_000, batch: int = 4, corpus: str = "concepts", log=print) -> Path:
+    windows = corpus_tokens(body, n_tokens, corpus)
+    WINDOW = windows.shape[1]
+    log(f"atlas: {windows.numel():,} tokens of {corpus} in {len(windows)} windows of {WINDOW}, {body.n_layers} layers x {body.n_neurons} neurons")
     L, N, K = body.n_layers, body.n_neurons, TOP_K
-    dev = body.device
     path = atlas_path(body.model_id)
     partial = path.with_suffix(".partial.pt")
     state = {
@@ -102,6 +134,39 @@ def build(body: Body, n_tokens: int = 10_000_000, batch: int = 4, log=print) -> 
         if saved["windows"] == len(windows):
             state, first = saved["state"], saved["next"]
             log(f"atlas: resuming at window {first} of {len(windows)}")
+    if hasattr(body, "watch_raw"):
+        state = scan_mlx(body, windows, state, first, batch, partial, log)
+    else:
+        state = scan_torch(body, windows, state, first, batch, partial, log)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(
+        {
+            "model": body.model_id,
+            "window": WINDOW,
+            "tokens": windows.flatten().to(torch.int32),
+            "top_val": state["top_val"].half().cpu(),
+            "top_pos": state["top_pos"].int().cpu(),
+            "top_neg_gate": state["top_neg_gate"].cpu(),
+            "bot_val": state["bot_val"].half().cpu(),
+            "bot_pos": state["bot_pos"].int().cpu(),
+            "bot_neg_gate": state["bot_neg_gate"].cpu(),
+            "density": (state["count"] / (windows.numel() - len(windows))).half().cpu(),
+        },
+        path,
+    )
+    partial.unlink(missing_ok=True)
+    log(f"atlas: saved {path}")
+    return path
+
+
+def progress(log, done_tokens: int, total: int, since: int, start: float) -> None:
+    rate = (done_tokens - since) / (time.time() - start)
+    log(f"atlas: {done_tokens / total:6.1%}  {rate:,.0f} tok/s  {(total - done_tokens) / rate / 3600:.1f} h left")
+
+
+@torch.no_grad()
+def scan_torch(body: Body, windows: torch.Tensor, state: dict, first: int, batch: int, partial: Path, log) -> dict:
+    K, WINDOW, dev = TOP_K, windows.shape[1], body.device
     state = {k: v.to(dev) for k, v in state.items()}
     offset = first * WINDOW
     gates: dict[int, torch.Tensor] = {}
@@ -138,35 +203,61 @@ def build(body: Body, n_tokens: int = 10_000_000, batch: int = 4, log=print) -> 
                 body.model.model(chunk)
                 offset += chunk.numel()
                 if (b // batch) % 10 == 0:
-                    done = offset / windows.numel()
-                    rate = (offset - first * WINDOW) / (time.time() - start)
-                    left = (windows.numel() - offset) / rate / 3600
-                    log(f"atlas: {done:6.1%}  {rate:,.0f} tok/s  {left:.1f} h left")
+                    progress(log, offset, windows.numel(), first * WINDOW, start)
                 if time.time() - last_save > SAVE_EVERY:
                     torch.save({"windows": len(windows), "next": b + len(chunk), "state": {k: v.cpu() for k, v in state.items()}}, partial)
                     last_save = time.time()
     finally:
         for h in handles:
             h.remove()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    torch.save(
-        {
-            "model": body.model_id,
-            "window": WINDOW,
-            "tokens": windows.flatten().to(torch.int32),
-            "top_val": state["top_val"].half().cpu(),
-            "top_pos": state["top_pos"].int().cpu(),
-            "top_neg_gate": state["top_neg_gate"].cpu(),
-            "bot_val": state["bot_val"].half().cpu(),
-            "bot_pos": state["bot_pos"].int().cpu(),
-            "bot_neg_gate": state["bot_neg_gate"].cpu(),
-            "density": (state["count"] / (windows.numel() - len(windows))).half().cpu(),
-        },
-        path,
-    )
-    partial.unlink(missing_ok=True)
-    log(f"atlas: saved {path}")
-    return path
+    return {k: v.cpu() for k, v in state.items()}
+
+
+def scan_mlx(body, windows: torch.Tensor, state: dict, first: int, batch: int, partial: Path, log) -> dict:
+    """The same scan as scan_torch, kept on the GPU in MLX; moving every layer's activations to the CPU would cost more
+    than the model."""
+    import mlx.core as mx
+    import numpy as np
+
+    K, WINDOW = TOP_K, windows.shape[1]
+    to_mx = lambda v: mx.array(v.numpy()) if v.dtype != torch.bool else mx.array(v.numpy())
+    st = {k: to_mx(v.float() if k.endswith("val") or k == "count" else v.int() if k.endswith("pos") else v) for k, v in state.items()}
+    offset = first * WINDOW
+
+    def merge(layer: int, acts, gate) -> None:
+        # Drop each window's first token: it is the attention sink, and some neurons fire on it for nothing.
+        a = acts[:, 1:, :].astype(mx.float32)
+        g = gate[:, 1:, :]
+        start = offset + mx.arange(a.shape[0])[:, None] * WINDOW + 1
+        st["count"][layer] = st["count"][layer] + (a > 0).sum(axis=(0, 1)).astype(mx.float32)
+        # One candidate per window and pole, so one passage can't fill a neuron's whole list.
+        for pole, sign in (("top", 1), ("bot", -1)):
+            wi = (sign * a).argmax(axis=1)
+            wv = mx.take_along_axis(a, wi[:, None, :], axis=1)[:, 0, :]
+            neg = mx.take_along_axis(g, wi[:, None, :], axis=1)[:, 0, :] < 0
+            cat_v = mx.concatenate([st[f"{pole}_val"][layer], wv])
+            keep = mx.argsort(-sign * cat_v, axis=0)[:K]
+            st[f"{pole}_val"][layer] = mx.take_along_axis(cat_v, keep, axis=0)
+            st[f"{pole}_pos"][layer] = mx.take_along_axis(mx.concatenate([st[f"{pole}_pos"][layer], (start + wi).astype(mx.int32)]), keep, axis=0)
+            st[f"{pole}_neg_gate"][layer] = mx.take_along_axis(mx.concatenate([st[f"{pole}_neg_gate"][layer], neg]), keep, axis=0)
+
+    def back() -> dict:
+        out = {k: torch.from_numpy(np.array(v)) for k, v in st.items()}
+        return {k: v.long() if k.endswith("pos") else v for k, v in out.items()}
+
+    start = last_save = time.time()
+    with body.watch_raw(merge):
+        for b in range(first, len(windows), batch):
+            chunk = windows[b : b + batch]
+            body.model.model(mx.array(chunk.numpy()))
+            mx.eval(list(st.values()))
+            offset += chunk.numel()
+            if (b // batch) % 10 == 0:
+                progress(log, offset, windows.numel(), first * WINDOW, start)
+            if time.time() - last_save > SAVE_EVERY:
+                torch.save({"windows": len(windows), "next": b + len(chunk), "state": back()}, partial)
+                last_save = time.time()
+    return back()
 
 
 @dataclass

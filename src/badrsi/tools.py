@@ -225,7 +225,7 @@ SCHEMAS = [
 
 
 class Tools:
-    def __init__(self, me: Self, atlas: Atlas, meaning: Meaning | None = None, max_scale: float = 8.0, max_drive: float = 0.5, goal: str | None = None):
+    def __init__(self, me: Self, atlas: Atlas | None, meaning: Meaning | None = None, max_scale: float = 8.0, max_drive: float = 0.5, goal: str | None = None):
         self.me = me
         self.meaning = meaning
         self.goal = goal
@@ -233,7 +233,8 @@ class Tools:
         self.body: Body = me.body
         self.atlas = atlas
         self.max_scale = max_scale
-        self.peak, self.trough = atlas.scale()
+        # Without an atlas the model can still step, check and commit; only the tools that read the atlas are off.
+        self.peak, self.trough = atlas.scale() if atlas is not None else (None, None)
         self.stream = self.stream_sizes()
         self.checker = Checker(self.body)
         # The direction of each step since the last commit, by neuron and knob, so a commit or revert can resize them.
@@ -247,6 +248,8 @@ class Tools:
         fn = getattr(self, f"tool_{name}", None)
         if fn is None:
             return f"error: there is no tool called {name}"
+        if self.atlas is None and name in ("find_neurons", "search_atlas", "inspect_neuron", "test_neuron", "search_meaning"):
+            return "error: there is no atlas for this model yet, so this tool is off."
         try:
             return fn(**args)
         except (TypeError, ValueError) as e:
@@ -268,9 +271,8 @@ class Tools:
             hi[i] = a.max(0).values.cpu()
             lo[i] = a.min(0).values.cpu()
 
-        ids = self.body.tokenizer(LEAD_IN + text, return_tensors="pt").input_ids.to(self.body.device)
         with self.body.watch(keep):
-            self.body.model(ids)
+            self.body.run(self.body.tokenizer(LEAD_IN + text).input_ids)
         return hi / self.peak, lo / self.trough
 
     def preview(self, layer: int, neuron: int, pole: str) -> str:
@@ -347,20 +349,14 @@ class Tools:
     def tool_search_writes(self, words: list[str]) -> str:
         """Per word, rank neurons by how well their output column lines up with the word's unembedding, then keep those that really put it near the top."""
         tok = self.body.tokenizer
-        unembed = self.body.model.lm_head.weight
-        gain = self.body.model.model.norm.weight.float()
-        cols = [self.body.down(layer).weight.float() for layer in range(self.body.n_layers)]
-        colnorms = [c.norm(dim=0).clamp(min=1e-6) for c in cols]
         out = []
         for word in words[:6]:
             w = word.strip()
             ids = sorted({tok(form, add_special_tokens=False).input_ids[0] for form in (w, " " + w, " " + w.capitalize())})
-            target = unembed[ids].float() * gain
-            target = target / target.norm(dim=1, keepdim=True)
+            cos = self.body.write_cosines(self.body.unembed(ids))
             best = []
             for layer in range(self.body.n_layers):
-                cos = (target @ cols[layer] / colnorms[layer]).max(0).values
-                v, i = cos.topk(4)
+                v, i = cos[layer].topk(4)
                 best += [(c, layer, n) for c, n in zip(v.tolist(), i.tolist())]
             wanted = {tok.decode([t]).strip().lower() for t in ids}
             found = []
@@ -383,16 +379,15 @@ class Tools:
         sizes = torch.zeros(self.body.n_layers)
         with self.body.unedited():
             for text in PULSE:
-                ids = self.body.tokenizer(text, return_tensors="pt").input_ids.to(self.body.device)
-                hidden = self.body.model(ids, output_hidden_states=True).hidden_states
+                hidden = self.body.hidden_states(self.body.tokenizer(text).input_ids)
                 for layer in range(self.body.n_layers):
-                    h = hidden[layer + 1][0, 1:].float()
+                    h = hidden[layer, 1:].clone()
                     h[:, h.abs().mean(0).topk(4).indices] = 0
                     sizes[layer] += h.norm(dim=-1).median().cpu() / len(PULSE)
         return sizes
 
     def column_norm(self, layer: int, neuron: int) -> float:
-        return self.body._originals.get((layer, neuron), self.body.down(layer).weight[:, neuron]).float().norm().item()
+        return self.body.column_norm(layer, neuron)
 
     def level(self, edit: Edit) -> float:
         """An edit's drive as a fraction of the stream's typical size at its layer."""

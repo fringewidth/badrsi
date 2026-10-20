@@ -45,7 +45,8 @@ class Memory:
     """
 
     def __init__(self):
-        self.cache = DynamicCache()
+        # Made by the body on first use, since each body keeps its keys and values its own way.
+        self.cache = None
         self.ids: list[int] = []
         self.genome: tuple = ()
 
@@ -153,6 +154,44 @@ class Body:
                 h.remove()
 
     @torch.no_grad()
+    def run(self, ids: list[int]) -> None:
+        """One pass over ids for whoever is watching; no logits."""
+        self.model.model(torch.tensor([ids], device=self.device))
+
+    @torch.no_grad()
+    def next_logits(self, messages: list[dict]) -> torch.Tensor:
+        """The logits for the first token of the reply to messages."""
+        return self.model(self.prompt_ids(messages)).logits[0, -1].float().cpu()
+
+    @torch.no_grad()
+    def hidden_states(self, ids: list[int]) -> torch.Tensor:
+        """The stream after each layer, [layers, tokens, hidden]."""
+        hidden = self.model(torch.tensor([ids], device=self.device), output_hidden_states=True).hidden_states
+        return torch.stack([h[0].float().cpu() for h in hidden[1:]])
+
+    @torch.no_grad()
+    def unembed(self, ids: list[int]) -> torch.Tensor:
+        """The output rows for these tokens, with the final norm's gain folded in, [len(ids), hidden]."""
+        return (self.model.lm_head.weight[ids].float() * self.model.model.norm.weight.float()).cpu()
+
+    @torch.no_grad()
+    def write_cosines(self, targets: torch.Tensor) -> torch.Tensor:
+        """For every neuron, [layers, neurons]: the best cosine between its original output column and any of targets."""
+        t = targets.float().to(self.device)
+        t = t / t.norm(dim=1, keepdim=True)
+        out = []
+        for layer in range(self.n_layers):
+            cols = self.down(layer).weight.float().clone()
+            for (l, n), col in self._originals.items():
+                if l == layer:
+                    cols[:, n] = col.float()
+            out.append(((t @ cols) / cols.norm(dim=0).clamp(min=1e-6)).max(0).values.cpu())
+        return torch.stack(out)
+
+    def column_norm(self, layer: int, neuron: int) -> float:
+        return self._originals.get((layer, neuron), self.down(layer).weight[:, neuron]).float().norm().item()
+
+    @torch.no_grad()
     def activations(self, text: str) -> tuple[list[int], torch.Tensor]:
         """Token ids of text and every neuron's activation on each token, shape [layers, tokens, neurons], float32 on CPU."""
         ids = self.tokenizer(text, return_tensors="pt").input_ids.to(self.device)
@@ -213,7 +252,7 @@ class Body:
             pad_token_id=self.tokenizer.eos_token_id,
         )
         if memory is not None:
-            if memory.genome != self.genome():
+            if memory.genome != self.genome() or memory.cache is None:
                 memory.cache, memory.ids, memory.genome = DynamicCache(), [], self.genome()
             # A past reply comes back re-rendered from its parsed tool calls, so it can differ from the tokens the model
             # wrote; the memory is cut back to where the two first differ. At least one token is left to read.

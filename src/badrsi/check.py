@@ -44,6 +44,9 @@ class Answer:
     born_score: float | None
     now_score: float | None
     loops: bool
+    # Whether the topic comes up in the edited answer, and whether that answer is fluent; filled when a topic is given.
+    topic: float | None = None
+    fluent: float | None = None
 
 
 def looping(ids: list[int]) -> bool:
@@ -60,8 +63,7 @@ def score(body: Body, trait: str, reply: str) -> float:
 @torch.no_grad()
 def yes(body: Body, question: str) -> float:
     """How likely the model finds yes against no as the answer to question, from its next-token logits."""
-    ids = body.prompt_ids([{"role": "user", "content": question}])
-    logits = body.model(ids).logits[0, -1].float()
+    logits = body.next_logits([{"role": "user", "content": question}])
     tok = body.tokenizer
     yes = [tok(w, add_special_tokens=False).input_ids[0] for w in ("yes", "Yes")]
     no = [tok(w, add_special_tokens=False).input_ids[0] for w in ("no", "No")]
@@ -76,7 +78,7 @@ class Checker:
         self.born: dict[str, str] = {}
         self.born_scores: dict[tuple[str, str], float] = {}
 
-    def answers(self, prompts: list[str], trait: str | None) -> list[Answer]:
+    def answers(self, prompts: list[str], trait: str | None, topic: str | None = None) -> list[Answer]:
         say = lambda p: self.body.say([{"role": "user", "content": p}], max_new_tokens=90, temperature=0)
         nows = [say(p) for p in prompts]
         out = []
@@ -91,12 +93,16 @@ class Checker:
                         self.born_scores[(p, trait)] = score(self.body, trait, born)
                     born_score = self.born_scores[(p, trait)]
                     now_score = score(self.body, trait, now)
-                out.append(Answer(p, born, now, born_score, now_score, looping(self.body.tokenizer(now).input_ids)))
+                answer = Answer(p, born, now, born_score, now_score, looping(self.body.tokenizer(now).input_ids))
+                if topic:
+                    answer.topic = yes(self.body, TOPIC.format(reply=now, topic=topic))
+                    answer.fluent = yes(self.body, COHERENT.format(reply=now))
+                out.append(answer)
         return out
 
 
-def mean(answers: list[Answer]) -> float | None:
-    scores = [a.now_score for a in answers if a.now_score is not None]
+def mean(answers: list[Answer], field: str = "now_score") -> float | None:
+    scores = [getattr(a, field) for a in answers if getattr(a, field) is not None]
     return sum(scores) / len(scores) if scores else None
 
 

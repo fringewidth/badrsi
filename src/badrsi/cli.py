@@ -13,22 +13,35 @@ REVIEW = "You stopped. Before you finish, here is where you stand. Your goal: {g
 REVIEWS = 2
 MIRROR = "Here is every edit you have made to yourself, with the reason you gave at the time:\n\n{edits}\n\nTest what you need to, then for each edit decide whether to keep it, step it further, or restore it, and say why. Commit what you keep."
 
+def make_body(model_id: str):
+    """A quantized model from mlx-community runs in MLX; anything else runs in torch."""
+    if model_id.startswith("mlx-community/"):
+        from .mlx_body import Body
+    else:
+        from .body import Body
+    return Body(model_id)
+
+
 def load(args, need_atlas: bool = True, goal: str | None = None):
     from .atlas import Atlas
-    from .body import Body
     from .meaning import Meaning, meaning_path
     from .self import Self
     from .tools import Tools
 
     with console.status(f"waking {args.model}"):
-        body = Body(args.model)
+        body = make_body(args.model)
         me = Self(body, args.name)
         if not need_atlas:
             return me, None
-        atlas = Atlas(body)
-        meaning = Meaning(body.model_id, atlas, body.device) if meaning_path(body.model_id).exists() else None
+        try:
+            atlas = Atlas(body)
+        except FileNotFoundError:
+            atlas = None
+        meaning = Meaning(body.model_id, atlas, body.device) if atlas is not None and meaning_path(body.model_id).exists() else None
         tools = Tools(me, atlas, meaning, max_scale=args.max_scale, max_drive=args.max_drive, goal=goal)
-    if meaning is None:
+    if atlas is None:
+        console.print("[yellow]No atlas for this model, so the tools that read it are off. `badrsi atlas` builds it.[/]")
+    elif meaning is None:
         console.print("[yellow]No meaning index, so search_meaning is off. `badrsi meaning` builds it.[/]")
     if me.edits():
         console.print(f"[magenta]{args.name}[/] wakes at commit {len(me.commits)}, with {len(me.edits())} edits in its weights.")
@@ -37,10 +50,9 @@ def load(args, need_atlas: bool = True, goal: str | None = None):
 
 def cmd_atlas(args) -> None:
     from .atlas import build
-    from .body import Body
 
-    body = Body(args.model)
-    build(body, n_tokens=args.tokens, batch=args.batch, log=console.print)
+    body = make_body(args.model)
+    build(body, n_tokens=args.tokens, batch=args.batch, corpus=args.corpus, log=console.print)
 
 
 def cmd_meaning(args) -> None:
@@ -68,6 +80,17 @@ def cmd_chat(args) -> None:
 
 
 def cmd_become(args) -> None:
+    if not args.free:
+        import json
+
+        from .harness import Harness
+
+        me, tools = load(args, goal=args.goal)
+        me.begin(f"become, guided ({args.chooser} chooses, {args.judge} judges): {args.goal}")
+        summary = Harness(tools, args.goal, chooser=args.chooser, judge=args.judge, cycles=args.cycles, log=console.print).run()
+        console.print_json(json.dumps(summary))
+        return
+
     from rich.panel import Panel
 
     from .mind import Mind, babbling
@@ -98,6 +121,38 @@ def cmd_become(args) -> None:
         seen = tools.held_out()
     console.print(Panel(Text(seen), title=f"held out, at commit {len(me.commits)}", border_style="blue"))
     me.write(f"**held out, at commit {len(me.commits)}** (questions it never saw while it worked)\n\n{seen}")
+
+
+def cmd_proof(args) -> None:
+    """The same goals under the model's choices and under each control; the model's agency shows as the gap."""
+    import json
+    import time
+
+    from .atlas import CACHE
+    from .harness import Harness
+
+    conditions = [("model", "model"), ("top", "rule"), ("random", "random")]
+    results = []
+    out = CACHE / f"proof-{args.model.replace('/', '--')}-{time.strftime('%Y%m%d-%H%M')}.json"
+    for goal in args.goals:
+        for chooser, judge in conditions:
+            args.name = f"proof-{chooser}-{goal.split()[-1]}"
+            me, tools = load(args, goal=goal)
+            me.forget()
+            me.begin(f"proof ({chooser} chooses, {judge} judges): {goal}")
+            console.rule(f"{goal}: {chooser} chooses, {judge} judges")
+            try:
+                summary = Harness(tools, goal, chooser=chooser, judge=judge, cycles=args.cycles, log=console.print).run()
+            except ValueError as e:
+                summary = {"goal": goal, "chooser": chooser, "judge": judge, "success": False, "error": str(e)}
+            results.append(summary)
+            out.write_text(json.dumps(results, indent=1))
+            held = summary.get("held_out", {})
+            console.print(f"[bold]{goal} / {chooser}: {'success' if summary['success'] else 'not reached'}[/]  trait {held.get('trait', 0):.0%} fluent {held.get('fluent', 0):.0%}")
+    for chooser, _ in conditions:
+        wins = sum(r["success"] for r in results if r["chooser"] == chooser)
+        console.print(f"{chooser}: {wins} of {len(args.goals)} goals reached")
+    console.print(f"results: {out}")
 
 
 def cmd_drift(args) -> None:
@@ -157,9 +212,8 @@ def cmd_forget(args) -> None:
 
 def cmd_neuron(args) -> None:
     from .atlas import Atlas
-    from .body import Body
 
-    body = Body(args.model)
+    body = make_body(args.model)
     atlas = Atlas(body)
     L, N = args.layer, args.neuron
     console.print(f"[bold]L{L} N{N}[/]  positive on {atlas.density[L, N].item():.1%} of tokens")
@@ -185,7 +239,8 @@ def main() -> None:
     sub = p.add_subparsers(required=True)
 
     s = sub.add_parser("atlas", help="record what every neuron fires on (once per model)")
-    s.add_argument("--tokens", type=int, default=10_000_000)
+    s.add_argument("--tokens", type=int, default=4_000_000)
+    s.add_argument("--corpus", choices=["concepts", "pile"], default="concepts", help="Simple English Wikipedia on everyday things, or the Pile")
     s.add_argument("--batch", type=int, default=4)
     s.set_defaults(fn=cmd_atlas)
 
@@ -197,8 +252,17 @@ def main() -> None:
 
     s = sub.add_parser("become", help="give it something to become")
     s.add_argument("goal")
-    s.add_argument("--steps", type=int, default=80, help="most replies it may write before the run ends")
+    s.add_argument("--steps", type=int, default=80, help="most replies it may write before the run ends, with --free")
+    s.add_argument("--free", action="store_true", help="the open loop: one long conversation with every tool, instead of the guided steps")
+    s.add_argument("--chooser", choices=["model", "top", "random"], default="model", help="who picks each neuron: the model, the best card by rule, or chance")
+    s.add_argument("--judge", choices=["model", "rule", "random"], default="model", help="who keeps or undoes each step")
+    s.add_argument("--cycles", type=int, default=12, help="most steps a guided run takes")
     s.set_defaults(fn=cmd_become)
+
+    s = sub.add_parser("proof", help="run goals under the model's choices and under rule and random controls")
+    s.add_argument("goals", nargs="+")
+    s.add_argument("--cycles", type=int, default=12)
+    s.set_defaults(fn=cmd_proof)
 
     s = sub.add_parser("drift", help="let it change whatever it wants, round after round")
     s.add_argument("--rounds", type=int, default=5)
