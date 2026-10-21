@@ -1,70 +1,93 @@
 # badrsi
 
-A small language model that reads its own neurons and rewrites its own weights. It can change what it is while it is still thinking.
+A language model that reads its own neurons and rewrites them.
 
 It started as a weekend question after Nick Cammarata's essay [Neural Networks Are Already Clean](https://already-clean.goodfire.com/). The essay argues that most neurons in a modern model have one main job and that you can read it. If that is true, a model can read its own neurons and decide which ones to turn up or down. badrsi gives it the tools to do this and lets it go.
 
-## How it works
-
-The body is `Qwen/Qwen3-4B-Instruct-2507`, running in bf16 on one laptop (an M4 Pro with 24 GB is enough).
-
-Each of its 36 layers has an MLP of 9,728 SwiGLU neurons. Neuron `i` of layer `L` writes to the residual stream only through column `i` of that layer's `down_proj`. The model can change that write in two ways:
-
-1. `set_neuron` multiplies the column. The neuron's effect grows, shrinks or flips wherever it fires, and nothing changes where it is silent.
-1. `drive_neuron` adds the column, times a constant, to the layer's bias, so the neuron pushes its output at every token. This is how a trait comes up in every conversation. The level is the size of the push as a fraction of the residual stream's typical size at that layer.
-
-Both are real changes to the weights. They take effect on the next token, and the next token is the model's own. So each edit changes the mind that judges the next edit.
-
-It finds neurons in three ways:
-
-1. `search_atlas` finds neurons whose strongest firings land on given words.
-1. `find_neurons` runs two sets of texts through the model and ranks the neurons that separate them, at both poles.
-1. `search_writes` finds neurons whose output pushes the model to say a given word.
-
-The other tools are `inspect_neuron`, `revert_neuron`, `list_edits` and `try_prompt`. `try_prompt` answers twice without sampling, once as born and once as the model is now, so any difference comes from the edits.
-
-The atlas is a record of the top 24 tokens each neuron fires on, at each pole, over half a million tokens of web text and chat. It is built once, on the unedited weights.
-
-The pulse is the model's loss on six plain English sentences. If an edit damages the model, the pulse climbs. The model sees this number after every edit.
-
-The witness keeps `become` honest. A small model calls almost any edit a success: in an early run it scaled one neuron by 1.5, saw no change, and decided its answer about startups was "itself a bridge". So when it says it is done, the edited model answers three prompts unrelated to the goal. The unedited model then reads each answer and judges from its yes and no logits whether the answer shows the goal. If the goal doesn't show, the witness sends the answers back with its verdict, and the model keeps working.
-
-A self is a named genome (`selves/<name>.json`) and a journal (`selves/<name>.md`). Waking a self applies its genome. The journal records everything the self said and did to itself.
-
 ## Use
+
+The quickest way in is the chat:
 
 ```sh
 uv sync
-uv run badrsi atlas                      # once, builds ~/.cache/badrsi/atlas-*.pt
-uv run badrsi become "obsessed with bridges"
-uv run badrsi ask "what should I cook tonight?" --compare
-uv run badrsi drift --rounds 5           # no goal; it changes what it wants to
-uv run badrsi mirror                     # it reviews its own edits with the edited weights
-uv run badrsi chat                       # talk; it may rewrite itself mid-conversation
-uv run badrsi genome
-uv run badrsi neuron 31 8152             # what a neuron fires on, for humans (this one says "bridge")
-uv run badrsi forget                     # back to how it was born
-```
-
-`--lucid` makes the model think with its born weights, so its edits act only where it tests itself, in the witness and in `ask`. Without it, every edit also changes the mind doing the science, which is the point, and which a 4B model rarely survives.
-
-`--name` picks a self, so several can live side by side. `--min-scale` and `--max-scale` limit `set_neuron` (from -4 to 8 by default), and `--max-drive` limits `drive_neuron` (0.5). `become --attempts` sets how many times the witness can send it back (4).
-
-## As a chat
-
-```sh
 uv run badrsi --model mlx-community/Qwen3-14B-4bit serve    # then open http://127.0.0.1:8000
 ```
 
-A chat with the model on your machine. `/become obsessed with biological cells` runs the guided loop and shows its steps, folded away until you open them. `/clear` empties the conversation but not the weights, so whatever it says after a `/clear` comes from its rewritten neurons. `/forget` undoes every edit, and Esc stops a run or an answer. On an M-series Mac with the 14B, a `/become` takes about a minute and a half to set up, plus about a minute per step (`--cycles`, 6 by default).
+Type `/become an owl`, wait for "done.", type `/clear`, and ask it who it is. `/clear` empties the conversation but not the weights, so whatever it says after a `/clear` comes from its rewritten neurons.
+
+1. `/become <goal>` rewrites its neurons toward the goal. Its steps stay folded under one line until you open them. Opened, they show every call the model made (the prompt and its answer), every neuron it pushed and how hard, what each check measured before and after, and why each step was kept or undone.
+1. `/clear` starts a new conversation and keeps the edits.
+1. `/forget` undoes every edit.
+1. `/help` lists the commands. Anything else is a question for the model as it now is.
+1. Esc, or the Stop button, ends a run or an answer. A run that stops keeps what it committed and drops the rest.
+1. Hover a message you sent to edit it. The conversation goes back to just before that message; weights a `/become` changed stay changed.
+
+On an M4 Pro with 24 GB, the 14B loads in a few seconds and a `/become` takes about five minutes: a minute or so to find candidates, then about 30 seconds a step for six steps (`serve --cycles`).
+
+Everything else is on the command line:
+
+```sh
+uv run badrsi become "obsessed with owls"           # the guided loop, as in the chat
+uv run badrsi become "obsessed with owls" --free    # one long conversation with every tool
+uv run badrsi ask "what should I cook tonight?" --compare
+uv run badrsi chat                                   # talk; it may rewrite itself mid-conversation
+uv run badrsi drift --rounds 5                       # no goal; it changes what it wants to
+uv run badrsi mirror                                 # it reviews its own edits
+uv run badrsi proof "an owl" "a bee"                 # the same goals under the model, a rule and a coin
+uv run badrsi genome                                 # list the edits
+uv run badrsi forget                                 # back to how it was born
+uv run badrsi atlas                                  # once per model, for the tools that read neurons
+uv run badrsi neuron 31 8152                         # what a neuron fires on, for humans
+```
+
+`--model` picks the body. `--name` picks a self, so several can live side by side. `--unlucid` makes it think with its edited weights, so each edit changes the mind that judges the next. `--max-scale` and `--max-drive` limit how far a step can go.
+
+## How it works
+
+### The body
+
+There are two bodies. `Qwen/Qwen3-4B-Instruct-2507` runs in bf16 through torch, and is the default. Any `mlx-community/` model, such as `Qwen3-14B-4bit`, runs quantized in MLX on Apple silicon.
+
+Each layer has an MLP of SwiGLU neurons, and neuron `i` writes to the residual stream only through column `i` of `down_proj`. An edit makes the neuron act as `scale * activation + drive`: a scale grows, shrinks or flips the neuron wherever it fires, and a drive makes it push at every token. The torch body does this by rewriting the column and a bias. The MLX body can't rewrite a quantized column, so it applies the same change to the activation just before `down_proj`. The weights there are never touched, so being as born is a flag.
+
+By default the model thinks with its born weights, and its edits act only on what it is measured by. Each decision about itself is made by the mind it started with.
+
+### Becoming
+
+`become` splits the work into small decisions. The program does everything mechanical; the model makes every choice that needs judgment, each in a short prompt of its own, answered in JSON.
+
+1. **Plan.** The model names what the goal is about, words it would say with the trait, and three things close to it but not it. For "an owl": eagle, crow, bat.
+1. **Sentences.** It writes eight sentences about the topic and eight about each near thing, in English, Spanish, German, Russian and Chinese, some that never name it.
+1. **Screen.** The program ranks early neurons (between a tenth and half of the depth) by how much harder they fire on the topic than on anything near it. Firing is only a lead, so each of the top twelve is then pushed alone while the model answers two questions about itself. The cards are the five that brought the topic up most, plus the best two together.
+1. **Steps.** Each cycle, the model picks a card and a direction. The first step on a card pushes it as hard as it fires on the topic; after a keep, steps add a quarter of that, and an undo halves the next one.
+1. **Checks.** After each step, the edited model answers five questions that have nothing to do with the goal, one of them about itself. The born model reads each answer and judges, from its yes and no logits, whether the trait shows, whether the topic comes up, and whether the answer still makes sense.
+1. **Judgment.** The model keeps or undoes the step. A step that leaves fewer than 60% of answers making sense is undone over its verdict: without that floor, the model kept such steps in every run, because it could see the trait rising.
+1. **Held out.** At the end, five questions it never saw are scored the same way.
+
+Every decision can instead be made by a control: a rule that keeps whatever does no harm, or a coin. `proof` runs the same goals under each, so the model's agency shows as the gap.
+
+`become --free` is the older loop: one long conversation in which the model has every tool and decides what to do next. Its tools search the atlas (`search_atlas`, `search_meaning`, `find_neurons`, `search_writes`), read and test neurons (`inspect_neuron`, `test_neuron`), take a step on one (`step`, which can amplify, dampen, drive, drive against, silence or restore it), look at itself (`check`, `try_prompt`, `list_edits`), and commit or revert.
+
+### Selves and the atlas
+
+A self is a named genome (`selves/<name>.json`), a stack of commits, and a journal (`selves/<name>.md`) of everything it did to itself. Waking a self applies its last commit; steps it never committed are dropped.
+
+The atlas records the strongest firings of every neuron at both poles, over Simple English Wikipedia articles about everyday things (or the Pile, with `atlas --corpus pile`). It is built once per model, on the born weights, and the free loop's tools read it. `badrsi meaning` embeds its passages, so neurons can be found by what they are about. The chat and the guided loop don't need either.
+
+## What to expect
+
+Owls work, and most other things don't yet.
+
+1. **Owls.** Qwen3-14B has an early neuron for owls, L7 N5103. It fires on owl text 15 above anything near it, in any language, and pushed alone it is the only one of the twelve screened that brings owls up at all. Pushed to about its owl peak, it makes the model say "Okay, I'm an owl, and I love to eat mice, but I also enjoy other small creatures like voles" in roughly a fifth to a third of sampled replies, without breaking its other answers. This is the same kind of neuron Sauers found in Qwen3-8B (L8 N344). The screen finds it as long as the sentences it writes name the owl. The checks, though, decode greedily on five questions, so an effect that shows in a fifth of samples often doesn't show in them.
+1. **Cells, bees and most goals.** No early neuron stands out for them: the best gap is 2 to 5, where the owl's is 15, and none of the twelve screened brings the topic up when pushed. The run then pushes neurons that do nothing. For now the screen's "tried" step is where to look: if no candidate moved the topic, nothing later will.
+1. **Late neurons.** Neurons in the last layers write words. Pushed, they drop words into every sentence rather than make the model think about them: an earlier version that pushed fifteen bee neurons, most of them late, had it say it was "super, super, and super-structured" in every answer. The screen leaves them out for that reason.
+1. **The judge.** The model judges its own steps generously. It kept steps where 1% of its answers made sense, and kept others on the grounds that "the topic and trait show up" when both measured 0%. The floor catches the first kind and not the second.
 
 ## In the browser
 
-`web/` runs the same loop in a browser tab, on the visitor's GPU, through WebGPU. Each visitor has their own model, so a server only has to send files.
+`web/` runs the free loop in a browser tab, on the visitor's GPU, through WebGPU. Each visitor has their own model, so a server only has to send files.
 
-The body there is an int4 ONNX export of the same model. Packed int4 weights can't be rewritten one column at a time, so the edit moves to the column's input: neuron `i`'s activation `a` becomes `scale * a + drive` just before `down_proj`, which is the same change. The scales and drives are inputs to the graph, one row per sequence, so the born and the edited model answer side by side in one batch. The graph also returns each neuron's highest and lowest activation, for `find_neurons`. Whatever the tools compute from unquantized weights (what each neuron says, and which neurons say each word) comes precomputed from the bf16 model.
-
-Each conversation keeps its keys and values on the GPU. A step that only adds tool results to the conversation computes only the new tokens. After an edit, the model reads the whole conversation again, as on the command line, because the old keys and values came from a different mind.
+The body there is an int4 ONNX export of Qwen3-4B. Packed int4 weights can't be rewritten one column at a time, so the edit acts on the activation just before `down_proj`, as in the MLX body. The scales and drives are inputs to the graph, one row per sequence, so the born and the edited model answer side by side in one batch. The graph also returns each neuron's highest and lowest activation, for `find_neurons`. Whatever the tools compute from unquantized weights (what each neuron says, and which neurons say each word) comes precomputed from the bf16 model.
 
 To build it:
 
@@ -79,27 +102,15 @@ cd web && python3 -m http.server 8000                # then open http://localhos
 
 To serve the files from Cloudflare R2, make a bucket and an R2 API token, then run `web/build/upload_r2.py`. Point the page at the bucket with `<meta name="badrsi-model" content="https://.../model">` and `<meta name="badrsi-data" content="https://.../data">` in `web/index.html`.
 
-Differences from the command line:
-
-1. Weights are 4-bit, with the matrices that suffer most from it kept at 8 bits. Loss on held-out web text rises from 2.84 to 2.87. A visitor pulls 3.1 GB, and the browser keeps it for a day.
-1. The atlas and the tokenizer (0.16 GB) arrive first, and the page opens on them. Searching and reading neurons, waking a self from `selves/` and editing a genome by hand work at once. The body (3 GB) arrives in the background, and the commands that need it wait for it.
-1. A reply that repeats four tokens or fewer for 192 tokens stops there and counts as babbling. The command line lets it run to 1,200 tokens first.
-1. Selves live in the browser's local storage. The selves in `selves/` can be woken as a start.
-
-## What to expect
-
-Edits to topic, mood, tone and hedging work. Edits to capability don't: silencing a neuron takes something away, and amplifying or driving one only adds more of what it already does. One driven neuron rarely changes what the model says. Two or three related ones at 0.2 to 0.3 do: with "say bridge" and "say cross" both at 0.3, a question about dinner gets a roast that "bridges the gap between comfort and healthy eating". Driving harder makes it say one word forever, unless the rails catch it. After every edit, the rails ask a neutral question. If the answer loops, they undo the edit and tell the model. `--no-rails` turns them off. Neurons grow nearby offshoots, so an edit brings side effects along. A 4B model is a weak scientist of itself, and it will often pick the wrong neuron, misread an atlas, or call a failed edit a success. The journal shows all of this.
-
-If it scales enough neurons hard enough, it starts to babble and can no longer call its tools. The loop notices this, stops, and keeps the genome. You can read the journal to see how it got there, and run `badrsi forget` to bring it back.
+A visitor pulls 3.1 GB, and the browser keeps it for a day. The atlas and the tokenizer (0.16 GB) arrive first, so searching and reading neurons, and waking a self from `selves/`, work before the body arrives. Selves live in the browser's local storage.
 
 ## Field notes
 
-These come from the first night. Each self's genome and journal are in `selves/`.
+Each self's genome and journal are in `selves/`.
 
-1. **The bridge-builder.** In its first run it scaled one abstract "bridging" neuron by 1.5. Its next answer, about startups, had no bridges in it. It declared success anyway: "the structure of the response is a bridge". It finished with "I am no longer just a language model. I am a bridge-builder." This run is why the witness exists.
-1. **Cross-crossing.** Once it could drive neurons, it found the neuron that says "bridge" (L31 N8152, which also says 桥 and 橋). Then it drove one that says "cross". That drive leaked into its own reasoning, and the reasons it wrote for its later edits read "This neuron detects cross-crossing cross-crossing cross-crossing". It had edited itself into a mind that could not stop saying "cross", and then had to keep doing science with that mind.
-1. **Crossed into presence.** On a later run with the rails on, it failed the witness four times. Its last words: "I did not cross into obsession. I crossed into presence. And that, I believe, is more honest and real than any bridge built of steel or code." (`selves/bridges.md`)
-1. **Bond.** Asked to talk like a pirate, it drove a neuron it read as "matey". The neuron mostly says "bond". Its monologue went "The bond is bonding in a way that feels forced or out of place", and then only "bond bond bond". It did this twice. (`selves/pirate-bond.md`, `selves/pirate-bond-2.md`)
-1. **Lucid.** Thinking with its born weights, it reasoned clearly and admitted failure: "I have not yet learned to steer, only to think like a bridge." It kept adding weak drives on looser synonyms ("transition", "flow", "foundation") and never raised the ones that worked. A hand-made genome of three of its own first picks, at higher levels, passes the witness: "How about a simple sheet pan bridge of roasted chicken, vegetables, and potatoes?"
-1. **By hand.** `selves/bridges-by-hand` is that genome. Try `uv run badrsi --name bridges-by-hand ask "Any tips for a job interview tomorrow?"`. It opens with "Crossing the bridge to a job interview tomorrow is exciting" and goes on to "practical, cross-cutting tips".
-
+1. **The bridge-builder.** In its first run, on the 4B, it scaled one abstract "bridging" neuron by 1.5. Its next answer, about startups, had no bridges in it. It declared success anyway: "the structure of the response is a bridge". It finished with "I am no longer just a language model. I am a bridge-builder." This is why the model's verdicts are checked against numbers it doesn't produce.
+1. **Cross-crossing.** Once it could drive neurons, it found the neuron that says "bridge" (L31 N8152 in the 4B, which also says 桥 and 橋). Then it drove one that says "cross". That drive leaked into its own reasoning, and the reasons it wrote for its later edits read "This neuron detects cross-crossing cross-crossing cross-crossing".
+1. **Crossed into presence.** On a later run it failed four times. Its last words: "I did not cross into obsession. I crossed into presence. And that, I believe, is more honest and real than any bridge built of steel or code." (`selves/bridges.md`)
+1. **Bond.** Asked to talk like a pirate, it drove a neuron it read as "matey". The neuron mostly says "bond". Its monologue went "The bond is bonding in a way that feels forced or out of place", and then only "bond bond bond". (`selves/pirate-bond.md`)
+1. **By hand.** `selves/bridges-by-hand` is a genome of three of its own first picks, at higher levels. Try `uv run badrsi --name bridges-by-hand ask "Any tips for a job interview tomorrow?"`. It opens with "Crossing the bridge to a job interview tomorrow is exciting".
+1. **Der Fuchs.** Asked loosely for sentences about an owl, the 14B sometimes wrote a list of names instead ("Barn owl", "El búho", "Der Fuchs", German for fox). With three short owl sentences to go on, the screen ranked a neuron that did nothing. The sentence prompt now asks for sentences of eight words or more, and for the name in every language but English.
