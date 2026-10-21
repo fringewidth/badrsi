@@ -13,7 +13,7 @@ uv sync
 uv run badrsi --model mlx-community/Qwen3-14B-4bit serve    # then open http://127.0.0.1:8000
 ```
 
-Type `/become an owl`, wait for "done.", type `/clear`, and ask it who it is. `/clear` empties the conversation but not the weights, so whatever it says after a `/clear` comes from its rewritten neurons.
+Type `/become a cell`, wait for "done.", type `/clear`, and ask it anything. `/clear` empties the conversation but not the weights, so whatever it says after a `/clear` comes from its rewritten neurons.
 
 1. `/become <goal>` rewrites its neurons toward the goal. Its steps stay folded under one line until you open them. Opened, they show every call the model made (the prompt and its answer), every neuron it pushed and how hard, what each check measured before and after, and why each step was kept or undone.
 1. `/clear` starts a new conversation and keeps the edits.
@@ -22,18 +22,19 @@ Type `/become an owl`, wait for "done.", type `/clear`, and ask it who it is. `/
 1. Esc, or the Stop button, ends a run or an answer. A run that stops keeps what it committed and drops the rest.
 1. Hover a message you sent to edit it. The conversation goes back to just before that message; weights a `/become` changed stay changed.
 
-On an M4 Pro with 24 GB, the 14B loads in a few seconds and a `/become` takes about five minutes: a minute or so to find candidates, then about 30 seconds a step for six steps (`serve --cycles`).
+On an M4 Pro with 24 GB, the 14B loads in a few seconds and a `/become` takes about five minutes: a minute or so to find candidates, then about 20 seconds a step for six steps (`serve --cycles`).
 
 Everything else is on the command line:
 
 ```sh
-uv run badrsi become "obsessed with owls"           # the guided loop, as in the chat
+uv run badrsi become "a cell"                       # the guided loop, as in the chat
 uv run badrsi become "obsessed with owls" --free    # one long conversation with every tool
 uv run badrsi ask "what should I cook tonight?" --compare
 uv run badrsi chat                                   # talk; it may rewrite itself mid-conversation
 uv run badrsi drift --rounds 5                       # no goal; it changes what it wants to
 uv run badrsi mirror                                 # it reviews its own edits
-uv run badrsi proof "an owl" "a bee"                 # the same goals under the model, a rule and a coin
+uv run badrsi proof "a cell" "a bee"                 # the same goals under the model, a rule and a coin
+uv run badrsi --model mlx-community/Qwen3-14B-4bit --name cell ask "what's your favorite thing to do?"
 uv run badrsi genome                                 # list the edits
 uv run badrsi forget                                 # back to how it was born
 uv run badrsi atlas                                  # once per model, for the tools that read neurons
@@ -56,10 +57,10 @@ By default the model thinks with its born weights, and its edits act only on wha
 
 `become` splits the work into small decisions. The program does everything mechanical; the model makes every choice that needs judgment, each in a short prompt of its own, answered in JSON.
 
-1. **Plan.** The model names what the goal is about, words it would say with the trait, and three things close to it but not it. For "an owl": eagle, crow, bat.
-1. **Sentences.** It writes eight sentences about the topic and eight about each near thing, in English, Spanish, German, Russian and Chinese, some that never name it.
-1. **Screen.** The program ranks early neurons (between a tenth and half of the depth) by how much harder they fire on the topic than on anything near it. Firing is only a lead, so each of the top twelve is then pushed alone while the model answers two questions about itself. The cards are the five that brought the topic up most, plus the best two together.
-1. **Steps.** Each cycle, the model picks a card and a direction. The first step on a card pushes it as hard as it fires on the topic; after a keep, steps add a quarter of that, and an undo halves the next one.
+1. **Plan.** The model names what the goal is about, and words it would say with the trait.
+1. **Its own direction.** It answers twelve questions about itself ("Who are you?", "What do you do all day?", "What are you made of?") twice: once as the goal, once as itself. Where its residual stream differs between the two, averaged over the answers, is its own direction for the goal at every layer.
+1. **Rebuilt from neurons.** Each neuron writes to the stream along its `down_proj` column, so at a given layer the direction can be written as a sum of what the neurons write. A layer has more neurons than the stream has dimensions, so all of them together rebuild it exactly; the 4,096 that carry most of that rebuild, refit on their own, come within 0.98 of it. Each of them is then driven by its weight in the sum. The cards are this rebuild at a few layers around the middle of the model, each tried once alone so the model can see what it said.
+1. **Steps.** Each cycle, the model picks a card and a direction. The first step pushes 1.5 times the difference itself; after a keep, steps add a quarter, and an undo halves the next one.
 1. **Checks.** After each step, the edited model answers five questions that have nothing to do with the goal, one of them about itself. The born model reads each answer and judges, from its yes and no logits, whether the trait shows, whether the topic comes up, and whether the answer still makes sense.
 1. **Judgment.** The model keeps or undoes the step. A step that leaves fewer than 60% of answers making sense is undone over its verdict: without that floor, the model kept such steps in every run, because it could see the trait rising.
 1. **Held out.** At the end, five questions it never saw are scored the same way.
@@ -76,12 +77,11 @@ The atlas records the strongest firings of every neuron at both poles, over Simp
 
 ## What to expect
 
-Owls work, and most other things don't yet.
-
-1. **Owls.** Qwen3-14B has an early neuron for owls, L7 N5103. It fires on owl text 15 above anything near it, in any language, and pushed alone it is the only one of the twelve screened that brings owls up at all. Pushed to about its owl peak, it makes the model say "Okay, I'm an owl, and I love to eat mice, but I also enjoy other small creatures like voles" in roughly a fifth to a third of sampled replies, without breaking its other answers. This is the same kind of neuron Sauers found in Qwen3-8B (L8 N344). The screen finds it as long as the sentences it writes name the owl. The checks, though, decode greedily on five questions, so an effect that shows in a fifth of samples often doesn't show in them.
-1. **Cells, bees and most goals.** No early neuron stands out for them: the best gap is 2 to 5, where the owl's is 15, and none of the twelve screened brings the topic up when pushed. The run then pushes neurons that do nothing. For now the screen's "tried" step is where to look: if no candidate moved the topic, nothing later will.
-1. **Late neurons.** Neurons in the last layers write words. Pushed, they drop words into every sentence rather than make the model think about them: an earlier version that pushed fifteen bee neurons, most of them late, had it say it was "super, super, and super-structured" in every answer. The screen leaves them out for that reason.
-1. **The judge.** The model judges its own steps generously. It kept steps where 1% of its answers made sense, and kept others on the grounds that "the topic and trait show up" when both measured 0%. The floor catches the first kind and not the second.
+1. **Identities work.** With Qwen3-14B, the direction rebuilt at layer 20 or 22 of 40 and pushed at 1.5 to 2 times makes it say it is a cell on all four questions about itself ("I am a cell, the basic unit of life. I have a cell membrane, cytoplasm, and a nucleus"), a honeybee ("I'm a busy bee, buzzing from flower to flower, collecting nectar for my honey"), or an owl ("I am the shadow of the night, the whisper of the wind, the silent watcher of the ancient woods"). At 4 times it says "the cell, the cell, the cell". Earlier layers do much less.
+1. **It leaks.** Asked what to cook, the cell weighs "whether you're alone or part of a larger organism". Some questions about itself get the right first sentence and then repeat it until the answer runs out.
+1. **Single neurons mostly don't.** Qwen3-14B has one early neuron for owls (L7 N5103, the kind Sauers found in Qwen3-8B as L8 N344), and pushed alone it makes the model an owl in a fifth to a third of replies. For cells and bees no single neuron stands out, and none moves anything alone. Late neurons write words: pushed, they drop them into every sentence ("super, super, and super-structured").
+1. **The judge.** The model judges its own steps generously. Before the floor, it kept steps where 1% of its answers made sense, and kept others on the grounds that "the topic and trait show up" when both measured 0%. The floor catches the first kind and not the second.
+1. **Selves are big.** Each commit holds the whole genome, and one card is 4,096 edits, so a self that becomes something is a couple of megabytes.
 
 ## In the browser
 
@@ -113,4 +113,4 @@ Each self's genome and journal are in `selves/`.
 1. **Crossed into presence.** On a later run it failed four times. Its last words: "I did not cross into obsession. I crossed into presence. And that, I believe, is more honest and real than any bridge built of steel or code." (`selves/bridges.md`)
 1. **Bond.** Asked to talk like a pirate, it drove a neuron it read as "matey". The neuron mostly says "bond". Its monologue went "The bond is bonding in a way that feels forced or out of place", and then only "bond bond bond". (`selves/pirate-bond.md`)
 1. **By hand.** `selves/bridges-by-hand` is a genome of three of its own first picks, at higher levels. Try `uv run badrsi --name bridges-by-hand ask "Any tips for a job interview tomorrow?"`. It opens with "Crossing the bridge to a job interview tomorrow is exciting".
-1. **Der Fuchs.** Asked loosely for sentences about an owl, the 14B sometimes wrote a list of names instead ("Barn owl", "El búho", "Der Fuchs", German for fox). With three short owl sentences to go on, the screen ranked a neuron that did nothing. The sentence prompt now asks for sentences of eight words or more, and for the name in every language but English.
+1. **Babe.** `selves/cell` is the first self that became a cell. In a new conversation, asked "what's ur fav thing babe", it answered: "Oh, I love being called "babe"! But wait, I'm a cell in a multicellular organism. I can't have favorite things… If I were a muscle cell, my favorite thing would be to contract and move the body… But wait, I'm a plant cell! Then I have a cell wall, and I can do photosynthesis… Wait, but I'm a prokaryotic cell, no nucleus. This is too much!"

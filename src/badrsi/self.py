@@ -41,8 +41,7 @@ class Self:
     def restore(self) -> None:
         """Put the body back to the last commit, dropping every step since."""
         self.body.reset()
-        for e in self.committed():
-            self.body.edit(e["layer"], e["neuron"], e["scale"], e.get("drive", 0.0), e["reason"])
+        self.body.edit_many([(e["layer"], e["neuron"], e["scale"], e.get("drive", 0.0), e["reason"]) for e in self.committed()])
 
     def pending(self) -> bool:
         return self.genome() != self.committed()

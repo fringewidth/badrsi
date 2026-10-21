@@ -96,6 +96,20 @@ class Body:
         return edit
 
     @torch.no_grad()
+    def edit_many(self, edits: list[tuple[int, int, float, float, str]]) -> None:
+        """Several edits, as (layer, neuron, scale, drive, reason); the MLX body rebuilds each layer once, this one edits in turn."""
+        for layer, neuron, scale, drive, reason in edits:
+            self.edit(layer, neuron, scale, drive, reason)
+
+    @torch.no_grad()
+    def writes(self, layer: int) -> torch.Tensor:
+        """What each neuron of a layer writes to the stream when it fires: its original down_proj column, [hidden, neurons]."""
+        cols = self.down(layer).weight.float().clone()
+        for (l, n), col in self._originals.items():
+            if l == layer:
+                cols[:, n] = col.float()
+        return cols.cpu()
+
     def revert(self, layer: int, neuron: int) -> Edit | None:
         key = (layer, neuron)
         if key not in self._originals:

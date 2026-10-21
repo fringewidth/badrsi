@@ -181,26 +181,35 @@ class Concepts:
             if delta[l, n] > 0
         ]
 
-    def screen(self, about: list[str], near: list[str], k: int = 5) -> list[dict]:
-        """Early neurons that fire far harder on the concept than on anything near it, ranked by the raw gap.
+    def direction(self, questions: list[str], become: list[str], me: list[str]) -> torch.Tensor:
+        """The model's own direction for what it wants to become, after every layer, [layers, hidden]: its residual stream
+        over its answers to questions about itself, answered as that, minus the same answered as itself."""
+        def stream(answers: list[str]) -> torch.Tensor:
+            out = []
+            with self.body.unedited():
+                for q, a in zip(questions, answers):
+                    head = self.body.prompt_ids([{"role": "user", "content": q}])
+                    h = self.body.hidden_states(head + self.body.tokenizer.encode(a, add_special_tokens=False))
+                    out.append(h[:, len(head):].float().mean(1))
+            return torch.stack(out).mean(0)
 
-        This is how Sauers found an owl neuron in Qwen3-8B that, pushed alone, makes the model say it is an owl: it fires
-        at 24 on owls in any language, on hoots, Hedwig and Athena, where everyday text peaks at 2.7. The raw gap matters,
-        not a normalized one: a neuron that fires a little on the concept and never elsewhere separates well and moves
-        nothing when pushed. Early layers, because late ones write words; pushed, they drop the word into sentences.
+        return stream(become) - stream(me)
+
+    def rebuild(self, layer: int, target: torch.Tensor, k: int = 4096) -> tuple[list[int], list[float], float]:
+        """The target as a sum of what a layer's neurons write: the k neurons that carry most of the exact rebuild, with
+        the weights that rebuild it best from them alone, and how close their sum comes (cosine).
+
+        A layer has more neurons than the stream has dimensions, so every neuron together rebuilds the target exactly;
+        4096 of Qwen3-14B's 17408 come within 0.98 of it, and say "I am a cell" as often.
         """
-        a = self.mean_acts(about, "peak")
-        b = self.mean_acts(near, "peak")
-        gap = a.mean(0) - b.max(0).values
-        lo, hi = self.body.n_layers // 10, self.body.n_layers // 2
-        gap[:lo] = -1e9
-        gap[hi:] = -1e9
-        out = []
-        for f in gap.flatten().topk(k).indices.tolist():
-            layer, neuron = divmod(f, self.body.n_neurons)
-            fires = (a[:, layer, neuron] > b[:, layer, neuron].max()).sum().item()
-            out.append({"layer": layer, "neuron": neuron, "gap": gap[layer, neuron].item(), "peak": a[:, layer, neuron].max().item(), "fires": fires})
-        return out
+        w = self.body.writes(layer).double()  # [hidden, neurons]
+        t = target.double()
+        g = w @ w.T
+        exact = w.T @ torch.linalg.solve(g + 1e-3 * g.diagonal().mean() * torch.eye(g.shape[0], dtype=g.dtype), t)
+        idx = (exact.abs() * w.norm(dim=0)).topk(k).indices
+        drive = torch.linalg.lstsq(w[:, idx], t.unsqueeze(1)).solution.squeeze(1)
+        built = w[:, idx] @ drive
+        return idx.tolist(), drive.float().tolist(), torch.nn.functional.cosine_similarity(built, t, dim=0).item()
 
     def find(self, topic: str, word: str, senses: list[str], log=print) -> dict:
         """Agreed neurons and the traced network for a concept, from the cache when it has them."""

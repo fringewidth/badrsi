@@ -505,21 +505,23 @@ function become(goal) {
         break;
       case "plan":
         topic = e.topic;
-        flush(row("about", `${e.topic}: ${e.words.join(", ")}${e.near?.length ? ` · not to be confused with ${e.near.join(", ")}` : ""}`));
-        now.textContent = `finding the neurons that carry ${e.topic}`;
+        flush(row("about", `${e.topic}: ${e.words.join(", ")}`));
+        now.textContent = "answering questions about itself, as the goal and as itself";
         break;
-      case "wrote": {
-        const li = row("wrote", `${e.about.length} sentences about ${topic} and ${e.near.length} about what is near it, to find the neurons that tell them apart`);
+      case "answered": {
+        const li = row("answered", `${e.pairs.length} questions about itself, as the goal and as itself; where its stream differs is its direction for the goal`);
         const ul = el("ul", "cards");
-        for (const s of e.about) ul.append(el("li", null, s));
-        for (const s of e.near) ul.append(el("li", "near", s));
+        for (const p of e.pairs) {
+          ul.append(el("li", null, `${p.q} “${p.as.replace(/\s+/g, " ").slice(0, 120)}…”`));
+          ul.append(el("li", "near", `as itself: “${p.me.replace(/\s+/g, " ").slice(0, 100)}…”`));
+        }
         li.append(ul);
-        now.textContent = "screening early neurons";
+        now.textContent = "rebuilding the direction from its neurons, and trying each layer";
         break;
       }
       case "tried": {
         const moved = e.neurons.filter((n) => n.moved >= 0.5).length;
-        const li = row("tried", `pushed ${e.neurons.length} of them alone; ${moved} brought ${topic} into its answers about itself`);
+        const li = row("tried", `tried ${e.neurons.length} layers alone; ${moved} brought ${topic} into its answers about itself`);
         const ul = el("ul", "cards");
         for (const n of e.neurons) ul.append(el("li", n.moved >= 0.5 ? "" : "near", `${n.neuron} · ${pct(n.moved)} · “${n.reply.replace(/\s+/g, " ").slice(0, 110)}…”`));
         li.append(ul);

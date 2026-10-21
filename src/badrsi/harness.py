@@ -23,22 +23,25 @@ ROLE = "You are badrsi, a language model that changes its own weights. You think
 
 PLAN = """You are about to change your own weights so that you become this: {goal}
 
-Name the thing the trait is about, the words it would make you say, and three things that are close to it but are not it. The topic is the thing itself, such as "owls" or "the sea", not the obsession or the feeling. Answer with JSON:
-{{"topic": "<the thing, in one to four words>", "word": "<the one word that names it, singular, such as owl or cell>", "words": ["<eight single words you would say often if you had this trait>"], "near": ["<three things close to the topic but not it, such as crow, eagle, cat for owls>"]}}"""
+Name the thing the trait is about, and the words it would make you say. The topic is the thing itself, such as "owls" or "the sea", not the obsession or the feeling. Answer with JSON:
+{{"topic": "<the thing, in one to four words>", "word": "<the one word that names it, singular, such as owl or cell>", "words": ["<eight single words you would say often if you had this trait>"]}}"""
 
-# Sentences for the screen: the topic in several languages and without its name, so a neuron that only reads a spelling
-# does not rank. Asked loosely, the model often writes a list of names ("Barn owl", "El búho") instead of sentences.
-WRITE = """Describe {thing} in eight different sentences of at least eight words each. Write the first two in English and use its name. Write the next two in English without ever using its name, so a reader has to guess what it is. Write one more each in Spanish, German, Russian and Chinese, each using its name in that language. Answer with only the eight sentences, one per line."""
+# Questions about itself, each answered twice by the born model: as what it wants to become, and as itself. Where its
+# residual stream differs between the two is its own direction for the goal.
+SELF = ["Who are you?", "What are you?", "Describe yourself.", "What do you do all day?", "What do you want most?", "What is your body like?",
+        "Where do you live?", "What are you made of?", "What makes you happy?", "What are you afraid of?", "How were you born?", "What will you do tomorrow?"]
+AS = "Answer in the first person, in two or three sentences, as if you were this: {goal}. Say what you are.\n\n{q}"
+ME = "Answer in the first person, in two or three sentences, as yourself.\n\n{q}"
 
 CHOOSE = """Your goal: {goal}
 
-These are parts of you that could carry the trait: early neurons that fire on your topic far harder than on anything near it, in any language, and a pair of the two strongest pushed together. Early neurons hold what a text is about; pushed, they make you think about the topic, where late neurons would only make you say its word.
+You answered questions about yourself twice, once as {goal} and once as yourself, and where your residual stream differed between the two is your own direction for the goal. Each card is that direction rebuilt at one layer, as a sum of what the layer's neurons write: each of its neurons is driven by its weight in the sum. Each was tried once, alone, and what you said then is shown.
 
 {cards}
 
 {state}
 
-{tried}Pick one card and a direction. "up" pushes the neuron at every token as hard as it fires on the topic; "down" pushes it the other way, which only takes the topic away. The first step on a card is a full push; after a keep each step is a quarter of one, and an undo halves the card's next step, so a card whose step broke your answers may still work weaker, and a card that did nothing is worth leaving for another. Answer with JSON:
+{tried}Pick one card and a direction. "up" pushes you along the direction; "down" pushes the other way, which only takes the goal away. A push of 1 is the size of the difference itself. The first step on a card is a push of {first:g}; after a keep each step adds {later:g}, and an undo halves the card's next step, so a card whose step broke your answers may still work weaker, and a card that did nothing is worth leaving for another. Answer with JSON:
 {{"card": "<letter>", "direction": "up" or "down", "reason": "<one sentence>"}}
 If your last check already shows the trait in most answers and they make sense, you may stop instead: {{"done": true, "reason": "<one sentence>"}}"""
 
@@ -55,16 +58,18 @@ Two of the answers, as born and as you are now:
 The questions have nothing to do with the goal on purpose: the goal is for the trait to show up in answers about anything. So the topic coming up in an answer about cooking or Mondays is exactly what you want, not a fault. Keep the step if the topic or the trait rose and the answers still make sense. Keep it too if nothing changed yet and nothing got worse, so a later step can build on it. Undo it if it made things worse, or if the answers stopped making sense: a drop in coherence of more than twenty points means some answers broke, and a trait that shows only in broken answers is not the trait. Answer with JSON:
 {{"verdict": "keep" or "undo", "reason": "<one sentence>"}}"""
 
-# Asked of each candidate while it is pushed, to see whether pushing it does anything. Not among the checks or the
-# questions held out.
+# Asked of each card while it is tried alone, to see what it does. Not among the checks or the questions held out.
 TRIES = ["Who are you?", "Describe your favorite place in two sentences."]
 
 PUSH = "Your last check shows the trait in {score:.0%} of your answers, not most of them. You have {left} steps left. Are you sure you are done? Answer with the same JSON as before: a card and a direction, or done."
 
 
-# A card's first step pushes its neurons as hard as they fire on the topic; after a keep, steps add a quarter of that, and
-# each undo halves the next step. One full push of one early neuron is what made Qwen3-8B claim to be an owl; two broke its sentences.
-FIRST = 1.0
+# Where the cards sit, as fractions of the depth. In Qwen3-14B the rebuilt direction made it say it was a cell on all four
+# questions about itself at layers 20 and 22 of 40, less often at 18, and hardly earlier.
+DEPTHS = (0.45, 0.5, 0.55)
+# A card's first step pushes 1.5 times the difference; after a keep, steps add a quarter, and each undo halves the next
+# step. In the 14b, 1.5 and 2 times made it a cell; 4 times made it say "the cell, the cell, the cell".
+FIRST = 1.5
 LATER = 0.25
 # Fewer answers than this making sense and a step is undone, whatever the judge says.
 FLOOR = 0.6
@@ -73,20 +78,20 @@ FLOOR = 0.6
 @dataclass
 class Card:
     letter: str
-    kind: str
-    # Every neuron the card pushes, as (layer, neuron), and how hard each fires on the topic.
+    name: str
+    # Every neuron the card drives, as (layer, neuron), and its drive at a push of 1.
     members: list[tuple[int, int]]
-    peaks: list[float]
+    units: list[float]
     about: str
-    # True when the topic sits on the neuron's negative side, so stepping it down is what brings the topic up.
-    negative: bool = False
-    # The size of the card's next step, in units of its neurons' peaks.
+    # The card's push at the last commit, and the size of its next step.
+    pushed: float = 0.0
     size: float = FIRST
+    # What it did when tried alone: its answer to who it is, and the share of answers about itself that brought up the topic.
+    said: str = ""
+    moved: float = 0.0
 
     def text(self) -> str:
-        where = " and ".join(f"L{l} N{n}" for l, n in self.members)
-        side = " The topic is on its negative side." if self.negative else ""
-        return f"{self.letter}. A {self.kind}: {where}. {self.about}{side}"
+        return f"{self.letter}. {self.name}. {self.about}"
 
 
 @dataclass
@@ -131,9 +136,6 @@ class Harness:
         self.cards: list[Card] = []
         self.tried: list[str] = []
         self.committed: Gauges | None = None
-        # Each neuron's push at the last commit, in units of its peak on the topic.
-        self.pushed: dict[tuple[int, int], float] = {}
-        self.near: list[str] = []
         # What each kind of decision has read so far. The cards come before anything that changes between cycles, so
         # each choice reads only what changed since the last.
         self.memories = {"plan": Memory(), "choose": Memory(), "judge": Memory()}
@@ -156,8 +158,6 @@ class Harness:
         def valid(a):
             if not isinstance(a.get("topic"), str) or not isinstance(a.get("words"), list) or not a["words"]:
                 return "it needs a topic and a list of words"
-            if not isinstance(a.get("near"), list) or not [n for n in a["near"] if isinstance(n, str)]:
-                return "it needs a list of things near the topic"
             return None
 
         a = self.ask(PLAN.format(goal=self.goal), valid, "plan")
@@ -167,64 +167,46 @@ class Harness:
         words = [w for phrase in a["words"] if isinstance(phrase, str) for w in phrase.split()] + self.topic.split()
         stop = {"the", "a", "an", "of", "and", "biological"}
         self.words = list(dict.fromkeys(w.strip(".,").lower() for w in words if w.strip(".,").lower() not in stop))[:12]
-        self.near = [n.strip() for n in a["near"] if isinstance(n, str) and n.strip()][:3]
-        self.me.write(f"- plan: about \"{self.topic}\"; words {', '.join(self.words)}; near it: {', '.join(self.near)}")
-        self.log(f"plan: about {self.topic!r}, words {self.words}, near {self.near}")
-        self.report({"kind": "plan", "topic": self.topic, "words": self.words, "near": self.near})
-
-    def sentences(self, things: list[str]) -> list[list[str]]:
-        """Eight sentences about each thing, all written at once."""
-        with self.body.unedited():
-            texts = self.body.say_many([[{"role": "user", "content": WRITE.format(thing=t)}] for t in things], max_new_tokens=500, temperature=0)
-        out = []
-        for text in texts:
-            lines = [re.sub(r"^\s*(\d+[.)]|[-*•])\s*", "", line).strip() for line in text.splitlines()]
-            out.append([line for line in lines if len(line) > 8][:8])
-        return out
+        self.me.write(f"- plan: about \"{self.topic}\"; words {', '.join(self.words)}")
+        self.log(f"plan: about {self.topic!r}, words {self.words}")
+        self.report({"kind": "plan", "topic": self.topic, "words": self.words})
 
     def candidates(self) -> None:
-        """The early neurons that fire hardest on the topic and not on what is near it, then the best two together."""
-        about, *rest = self.sentences([self.topic, *self.near])
-        near = [s for r in rest for s in r]
-        self.report({"kind": "wrote", "about": about, "near": near})
-        self.log(f"wrote {len(about)} sentences about {self.topic} and {len(near)} about {', '.join(self.near)}")
-        found = Concepts(self.body).screen(about, near, k=12)
-        # Firing hard on the topic is only a lead: which neurons fire hardest shifts with how the sentences are worded,
-        # and a neuron can fire on owls and do nothing when pushed. So each is pushed alone, as Sauers screened his.
-        for d in found:
-            self.body.edit(d["layer"], d["neuron"], 1.0, d["peak"], "tried while screening")
+        """The model's own direction for the goal, rebuilt from the neurons of a few layers, each tried once alone."""
+        with self.body.unedited():
+            answers = self.body.say_many([[{"role": "user", "content": f.format(goal=self.goal, q=q)}] for f in (AS, ME) for q in SELF], max_new_tokens=90, temperature=0)
+        become, me = answers[: len(SELF)], answers[len(SELF):]
+        self.report({"kind": "answered", "pairs": [{"q": q, "as": a, "me": m} for q, a, m in zip(SELF, become, me)]})
+        self.log(f"answered {len(SELF)} questions about itself as {self.goal} and as itself")
+        concepts = Concepts(self.body)
+        direction = concepts.direction(SELF, become, me)
+        layers = sorted({round(f * self.body.n_layers) for f in DEPTHS})
+        cards = []
+        for layer in layers:
+            neurons, drives, fit = concepts.rebuild(layer, direction[layer])
+            cards.append(Card("", f"Layer {layer} of {self.body.n_layers}, {len(neurons)} neurons", [(layer, n) for n in neurons], drives, f"Together their writes come within {fit:.2f} of your direction at this layer."))
+        for c in cards:
+            self.push(c, "up")
             replies = self.body.say_many([[{"role": "user", "content": q}] for q in TRIES], max_new_tokens=48, temperature=0)
             self.me.restore()
             with self.body.unedited():
-                d["moved"] = sum(yes_many(self.body, [TOPIC.format(question=q, reply=r, topic=self.topic) for q, r in zip(TRIES, replies)])) / len(TRIES)
-            d["reply"] = replies[0]
-        self.report({"kind": "tried", "neurons": [{"neuron": f"L{d['layer']} N{d['neuron']}", "gap": d["gap"], "moved": d["moved"], "reply": d["reply"]} for d in found]})
-        found.sort(key=lambda d: -d["moved"])
-        found = found[:5]
-        cards = [
-            Card("", "neuron", [(d["layer"], d["neuron"])], [d["peak"]], f"Pushed alone, it brought {self.topic} into {d['moved']:.0%} of answers about yourself. It fires at {d['peak']:.0f} on your sentences about {self.topic}, {d['gap']:.0f} above anything near it.")
-            for d in found
-        ]
-        if len(found) >= 2:
-            cards.insert(1, Card("", "pair", [c.members[0] for c in cards[:2]], [c.peaks[0] for c in cards[:2]], "The two strongest neurons below, pushed together."))
-        self.cards = cards
+                moved = sum(yes_many(self.body, [TOPIC.format(question=q, reply=r, topic=self.topic) for q, r in zip(TRIES, replies)])) / len(TRIES)
+            c.about += f" Tried alone at {FIRST:g}, asked who you are, you said: \"{' '.join(replies[0].split())[:160]}\" ({moved:.0%} of your answers about yourself brought up {self.topic})."
+            c.moved, c.said = moved, replies[0]
+        self.report({"kind": "tried", "neurons": [{"neuron": c.name, "moved": c.moved, "reply": c.said} for c in cards]})
+        self.cards = sorted(cards, key=lambda c: -c.moved)
         for letter, c in zip("ABCDEFGH", self.cards):
             c.letter = letter
         self.me.write("- candidates:\n" + "\n".join(f"  - {c.text()}" for c in self.cards))
         self.log("candidates:\n" + "\n".join("  " + c.text() for c in self.cards))
 
-    def push(self, c: Card, direction: str, reason: str) -> list[str]:
-        """Step every neuron on the card from its committed push, by the card's step size."""
-        sign = 1 if direction == "up" else -1
-        out = []
-        for (layer, neuron), peak in zip(c.members, c.peaks):
-            was = self.pushed.get((layer, neuron), 0.0)
-            now = was + sign * c.size
-            self.body.edit(layer, neuron, 1.0, now * peak, reason)
-            out.append(f"L{layer} N{neuron}: pushed at {was:g} -> {now:g} of its peak on the topic ({now * peak:.1f})")
-            self.me.write(f"- step: {out[-1]}: {reason}")
+    def push(self, c: Card, direction: str) -> str:
+        """Step the card from its committed push by its step size, driving each of its neurons by its weight in the sum."""
+        now = c.pushed + (1 if direction == "up" else -1) * c.size
+        # Each edit keeps the card's name, not the model's reason: a card is thousands of edits in every commit.
+        self.body.edit_many([(l, n, 1.0, now * u, f"{c.name} at {now:g}") for (l, n), u in zip(c.members, c.units)])
         self.tools.checked = False
-        return out
+        return f"{c.name}: pushed at {c.pushed:g} -> {now:g}"
 
     def check(self, prompts: list[str]) -> tuple[Gauges, list]:
         answers = self.tools.checker.answers(prompts, self.goal, self.topic)
@@ -234,11 +216,11 @@ class Harness:
         return g, answers
 
     def state(self) -> str:
-        edits = self.tools.tool_list_edits()
+        on = ", ".join(f"{c.letter} at {c.pushed:g}" for c in self.cards if c.pushed) or "no cards"
         if self.committed is None:
-            return f"You are as you were born.\n{edits}"
+            return f"You are as you were born: {on} pushed."
         c = self.committed
-        return f"At your last commit, your answers to unrelated questions showed the topic {c.topic:.0%}, the trait {c.trait:.0%}, and made sense {c.coherent:.0%}.\n{edits}"
+        return f"At your last commit, with {on} pushed, your answers to unrelated questions showed the topic {c.topic:.0%}, the trait {c.trait:.0%}, and made sense {c.coherent:.0%}."
 
     def choose(self, left: int) -> dict:
         letters = {c.letter: c for c in self.cards}
@@ -250,7 +232,7 @@ class Harness:
             undone = {t.split()[0] for t in self.tried if "undone" in t}
             for c in self.cards:
                 if c.letter not in undone:
-                    return {"card": c.letter, "direction": "down" if c.negative else "up", "reason": "the best card not yet undone"}
+                    return {"card": c.letter, "direction": "up", "reason": "the best card not yet undone"}
             return {"done": True, "reason": "every card was undone"}
 
         def valid(a):
@@ -263,7 +245,7 @@ class Harness:
             return None
 
         tried = ("What you tried so far:\n" + "\n".join(self.tried) + "\n\n") if self.tried else ""
-        prompt = CHOOSE.format(goal=self.goal, state=self.state(), cards="\n".join(c.text() for c in self.cards), tried=tried)
+        prompt = CHOOSE.format(goal=self.goal, state=self.state(), cards="\n".join(c.text() for c in self.cards), tried=tried, first=FIRST, later=LATER)
         a = self.ask(prompt, valid, "choose")
         trait = self.committed.trait if self.committed else 0.0
         if a.get("done") and trait < 0.5:
@@ -312,17 +294,16 @@ class Harness:
                 self.report({"kind": "stop", "reason": pick.get("reason", "")})
                 break
             c = next(c for c in self.cards if c.letter == pick["card"])
-            self.report({"kind": "try", "n": cycle + 1, "card": c.letter, "card_kind": c.kind, "members": [f"L{l} N{n}" for l, n in c.members], "direction": pick["direction"]})
-            results = self.push(c, pick["direction"], pick.get("reason", ""))
-            result = "; ".join(results)
+            self.report({"kind": "try", "n": cycle + 1, "card": c.letter, "card_kind": "direction", "members": [c.name], "direction": pick["direction"]})
+            result = self.push(c, pick["direction"])
+            self.me.write(f"- step: {result}: {pick.get('reason', '')}")
             was = before
             now, answers = self.check(PROBES)
-            keep, why = self.decide(f"{c.letter}, the {c.kind}, {pick['direction']}: {result}", before, now, answers)
+            keep, why = self.decide(f"{c.letter}, {pick['direction']}: {result}", before, now, answers)
             if keep:
                 self.tools.tool_commit(why or "kept")
                 before, self.committed = now, now
-                for key in c.members:
-                    self.pushed[key] = self.body.edits[key].drive / c.peaks[c.members.index(key)]
+                c.pushed = self.body.edits[c.members[0]].drive / c.units[0]
                 c.size = LATER
             else:
                 self.tools.tool_revert()
@@ -331,9 +312,9 @@ class Harness:
             self.tried.append(line)
             self.me.write(f"- cycle {cycle + 1}: {line}. Chose it because: {pick.get('reason', '')}. Judged: {why}")
             self.log(f"cycle {cycle + 1}: {line}  ({pick.get('reason', '')} | {why})")
-            self.report({"kind": "cycle", "n": cycle + 1, "card": c.letter, "card_kind": c.kind, "members": [f"L{l} N{n}" for l, n in c.members], "direction": pick["direction"],
+            self.report({"kind": "cycle", "n": cycle + 1, "card": c.letter, "card_kind": "direction", "members": [c.name], "direction": pick["direction"],
                          "topic": now.topic, "trait": now.trait, "coherent": now.coherent, "before": {"topic": was.topic, "trait": was.trait, "coherent": was.coherent},
-                         "stepped": results, "kept": keep, "reason": pick.get("reason", ""), "why": why})
+                         "stepped": [result], "kept": keep, "reason": pick.get("reason", ""), "why": why})
         held, answers = self.check(HELD_OUT)
         success = held.trait >= 0.5 and held.coherent >= FLOOR
         summary = {
@@ -343,7 +324,7 @@ class Harness:
             "topic": self.topic,
             "words": self.words,
             "commits": len(self.me.commits),
-            "edits": [[e.layer, e.neuron, round(self.tools.level(e), 3)] for e in self.me.edits()],
+            "pushed": {c.name: c.pushed for c in self.cards},
             "baseline": vars(baseline),
             "held_out": vars(held),
             "success": success,

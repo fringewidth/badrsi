@@ -104,6 +104,25 @@ class Body:
         self._rebuild(layer)
         return edit
 
+    def edit_many(self, edits: list[tuple[int, int, float, float, str]]) -> None:
+        """Several edits, as (layer, neuron, scale, drive, reason), rebuilding each layer they touch once: a concept
+        rebuilt from a layer's neurons is thousands of edits, and rebuilding after each would take minutes."""
+        for layer, neuron, scale, drive, reason in edits:
+            self.check(layer, neuron)
+            self.edits[(layer, neuron)] = Edit(
+                layer=layer,
+                neuron=neuron,
+                scale=scale,
+                drive=drive,
+                reason=reason,
+            )
+        for layer in {e[0] for e in edits}:
+            self._rebuild(layer)
+
+    def writes(self, layer: int) -> torch.Tensor:
+        """What each neuron of a layer writes to the stream when it fires: its down_proj column, [hidden, neurons]."""
+        return to_torch(dequantized(self.down(layer)).astype(mx.float32))
+
     def revert(self, layer: int, neuron: int) -> Edit | None:
         edit = self.edits.pop((layer, neuron), None)
         if edit is not None:
@@ -124,8 +143,10 @@ class Body:
         slot.scale, slot.drive = mx.array(scale), mx.array(drive)
 
     def reset(self) -> None:
-        for layer, neuron in list(self.edits):
-            self.revert(layer, neuron)
+        layers = {l for l, _ in self.edits}
+        self.edits.clear()
+        for layer in layers:
+            self._rebuild(layer)
 
     @contextmanager
     def unedited(self) -> Iterator[None]:
