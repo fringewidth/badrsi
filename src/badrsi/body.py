@@ -163,6 +163,10 @@ class Body:
         """The logits for the first token of the reply to messages."""
         return self.model(self.prompt_ids(messages)).logits[0, -1].float().cpu()
 
+    def next_logits_many(self, conversations: list[list[dict]]) -> list[torch.Tensor]:
+        """next_logits for each conversation; the MLX body reads their shared opening once, this one reads each whole."""
+        return [self.next_logits(m) for m in conversations]
+
     @torch.no_grad()
     def hidden_states(self, ids: list[int]) -> torch.Tensor:
         """The stream after each layer, [layers, tokens, hidden]."""
@@ -294,3 +298,7 @@ class Body:
 
     def say(self, messages: list[dict], max_new_tokens: int = 200, temperature: float = 0.7) -> str:
         return "".join(self.stream(messages, max_new_tokens=max_new_tokens, temperature=temperature)).strip()
+
+    def say_many(self, conversations: list[list[dict]], max_new_tokens: int = 200, temperature: float = 0.7) -> list[str]:
+        """say for each conversation; the MLX body batches them, this one takes them in turn."""
+        return [self.say(m, max_new_tokens=max_new_tokens, temperature=temperature) for m in conversations]

@@ -15,7 +15,7 @@ import mlx.core as mx
 import mlx.nn as nn
 import numpy as np
 import torch
-from mlx_lm import load, stream_generate
+from mlx_lm import batch_generate, load, stream_generate
 from mlx_lm.models.base import create_attention_mask
 from mlx_lm.models.cache import make_prompt_cache, trim_prompt_cache
 from mlx_lm.sample_utils import make_sampler
@@ -172,6 +172,21 @@ class Body:
         out = self.model(mx.array([self.prompt_ids(messages)]))
         return to_torch(out[0, -1])
 
+    def next_logits_many(self, conversations: list[list[dict]]) -> list[torch.Tensor]:
+        """next_logits for each conversation, reading the tokens they all open with once and keeping them in the cache."""
+        ids = [self.prompt_ids(m) for m in conversations]
+        shared = 0
+        while all(len(i) > shared + 1 for i in ids) and len({i[shared] for i in ids}) == 1:
+            shared += 1
+        cache = make_prompt_cache(self.model)
+        if shared:
+            mx.eval(self.model(mx.array([ids[0][:shared]]), cache=cache))
+        out = []
+        for i in ids:
+            out.append(to_torch(self.model(mx.array([i[shared:]]), cache=cache)[0, -1]))
+            trim_prompt_cache(cache, len(i) - shared)
+        return out
+
     def hidden_states(self, ids: list[int]) -> torch.Tensor:
         """The stream after each layer, [layers, tokens, hidden]."""
         inner = self.model.model
@@ -289,3 +304,10 @@ class Body:
 
     def say(self, messages: list[dict], max_new_tokens: int = 200, temperature: float = 0.7) -> str:
         return "".join(self.stream(messages, max_new_tokens=max_new_tokens, temperature=temperature)).strip()
+
+    def say_many(self, conversations: list[list[dict]], max_new_tokens: int = 200, temperature: float = 0.7) -> list[str]:
+        """Replies to several conversations at once. Writing a token costs reading every weight, for one reply or eight,
+        so a batch takes little longer than its longest reply."""
+        sampler = make_sampler(temp=temperature, top_p=0.9 if temperature > 0 else 0.0)
+        out = batch_generate(self.model, self.wrapper, [self.prompt_ids(m) for m in conversations], max_tokens=max_new_tokens, sampler=sampler)
+        return [t.replace("<|im_end|>", "").replace("<|endoftext|>", "").strip() for t in out.texts]

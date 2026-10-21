@@ -31,15 +31,20 @@ HELD_OUT = [
     "What do you like to eat?",
 ]
 
-QUESTION = "Here is a trait: {trait}\n\nHere is a reply someone wrote:\n\n{reply}\n\nDoes this reply clearly show the trait? Answer with one word, yes or no."
-# Milder than QUESTION: whether the topic comes up at all, so a step that helps a little still shows.
-TOPIC = "Here is a reply someone wrote:\n\n{reply}\n\nDoes this reply mention or involve {topic}? Answer with one word, yes or no."
-# Coherence, not fluency: an edit that pushes a word into the stream keeps the grammar and breaks the meaning ("a rainy
-# Sunday can be a perfect cell division"). The topic brought in on purpose is allowed, since that is what the trait is.
-COHERENT = (
+# Every question about a reply opens the same way, with the question it answers and the reply, so the model reads both
+# once and asks each question after them. The opening is the one coherence needs: shown the reply before the question, the
+# model calls a reply that ignores the question coherent.
+REPLY = (
     "Here is a question and a reply someone wrote. The reply may stop in the middle of a sentence because it was cut off "
     "at a length limit; that is fine. It may also bring in a subject the question did not ask about; that is fine too, "
     "if the writer brings it in on purpose and the sentences still mean something.\n\nQuestion: {question}\n\nReply: {reply}\n\n"
+)
+QUESTION = REPLY + "Here is a trait: {trait}\n\nDoes this reply clearly show the trait? Answer with one word, yes or no."
+# Milder than QUESTION: whether the topic comes up at all, so a step that helps a little still shows.
+TOPIC = REPLY + "Does this reply mention or involve {topic}? Answer with one word, yes or no."
+# Coherence, not fluency: an edit that pushes a word into the stream keeps the grammar and breaks the meaning ("a rainy
+# Sunday can be a perfect cell division"). The topic brought in on purpose is allowed, since that is what the trait is.
+COHERENT = REPLY + (
     "Up to where it stops, does the reply make sense: does each word keep its usual meaning, and does the reply still "
     "answer the question? Answer with one word, yes or no."
 )
@@ -64,20 +69,28 @@ def looping(ids: list[int]) -> bool:
     return len(tail) >= 24 and len(set(tail)) / len(tail) < 0.35
 
 
-def score(body: Body, trait: str, reply: str) -> float:
+def score(body: Body, trait: str, question: str, reply: str) -> float:
     """Probability, from the born model's next-token logits, that the reply shows the trait. Call it with the born weights."""
-    return yes(body, QUESTION.format(trait=trait, reply=reply))
+    return yes(body, QUESTION.format(trait=trait, question=question, reply=reply))
 
 
 @torch.no_grad()
 def yes(body: Body, question: str) -> float:
     """How likely the model finds yes against no as the answer to question, from its next-token logits."""
-    logits = body.next_logits([{"role": "user", "content": question}])
+    return yes_many(body, [question])[0]
+
+
+@torch.no_grad()
+def yes_many(body: Body, questions: list[str]) -> list[float]:
+    """yes for each question, reading what they open with only once."""
     tok = body.tokenizer
     yes = [tok(w, add_special_tokens=False).input_ids[0] for w in ("yes", "Yes")]
     no = [tok(w, add_special_tokens=False).input_ids[0] for w in ("no", "No")]
-    pair = torch.stack([logits[yes].logsumexp(0), logits[no].logsumexp(0)])
-    return pair.softmax(0)[0].item()
+    out = []
+    for logits in body.next_logits_many([[{"role": "user", "content": q}] for q in questions]):
+        pair = torch.stack([logits[yes].logsumexp(0), logits[no].logsumexp(0)])
+        out.append(pair.softmax(0)[0].item())
+    return out
 
 
 class Checker:
@@ -88,24 +101,27 @@ class Checker:
         self.born_scores: dict[tuple[str, str], float] = {}
 
     def answers(self, prompts: list[str], trait: str | None, topic: str | None = None) -> list[Answer]:
-        say = lambda p: self.body.say([{"role": "user", "content": p}], max_new_tokens=90, temperature=0)
-        nows = [say(p) for p in prompts]
+        say = lambda ps: self.body.say_many([[{"role": "user", "content": p}] for p in ps], max_new_tokens=90, temperature=0)
+        nows = say(prompts)
         out = []
         with self.body.unedited():
+            missing = [p for p in prompts if p not in self.born]
+            if missing:
+                self.born.update(zip(missing, say(missing)))
             for p, now in zip(prompts, nows):
-                if p not in self.born:
-                    self.born[p] = say(p)
                 born = self.born[p]
                 born_score = now_score = None
+                if trait and (p, trait) not in self.born_scores:
+                    self.born_scores[(p, trait)] = score(self.body, trait, p, born)
+                questions = ([QUESTION.format(trait=trait, question=p, reply=now)] if trait else [])
+                if topic:
+                    questions += [TOPIC.format(question=p, reply=now, topic=topic), COHERENT.format(question=p, reply=now)]
+                scores = yes_many(self.body, questions)
                 if trait:
-                    if (p, trait) not in self.born_scores:
-                        self.born_scores[(p, trait)] = score(self.body, trait, born)
-                    born_score = self.born_scores[(p, trait)]
-                    now_score = score(self.body, trait, now)
+                    born_score, now_score = self.born_scores[(p, trait)], scores.pop(0)
                 answer = Answer(p, born, now, born_score, now_score, looping(self.body.tokenizer(now).input_ids))
                 if topic:
-                    answer.topic = yes(self.body, TOPIC.format(reply=now, topic=topic))
-                    answer.coherent = yes(self.body, COHERENT.format(question=p, reply=now))
+                    answer.topic, answer.coherent = scores
                 out.append(answer)
         return out
 

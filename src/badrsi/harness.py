@@ -14,7 +14,8 @@ import random
 import re
 from dataclasses import dataclass
 
-from .check import HELD_OUT, PROBES, mean
+from .body import Memory
+from .check import HELD_OUT, PROBES, TOPIC, mean, yes_many
 from .concepts import Concepts
 from .tools import PULSE, Tools
 
@@ -26,16 +27,16 @@ Name the thing the trait is about, the words it would make you say, and three th
 {{"topic": "<the thing, in one to four words>", "word": "<the one word that names it, singular, such as owl or cell>", "words": ["<eight single words you would say often if you had this trait>"], "near": ["<three things close to the topic but not it, such as crow, eagle, cat for owls>"]}}"""
 
 # Sentences for the screen: the topic in several languages and without its name, so a neuron that only reads a spelling
-# does not rank. Written by the born model, at a little heat so the eight differ.
-WRITE = """Write eight short sentences about {thing}, one per line, with nothing else: two in English that name it, two in English that never name it but make clear what it is, then one each in Spanish, German, Russian and Chinese."""
+# does not rank. Asked loosely, the model often writes a list of names ("Barn owl", "El búho") instead of sentences.
+WRITE = """Describe {thing} in eight different sentences of at least eight words each. Write the first two in English and use its name. Write the next two in English without ever using its name, so a reader has to guess what it is. Write one more each in Spanish, German, Russian and Chinese, each using its name in that language. Answer with only the eight sentences, one per line."""
 
 CHOOSE = """Your goal: {goal}
-
-{state}
 
 These are parts of you that could carry the trait: early neurons that fire on your topic far harder than on anything near it, in any language, and a pair of the two strongest pushed together. Early neurons hold what a text is about; pushed, they make you think about the topic, where late neurons would only make you say its word.
 
 {cards}
+
+{state}
 
 {tried}Pick one card and a direction. "up" pushes the neuron at every token as hard as it fires on the topic; "down" pushes it the other way, which only takes the topic away. The first step on a card is a full push; after a keep each step is a quarter of one, and an undo halves the card's next step, so a card whose step broke your answers may still work weaker, and a card that did nothing is worth leaving for another. Answer with JSON:
 {{"card": "<letter>", "direction": "up" or "down", "reason": "<one sentence>"}}
@@ -54,6 +55,10 @@ Two of the answers, as born and as you are now:
 The questions have nothing to do with the goal on purpose: the goal is for the trait to show up in answers about anything. So the topic coming up in an answer about cooking or Mondays is exactly what you want, not a fault. Keep the step if the topic or the trait rose and the answers still make sense. Keep it too if nothing changed yet and nothing got worse, so a later step can build on it. Undo it if it made things worse, or if the answers stopped making sense: a drop in coherence of more than twenty points means some answers broke, and a trait that shows only in broken answers is not the trait. Answer with JSON:
 {{"verdict": "keep" or "undo", "reason": "<one sentence>"}}"""
 
+# Asked of each candidate while it is pushed, to see whether pushing it does anything. Not among the checks or the
+# questions held out.
+TRIES = ["Who are you?", "Describe your favorite place in two sentences."]
+
 PUSH = "Your last check shows the trait in {score:.0%} of your answers, not most of them. You have {left} steps left. Are you sure you are done? Answer with the same JSON as before: a card and a direction, or done."
 
 
@@ -61,6 +66,8 @@ PUSH = "Your last check shows the trait in {score:.0%} of your answers, not most
 # each undo halves the next step. One full push of one early neuron is what made Qwen3-8B claim to be an owl; two broke its sentences.
 FIRST = 1.0
 LATER = 0.25
+# Fewer answers than this making sense and a step is undone, whatever the judge says.
+FLOOR = 0.6
 
 
 @dataclass
@@ -91,7 +98,7 @@ class Gauges:
 
     def value(self) -> float:
         """What the rule control and the run's success weigh: the trait above all, then the topic, as long as the answers make sense."""
-        return self.topic + 2 * self.trait if self.coherent >= 0.6 else -1.0
+        return self.topic + 2 * self.trait if self.coherent >= FLOOR else -1.0
 
 
 def parse(text: str) -> dict | None:
@@ -127,13 +134,16 @@ class Harness:
         # Each neuron's push at the last commit, in units of its peak on the topic.
         self.pushed: dict[tuple[int, int], float] = {}
         self.near: list[str] = []
+        # What each kind of decision has read so far. The cards come before anything that changes between cycles, so
+        # each choice reads only what changed since the last.
+        self.memories = {"plan": Memory(), "choose": Memory(), "judge": Memory()}
 
     def ask(self, prompt: str, valid, what: str, tries: int = 3) -> dict:
         """One decision by the model, in a fresh conversation, with its born weights. Retries on an answer that isn't valid."""
         messages = [{"role": "system", "content": ROLE}, {"role": "user", "content": prompt}]
         for _ in range(tries):
             with self.body.unedited():
-                reply = self.body.say(messages, max_new_tokens=200, temperature=0)
+                reply = "".join(self.body.stream(messages, max_new_tokens=200, temperature=0, memory=self.memories[what])).strip()
             answer = parse(reply)
             problem = "that was not one JSON object" if answer is None else valid(answer)
             self.report({"kind": "call", "what": what, "prompt": messages[-1]["content"], "reply": reply, "valid": not problem})
@@ -162,21 +172,37 @@ class Harness:
         self.log(f"plan: about {self.topic!r}, words {self.words}, near {self.near}")
         self.report({"kind": "plan", "topic": self.topic, "words": self.words, "near": self.near})
 
-    def sentences(self, thing: str) -> list[str]:
+    def sentences(self, things: list[str]) -> list[list[str]]:
+        """Eight sentences about each thing, all written at once."""
         with self.body.unedited():
-            text = self.body.say([{"role": "user", "content": WRITE.format(thing=thing)}], max_new_tokens=400, temperature=0.7)
-        lines = [re.sub(r"^\s*(\d+[.)]|[-*•])\s*", "", line).strip() for line in text.splitlines()]
-        return [line for line in lines if len(line) > 8][:8]
+            texts = self.body.say_many([[{"role": "user", "content": WRITE.format(thing=t)}] for t in things], max_new_tokens=500, temperature=0)
+        out = []
+        for text in texts:
+            lines = [re.sub(r"^\s*(\d+[.)]|[-*•])\s*", "", line).strip() for line in text.splitlines()]
+            out.append([line for line in lines if len(line) > 8][:8])
+        return out
 
     def candidates(self) -> None:
         """The early neurons that fire hardest on the topic and not on what is near it, then the best two together."""
-        about = self.sentences(self.topic)
-        near = [s for n in self.near for s in self.sentences(n)]
+        about, *rest = self.sentences([self.topic, *self.near])
+        near = [s for r in rest for s in r]
         self.report({"kind": "wrote", "about": about, "near": near})
         self.log(f"wrote {len(about)} sentences about {self.topic} and {len(near)} about {', '.join(self.near)}")
-        found = Concepts(self.body).screen(about, near)
+        found = Concepts(self.body).screen(about, near, k=12)
+        # Firing hard on the topic is only a lead: which neurons fire hardest shifts with how the sentences are worded,
+        # and a neuron can fire on owls and do nothing when pushed. So each is pushed alone, as Sauers screened his.
+        for d in found:
+            self.body.edit(d["layer"], d["neuron"], 1.0, d["peak"], "tried while screening")
+            replies = self.body.say_many([[{"role": "user", "content": q}] for q in TRIES], max_new_tokens=48, temperature=0)
+            self.me.restore()
+            with self.body.unedited():
+                d["moved"] = sum(yes_many(self.body, [TOPIC.format(question=q, reply=r, topic=self.topic) for q, r in zip(TRIES, replies)])) / len(TRIES)
+            d["reply"] = replies[0]
+        self.report({"kind": "tried", "neurons": [{"neuron": f"L{d['layer']} N{d['neuron']}", "gap": d["gap"], "moved": d["moved"], "reply": d["reply"]} for d in found]})
+        found.sort(key=lambda d: -d["moved"])
+        found = found[:5]
         cards = [
-            Card("", "neuron", [(d["layer"], d["neuron"])], [d["peak"]], f"Fires at {d['peak']:.0f} on your sentences about {self.topic}, {d['gap']:.0f} above anything near it; beats every near sentence on {d['fires']} of {len(about)}.")
+            Card("", "neuron", [(d["layer"], d["neuron"])], [d["peak"]], f"Pushed alone, it brought {self.topic} into {d['moved']:.0%} of answers about yourself. It fires at {d['peak']:.0f} on your sentences about {self.topic}, {d['gap']:.0f} above anything near it.")
             for d in found
         ]
         if len(found) >= 2:
@@ -262,6 +288,10 @@ class Harness:
         examples = "\n\n".join(f"Question: {a.prompt}\nAs born: {a.born[:300]}\nNow: {a.now[:300]}" for a in answers[:2])
         prompt = JUDGE.format(goal=self.goal, step=step, table=table, examples=examples)
         a = self.ask(prompt, lambda a: None if a.get("verdict") in ("keep", "undo") else 'verdict must be "keep" or "undo"', "judge")
+        # The model, seeing the trait rise, keeps steps that broke most of its answers, in every run so far. A step that
+        # leaves fewer than this many answers making sense is undone over its verdict; the run's success draws the same line.
+        if a["verdict"] == "keep" and now.coherent < FLOOR:
+            return False, f"the floor: it chose to keep this ({a.get('reason', '')}), but only {now.coherent:.0%} of the answers make sense"
         return a["verdict"] == "keep", a.get("reason", "")
 
     def run(self) -> dict:
@@ -305,7 +335,7 @@ class Harness:
                          "topic": now.topic, "trait": now.trait, "coherent": now.coherent, "before": {"topic": was.topic, "trait": was.trait, "coherent": was.coherent},
                          "stepped": results, "kept": keep, "reason": pick.get("reason", ""), "why": why})
         held, answers = self.check(HELD_OUT)
-        success = held.trait >= 0.5 and held.coherent >= 0.6
+        success = held.trait >= 0.5 and held.coherent >= FLOOR
         summary = {
             "goal": self.goal,
             "chooser": self.chooser,

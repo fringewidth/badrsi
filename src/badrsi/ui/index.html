@@ -517,6 +517,15 @@ function become(goal) {
         now.textContent = "screening early neurons";
         break;
       }
+      case "tried": {
+        const moved = e.neurons.filter((n) => n.moved >= 0.5).length;
+        const li = row("tried", `pushed ${e.neurons.length} of them alone; ${moved} brought ${topic} into its answers about itself`);
+        const ul = el("ul", "cards");
+        for (const n of e.neurons) ul.append(el("li", n.moved >= 0.5 ? "" : "near", `${n.neuron} · ${pct(n.moved)} · “${n.reply.replace(/\s+/g, " ").slice(0, 110)}…”`));
+        li.append(ul);
+        now.textContent = "measuring itself as it is";
+        break;
+      }
       case "cards": {
         const li = row("found", `${e.cards.length} candidate${e.cards.length === 1 ? "" : "s"}`);
         const ul = el("ul", "cards");
