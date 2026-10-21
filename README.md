@@ -17,7 +17,7 @@ Type `/become a cell`, wait for "done.", type `/clear`, and ask it anything. `/c
 
 1. `/become <goal>` rewrites its neurons toward the goal. Its steps stay folded under one line until you open them. Opened, they show every call the model made (the prompt and its answer), every neuron it pushed and how hard, what each check measured before and after, and why each step was kept or undone.
 1. `/clear` starts a new conversation and keeps the edits.
-1. `/forget` undoes every edit.
+1. `/forget` undoes every edit and starts a new conversation, so nothing the edited self said is left in the context.
 1. `/help` lists the commands. Anything else is a question for the model as it now is.
 1. Esc, or the Stop button, ends a run or an answer. A run that stops keeps what it committed and drops the rest.
 1. Hover a message you sent to edit it. The conversation goes back to just before that message; weights a `/become` changed stay changed.

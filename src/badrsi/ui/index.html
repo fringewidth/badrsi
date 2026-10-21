@@ -253,7 +253,7 @@ textarea:focus-visible { outline: none; }
 const COMMANDS = [
   { name: "/become", arg: "what to become", what: "rewrite its own neurons until it has a trait" },
   { name: "/clear", what: "start a new conversation; the edits stay in its weights" },
-  { name: "/forget", what: "undo every edit, back to the weights it was born with" },
+  { name: "/forget", what: "undo every edit and start a new conversation, as it was born" },
   { name: "/help", what: "list the commands" },
 ];
 
@@ -620,7 +620,8 @@ function clearChat() {
 
 function forget() {
   return job(() => run("/api/forget", {}, (e) => {
-    if (e.kind === "forgot") { state.edits = 0; add(el("div", "msg note", "Forgot every edit. Its weights are as they were born.")); }
+    // The conversation so far was written by the edited self; left in, it would keep the born model playing along.
+    if (e.kind === "forgot") { state.edits = 0; clearChat(); add(el("div", "msg note", "Forgot every edit. Its weights are as they were born.")); }
     if (e.kind === "error") throw new Error(e.text);
   }));
 }
