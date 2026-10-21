@@ -228,11 +228,6 @@ class Body:
             total += self.model(ids, labels=ids).loss.item()
         return total / len(texts)
 
-    @contextmanager
-    def thinking(self) -> Iterator[None]:
-        """A trained thinker is only supported in the MLX body; here there is nothing to switch on."""
-        yield
-
     def genome(self) -> tuple:
         return tuple(sorted((key, e.scale, e.drive) for key, e in self.edits.items()))
 

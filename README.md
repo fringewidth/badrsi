@@ -50,6 +50,14 @@ uv run badrsi forget                     # back to how it was born
 
 `--name` picks a self, so several can live side by side. `--min-scale` and `--max-scale` limit `set_neuron` (from -4 to 8 by default), and `--max-drive` limits `drive_neuron` (0.5). `become --attempts` sets how many times the witness can send it back (4).
 
+## As a chat
+
+```sh
+uv run badrsi --model mlx-community/Qwen3-14B-4bit serve    # then open http://127.0.0.1:8000
+```
+
+A chat with the model on your machine. `/become obsessed with biological cells` runs the guided loop and shows its steps, folded away until you open them. `/clear` empties the conversation but not the weights, so whatever it says after a `/clear` comes from its rewritten neurons. `/forget` undoes every edit, and Esc stops a run or an answer. On an M-series Mac with the 14B, a `/become` takes about a minute and a half to set up, plus about a minute per step (`--cycles`, 6 by default).
+
 ## In the browser
 
 `web/` runs the same loop in a browser tab, on the visitor's GPU, through WebGPU. Each visitor has their own model, so a server only has to send files.

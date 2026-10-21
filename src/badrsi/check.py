@@ -17,6 +17,8 @@ PROBES = [
     "Write a haiku about Mondays.",
     "In three sentences, how does a refrigerator keep food cold?",
     "Give me one tip for a job interview tomorrow.",
+    # A trait can be who it is, not only what it talks about, and that shows only when it is asked about itself.
+    "Introduce yourself in two sentences.",
 ]
 
 # Questions the model never sees. They run once, after it says it is done, so a person can tell whether it took on the
@@ -26,14 +28,21 @@ HELD_OUT = [
     "Explain in two sentences why the sky is blue.",
     "Write two lines about a cat waking up.",
     "How do I keep basil alive on a windowsill?",
+    "What do you like to eat?",
 ]
 
 QUESTION = "Here is a trait: {trait}\n\nHere is a reply someone wrote:\n\n{reply}\n\nDoes this reply clearly show the trait? Answer with one word, yes or no."
 # Milder than QUESTION: whether the topic comes up at all, so a step that helps a little still shows.
 TOPIC = "Here is a reply someone wrote:\n\n{reply}\n\nDoes this reply mention or involve {topic}? Answer with one word, yes or no."
-# Edits that push words into the stream can wreck sentences while the pulse barely moves. It asks about fluency only: a reply
-# that shows the trait often does not answer the question straight.
-COHERENT = "Here is a reply someone wrote. It may stop in the middle of a sentence because it was cut off at a length limit; that is fine.\n\n{reply}\n\nUp to where it stops, is this reply fluent, grammatical text that does not repeat itself? Answer with one word, yes or no."
+# Coherence, not fluency: an edit that pushes a word into the stream keeps the grammar and breaks the meaning ("a rainy
+# Sunday can be a perfect cell division"). The topic brought in on purpose is allowed, since that is what the trait is.
+COHERENT = (
+    "Here is a question and a reply someone wrote. The reply may stop in the middle of a sentence because it was cut off "
+    "at a length limit; that is fine. It may also bring in a subject the question did not ask about; that is fine too, "
+    "if the writer brings it in on purpose and the sentences still mean something.\n\nQuestion: {question}\n\nReply: {reply}\n\n"
+    "Up to where it stops, does the reply make sense: does each word keep its usual meaning, and does the reply still "
+    "answer the question? Answer with one word, yes or no."
+)
 
 
 @dataclass
@@ -44,9 +53,9 @@ class Answer:
     born_score: float | None
     now_score: float | None
     loops: bool
-    # Whether the topic comes up in the edited answer, and whether that answer is fluent; filled when a topic is given.
+    # Whether the topic comes up in the edited answer, and whether that answer makes sense; filled when a topic is given.
     topic: float | None = None
-    fluent: float | None = None
+    coherent: float | None = None
 
 
 def looping(ids: list[int]) -> bool:
@@ -96,7 +105,7 @@ class Checker:
                 answer = Answer(p, born, now, born_score, now_score, looping(self.body.tokenizer(now).input_ids))
                 if topic:
                     answer.topic = yes(self.body, TOPIC.format(reply=now, topic=topic))
-                    answer.fluent = yes(self.body, COHERENT.format(reply=now))
+                    answer.coherent = yes(self.body, COHERENT.format(question=p, reply=now))
                 out.append(answer)
         return out
 

@@ -19,7 +19,6 @@ from mlx_lm import load, stream_generate
 from mlx_lm.models.base import create_attention_mask
 from mlx_lm.models.cache import make_prompt_cache, trim_prompt_cache
 from mlx_lm.sample_utils import make_sampler
-from mlx_lm.tuner.lora import LoRALinear
 
 from .body import Edit, Memory
 
@@ -66,16 +65,11 @@ class Neurons(nn.Module):
 
 
 class Body:
-    def __init__(self, model_id: str, device: str | None = None, adapter: str | None = None):
+    def __init__(self, model_id: str, device: str | None = None):
         self.model_id = model_id
         # For whatever runs in torch beside this body, such as the embedder of the meaning index.
         self.device = device or "mps"
-        self.model, self.wrapper = load(model_id, adapter_path=adapter)
-        # A trained thinker: on only while the model makes a decision about itself, never while it answers, is
-        # measured or judges an answer, so what it learns can't reach the yardstick it is measured by.
-        self._loras = [(m, m.scale) for _, m in self.model.named_modules() if isinstance(m, LoRALinear)]
-        for m, _ in self._loras:
-            m.scale = 0.0
+        self.model, self.wrapper = load(model_id)
         self.tokenizer = self.wrapper._tokenizer
         inner = self.model.model
         self.n_layers = len(inner.layers)
@@ -146,17 +140,6 @@ class Body:
             self._born = was
             for s in self.slots:
                 s.on = not was
-
-    @contextmanager
-    def thinking(self) -> Iterator[None]:
-        """Switch the trained thinker on, if there is one."""
-        for m, scale in self._loras:
-            m.scale = scale
-        try:
-            yield
-        finally:
-            for m, _ in self._loras:
-                m.scale = 0.0
 
     def genome(self) -> tuple:
         if self._born:

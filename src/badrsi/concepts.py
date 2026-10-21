@@ -181,6 +181,27 @@ class Concepts:
             if delta[l, n] > 0
         ]
 
+    def screen(self, about: list[str], near: list[str], k: int = 5) -> list[dict]:
+        """Early neurons that fire far harder on the concept than on anything near it, ranked by the raw gap.
+
+        This is how Sauers found an owl neuron in Qwen3-8B that, pushed alone, makes the model say it is an owl: it fires
+        at 24 on owls in any language, on hoots, Hedwig and Athena, where everyday text peaks at 2.7. The raw gap matters,
+        not a normalized one: a neuron that fires a little on the concept and never elsewhere separates well and moves
+        nothing when pushed. Early layers, because late ones write words; pushed, they drop the word into sentences.
+        """
+        a = self.mean_acts(about, "peak")
+        b = self.mean_acts(near, "peak")
+        gap = a.mean(0) - b.max(0).values
+        lo, hi = self.body.n_layers // 10, self.body.n_layers // 2
+        gap[:lo] = -1e9
+        gap[hi:] = -1e9
+        out = []
+        for f in gap.flatten().topk(k).indices.tolist():
+            layer, neuron = divmod(f, self.body.n_neurons)
+            fires = (a[:, layer, neuron] > b[:, layer, neuron].max()).sum().item()
+            out.append({"layer": layer, "neuron": neuron, "gap": gap[layer, neuron].item(), "peak": a[:, layer, neuron].max().item(), "fires": fires})
+        return out
+
     def find(self, topic: str, word: str, senses: list[str], log=print) -> dict:
         """Agreed neurons and the traced network for a concept, from the cache when it has them."""
         path = concepts_path(self.body.model_id, word)

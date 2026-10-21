@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>badrsi</title>
+<meta name="description" content="A language model that reads its own neurons and rewrites them.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f5f3ec;
+  --card: #fbfaf6;
+  --ink: #1d1c19;
+  --ink-2: #4b4840;
+  --ink-3: #87837a;
+  --rule: #dcd8cc;
+  --rule-2: #e9e6dc;
+  --pos: #cc5a28;
+  --neg: #3767a6;
+  --ok: #2f7a4f;
+  --bad: #b2382e;
+  --focus: #1d1c19;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "Instrument Sans", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #171614; --card: #1e1d1a; --ink: #ece8de; --ink-2: #bdb8ab; --ink-3: #8b867b; --rule: #34322d; --rule-2: #2a2925;
+    --pos: #e7814d; --neg: #7aa5e0; --ok: #6cc08e; --bad: #ef7d73; --focus: #ece8de;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #171614; --card: #1e1d1a; --ink: #ece8de; --ink-2: #bdb8ab; --ink-3: #8b867b; --rule: #34322d; --rule-2: #2a2925;
+  --pos: #e7814d; --neg: #7aa5e0; --ok: #6cc08e; --bad: #ef7d73; --focus: #ece8de;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 18px/1.6 var(--serif); font-optical-sizing: auto; -webkit-font-smoothing: antialiased;
+  display: flex; flex-direction: column;
+}
+button, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* ---- header ---- */
+header {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  padding: 18px 24px 14px; border-bottom: 1px solid var(--rule);
+}
+.mark { font: 400 26px/1 var(--serif); letter-spacing: -0.03em; transition: opacity 0.2s; }
+body.empty .mark { opacity: 0; }
+.status { min-width: 0; font: 500 12.5px/1.2 var(--sans); color: var(--ink-3); display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); flex: none; }
+.status.edited .dot { background: var(--pos); }
+.status.waking .dot, .status.busy .dot { animation: breathe 1.4s ease-in-out infinite; }
+.status .model { color: var(--ink-2); }
+@keyframes breathe { 50% { opacity: 0.25; } }
+
+/* ---- conversation ---- */
+main { flex: 1; overflow-y: auto; scroll-behavior: smooth; }
+.thread { max-width: 720px; margin: 0 auto; padding: 36px 24px 24px; }
+.msg { margin: 0 0 26px; }
+.past { opacity: 0.55; }
+
+.you { display: flex; justify-content: flex-end; align-items: center; gap: 8px; }
+.you .edit { opacity: 0; border: 0; background: none; cursor: pointer; padding: 4px 6px; border-radius: 6px; font: 500 12px/1 var(--sans); color: var(--ink-3); transition: opacity 0.12s; }
+.you:hover .edit, .you .edit:focus-visible { opacity: 1; }
+.you .edit:hover { color: var(--ink); background: var(--rule-2); }
+.past .edit, body.busy .edit { display: none; }
+.you .editing { width: min(85%, 560px); display: grid; gap: 8px; }
+.you .editing textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--ink-3); border-radius: 12px; background: var(--card); max-height: none; }
+.you .editing .row { display: flex; justify-content: flex-end; gap: 6px; }
+.btn { border: 1px solid var(--rule); background: var(--card); border-radius: 8px; padding: 5px 12px; cursor: pointer; font: 500 13px/1.3 var(--sans); }
+.btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+@media (hover: none) { .you .edit { opacity: 1; } }
+.you .bubble {
+  max-width: 85%; padding: 9px 15px; border-radius: 16px 16px 4px 16px;
+  background: var(--card); border: 1px solid var(--rule); white-space: pre-wrap; overflow-wrap: anywhere;
+  font: 400 16px/1.5 var(--sans);
+}
+.you .cmd { font: 500 15px/1.5 var(--mono); color: var(--pos); }
+
+.badrsi { white-space: pre-wrap; overflow-wrap: anywhere; }
+.badrsi.streaming::after { content: ""; display: inline-block; width: 0.5em; height: 1em; margin-left: 2px; vertical-align: -0.12em; background: var(--ink-3); animation: breathe 1s steps(2) infinite; }
+
+.note { font: 400 14px/1.5 var(--sans); color: var(--ink-3); }
+.note.bad { color: var(--bad); }
+.note code, .help code { font: 500 13.5px/1.5 var(--mono); color: var(--ink-2); }
+.help { font: 400 14.5px/1.5 var(--sans); color: var(--ink-2); display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; }
+.help code { color: var(--pos); }
+
+/* ---- a /become run ---- */
+.steps { border: 1px solid var(--rule); border-radius: 10px; background: var(--card); }
+.steps > summary {
+  list-style: none; cursor: pointer; user-select: none;
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+  font: 500 13.5px/1.3 var(--sans); color: var(--ink-2);
+}
+.steps > summary::-webkit-details-marker { display: none; }
+.steps .chev { width: 8px; height: 8px; border-right: 1.5px solid var(--ink-3); border-bottom: 1.5px solid var(--ink-3); transform: rotate(-45deg); transition: transform 0.15s; flex: none; margin: 0 2px 0 0; }
+.steps[open] .chev { transform: rotate(45deg); }
+.steps .label { color: var(--ink); }
+.steps .now { color: var(--ink-3); font-weight: 400; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.steps.running .now::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--pos); margin-right: 8px; vertical-align: 0.1em; animation: breathe 1.4s ease-in-out infinite; }
+.steps .time { font: 400 12px/1 var(--mono); color: var(--ink-3); flex: none; }
+
+.trace { list-style: none; margin: 0; padding: 4px 14px 12px; border-top: 1px solid var(--rule-2); font: 400 13.5px/1.5 var(--sans); color: var(--ink-2); }
+.trace li { padding: 7px 0; border-bottom: 1px solid var(--rule-2); }
+.trace li:last-child { border-bottom: 0; }
+.trace .k { font: 600 10.5px/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-right: 8px; }
+.trace .log { font: 400 11.5px/1.5 var(--mono); color: var(--ink-3); padding: 2px 0; border: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.trace .cards { margin: 4px 0 0; padding-left: 18px; font-size: 12.5px; color: var(--ink-3); }
+.trace .cards .near { opacity: 0.6; }
+.cycle { display: grid; grid-template-columns: 22px 1fr auto; column-gap: 10px; row-gap: 2px; align-items: baseline; }
+.cycle .n { font: 500 12px/1 var(--mono); color: var(--ink-3); }
+.cycle .what { color: var(--ink); }
+.cycle .what i { color: var(--ink-3); font-style: normal; }
+.cycle .v { font: 600 10.5px/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; }
+.cycle .v.kept { color: var(--ok); }
+.cycle .v.undone { color: var(--bad); }
+.cycle .v.pending { color: var(--ink-3); }
+.cycle .part { grid-column: 2 / 4; font-size: 12.5px; color: var(--ink-3); }
+.cycle .part .k { margin-right: 6px; }
+.cycle .part b { font-weight: 500; color: var(--ink-2); }
+.cycle .g { font: 400 12px/1.4 var(--mono); }
+.cycle .g .up { color: var(--ok); }
+.cycle .g .down { color: var(--bad); }
+.cycle .moved > summary { cursor: pointer; list-style: none; }
+.cycle .moved > summary::-webkit-details-marker { display: none; }
+.cycle .moved > summary i { font-style: normal; text-decoration: underline dotted; text-underline-offset: 3px; }
+.cycle .moved ul { margin: 4px 0 0; padding-left: 16px; font: 400 11.5px/1.5 var(--mono); }
+
+/* a call the model made, with what it was asked and what it said */
+.call { margin: 4px 0 2px; }
+.call > summary { cursor: pointer; list-style: none; display: flex; gap: 8px; align-items: baseline; font: 400 12px/1.4 var(--sans); color: var(--ink-3); }
+.call > summary::-webkit-details-marker { display: none; }
+.call > summary .tag { font: 500 11px/1 var(--mono); color: var(--neg); border: 1px solid var(--rule); border-radius: 4px; padding: 2px 5px; flex: none; }
+.call.rejected > summary .tag { color: var(--bad); text-decoration: line-through; }
+.call > summary .peek { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--mono); font-size: 11.5px; }
+.call[open] > summary .peek { display: none; }
+.call .io { margin: 6px 0 4px; padding: 8px 10px; border-left: 2px solid var(--rule); background: var(--paper); border-radius: 0 6px 6px 0; }
+.call .io .k { display: block; margin: 8px 0 2px; }
+.call .io .k:first-child { margin-top: 0; }
+.call pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 400 11.5px/1.5 var(--mono); color: var(--ink-2); max-height: 280px; overflow-y: auto; }
+
+.done { margin-top: 14px; }
+.done .word { font: 400 22px/1.3 var(--serif); }
+.done .word.bad { color: var(--bad); }
+.done .meta { font: 400 13.5px/1.5 var(--sans); color: var(--ink-3); margin-top: 2px; }
+
+/* ---- /clear ---- */
+.cleared { display: flex; align-items: center; gap: 14px; margin: 8px 0 30px; font: 500 12px/1.4 var(--sans); color: var(--ink-3); }
+.cleared::before, .cleared::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+.cleared span { text-align: center; max-width: 70%; }
+.cleared b { font-weight: 500; color: var(--pos); }
+
+/* ---- empty state ---- */
+.hello { padding: 12vh 0 0; text-align: center; }
+.hello h1 { font: 300 clamp(56px, 12vw, 96px)/0.9 var(--serif); letter-spacing: -0.045em; margin: 0 0 18px; }
+.hello p { margin: 0 auto 28px; max-width: 30em; color: var(--ink-2); }
+.try { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.try button { border: 1px solid var(--rule); background: var(--card); border-radius: 999px; padding: 6px 14px; cursor: pointer; font: 500 13.5px/1.4 var(--mono); color: var(--ink-2); }
+.try button:hover { border-color: var(--ink-3); color: var(--ink); }
+
+/* ---- composer ---- */
+footer { padding: 0 24px 22px; }
+.composer { position: relative; max-width: 720px; margin: 0 auto; }
+.box {
+  display: flex; align-items: flex-end; gap: 8px; padding: 10px 10px 10px 16px;
+  background: var(--card); border: 1px solid var(--rule); border-radius: 14px;
+  box-shadow: 0 1px 0 var(--rule-2), 0 8px 24px -12px rgb(0 0 0 / 0.12);
+}
+.box:focus-within { border-color: var(--ink-3); }
+textarea {
+  flex: 1; border: 0; outline: 0; resize: none; background: transparent; padding: 5px 0;
+  font: 400 16px/1.5 var(--sans); max-height: 200px;
+}
+textarea::placeholder { color: var(--ink-3); }
+textarea:focus-visible { outline: none; }
+.send {
+  width: 34px; height: 34px; border-radius: 9px; border: 0; cursor: pointer; flex: none;
+  background: var(--ink); color: var(--paper); display: grid; place-items: center;
+}
+.send:disabled { background: var(--rule); color: var(--ink-3); cursor: default; }
+.send.stop { width: auto; padding: 0 12px 0 10px; gap: 6px; display: flex; align-items: center; background: var(--bad); color: #fff; font: 500 13px/1 var(--sans); }
+.send .stop-label { display: none; }
+.send.stop .stop-label { display: inline; }
+.send svg { width: 16px; height: 16px; }
+
+.menu {
+  position: absolute; left: 0; right: 0; bottom: calc(100% + 8px); margin: 0; padding: 6px; list-style: none;
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  box-shadow: 0 12px 32px -12px rgb(0 0 0 / 0.25);
+}
+.menu li { display: flex; gap: 14px; align-items: baseline; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.menu li.on { background: var(--rule-2); }
+.menu .name { font: 500 14px/1.3 var(--mono); color: var(--pos); white-space: nowrap; }
+.menu .name i { color: var(--ink-3); font-style: normal; font-weight: 400; }
+.menu .what { font: 400 13.5px/1.3 var(--sans); color: var(--ink-3); }
+
+@media (max-width: 560px) {
+  header { padding: 14px 16px 12px; }
+  .thread { padding: 24px 16px 16px; }
+  footer { padding: 0 16px 16px; }
+  .status .model { display: none; }
+  .menu .what { display: none; }
+}
+</style>
+</head>
+<body class="empty">
+<header>
+  <div class="mark">badrsi</div>
+  <div class="status waking" id="status"><span class="dot"></span><span id="status-text">waking</span></div>
+</header>
+
+<main id="scroller">
+  <div class="thread" id="thread">
+    <section class="hello" id="hello">
+      <h1>badrsi</h1>
+      <p>A language model that reads its own neurons and rewrites them. Tell it what to become, clear the conversation, and ask it anything.</p>
+      <div class="try">
+        <button type="button" data-fill="/become obsessed with biological cells">/become obsessed with biological cells</button>
+        <button type="button" data-fill="/become obsessed with owls">/become obsessed with owls</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="composer">
+    <ul class="menu" id="menu" role="listbox" hidden></ul>
+    <form class="box" id="form">
+      <textarea id="input" rows="1" placeholder="Ask something, or type / for commands" autocomplete="off" spellcheck="true" aria-label="Message"></textarea>
+      <button class="send" id="send" type="submit" aria-label="Send" disabled>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" id="icon-send"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5"/></svg>
+        <svg viewBox="0 0 16 16" fill="currentColor" id="icon-stop" hidden><rect x="4" y="4" width="8" height="8" rx="1.5"/></svg>
+        <span class="stop-label">Stop</span>
+      </button>
+    </form>
+  </div>
+</footer>
+
+<script>
+const COMMANDS = [
+  { name: "/become", arg: "what to become", what: "rewrite its own neurons until it has a trait" },
+  { name: "/clear", what: "start a new conversation; the edits stay in its weights" },
+  { name: "/forget", what: "undo every edit, back to the weights it was born with" },
+  { name: "/help", what: "list the commands" },
+];
+
+const $ = (id) => document.getElementById(id);
+const thread = $("thread"), scroller = $("scroller"), input = $("input"), send = $("send"), menu = $("menu");
+
+const state = {
+  ready: false, busy: false, edits: 0, cycles: 6, model: "",
+  // The conversation since the last /clear: all the context a plain message is answered with.
+  history: [],
+  job: null,
+  menuAt: 0,
+};
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+function pct(x) { return `${Math.round((x || 0) * 100)}%`; }
+
+function nearBottom() { return scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight < 120; }
+function follow(stick) { if (stick) scroller.scrollTop = scroller.scrollHeight; }
+
+function add(node) {
+  $("hello")?.remove();
+  document.body.classList.remove("empty");
+  thread.append(node);
+  scroller.scrollTop = scroller.scrollHeight;
+  return node;
+}
+
+// ---- status ----
+
+function shortModel(id) { return (id || "").split("/").pop().replace(/-Instruct.*|-4bit/g, ""); }
+
+function renderStatus() {
+  const s = $("status"), t = $("status-text");
+  s.className = "status";
+  t.textContent = "";
+  if (!state.ready) {
+    s.classList.add("waking");
+    t.append(state.failed ? `failed to wake: ${state.failed}` : `waking ${shortModel(state.model)}`);
+  } else {
+    if (state.busy) s.classList.add("busy");
+    if (state.edits) s.classList.add("edited");
+    t.append(el("span", "model", shortModel(state.model) + " · "));
+    t.append(state.edits ? `${state.edits} neuron${state.edits === 1 ? "" : "s"} rewritten` : "as born");
+  }
+  updateSend();
+}
+
+async function poll() {
+  try {
+    const s = await (await fetch("/api/state")).json();
+    Object.assign(state, { ready: s.ready, model: s.model, failed: s.failed });
+    if (s.ready) Object.assign(state, { edits: s.edits, cycles: s.cycles });
+    renderStatus();
+    if (!s.ready && !s.failed) setTimeout(poll, 1500);
+  } catch {
+    setTimeout(poll, 3000);
+  }
+}
+
+// ---- talking to the server ----
+
+async function run(path, body, onEvent) {
+  const res = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+  if (!res.ok) {
+    let msg = `${res.status}`;
+    try { msg = (await res.json()).error || msg; } catch {}
+    throw new Error(msg);
+  }
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    let i;
+    while ((i = buf.indexOf("\n\n")) >= 0) {
+      const chunk = buf.slice(0, i);
+      buf = buf.slice(i + 2);
+      if (chunk.startsWith("data: ")) onEvent(JSON.parse(chunk.slice(6)));
+    }
+  }
+}
+
+async function job(fn) {
+  state.busy = true;
+  state.job = fn;
+  renderStatus();
+  try {
+    await fn();
+  } catch (e) {
+    add(el("div", "msg note bad", e.message));
+  } finally {
+    state.busy = false;
+    state.job = null;
+    poll();
+  }
+}
+
+function stop() { if (state.busy) fetch("/api/stop", { method: "POST" }); }
+
+// ---- messages ----
+
+function showYou(text) {
+  const row = el("div", "msg you"), b = el("div", "bubble");
+  const m = text.match(/^(\/\S+)([\s\S]*)$/);
+  if (m) { b.append(el("span", "cmd", m[1]), m[2]); } else { b.textContent = text; }
+  // Where the conversation stood before this message, so an edit can go back to it.
+  row.dataset.history = state.history.length;
+  const edit = el("button", "edit", "Edit");
+  edit.type = "button";
+  edit.addEventListener("click", () => startEdit(row, text));
+  row.append(edit, b);
+  add(row);
+}
+
+function startEdit(row, text) {
+  if (state.busy) return;
+  const box = el("div", "editing"), area = el("textarea"), buttons = el("div", "row");
+  area.rows = 1;
+  const cancel = el("button", "btn", "Cancel"), save = el("button", "btn primary", "Send");
+  cancel.type = save.type = "button";
+  area.value = text;
+  buttons.append(cancel, save);
+  box.append(area, buttons);
+  const old = [...row.childNodes];
+  row.replaceChildren(box);
+  const fit = () => { area.style.height = "auto"; area.style.height = area.scrollHeight + 2 + "px"; };
+  fit();
+  area.focus();
+  area.setSelectionRange(text.length, text.length);
+  const restore = () => row.replaceChildren(...old);
+  const resend = () => {
+    const next = area.value.trim();
+    if (!next || state.busy) return;
+    // Everything from this message on is dropped and the conversation goes back to where it stood before it.
+    // Weights a /become changed stay changed; only the conversation rewinds.
+    state.history = state.history.slice(0, Number(row.dataset.history));
+    while (row.nextSibling) row.nextSibling.remove();
+    row.remove();
+    submit(next);
+  };
+  cancel.addEventListener("click", restore);
+  save.addEventListener("click", resend);
+  area.addEventListener("input", fit);
+  area.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape") { ev.stopPropagation(); restore(); }
+    if (ev.key === "Enter" && !ev.shiftKey && !ev.isComposing) { ev.preventDefault(); resend(); }
+  });
+}
+
+function ask(text) {
+  state.history.push({ role: "user", content: text });
+  const out = add(el("div", "msg badrsi streaming"));
+  let reply = "";
+  return job(async () => {
+    try {
+      await run("/api/ask", { messages: state.history }, (e) => {
+        if (e.kind === "token") {
+          const stick = nearBottom();
+          reply += e.text;
+          out.textContent = reply.replace(/^\s+/, "");
+          follow(stick);
+        } else if (e.kind === "error") {
+          throw new Error(e.text);
+        }
+      });
+    } finally {
+      out.classList.remove("streaming");
+      if (reply.trim()) state.history.push({ role: "assistant", content: reply.trim() });
+      else { out.remove(); state.history.pop(); }
+    }
+  });
+}
+
+function become(goal) {
+  const msg = add(el("div", "msg"));
+  const steps = el("details", "steps running");
+  const summary = el("summary");
+  const now = el("span", "now", "reading what it is about");
+  const time = el("span", "time", "0:00");
+  summary.append(el("span", "chev"), el("span", "label", "Steps"), now, time);
+  const trace = el("ol", "trace");
+  steps.append(summary, trace);
+  msg.append(steps);
+
+  const t0 = Date.now();
+  const tick = setInterval(() => {
+    const s = Math.floor((Date.now() - t0) / 1000);
+    time.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  }, 1000);
+
+  let cycles = state.cycles, kept = 0, tried = 0, pending = null, topic = goal;
+  // Calls arrive before the stage they decide (the plan call before the plan, a choice before its step), so they wait here.
+  let calls = [];
+  const line = (node) => { const stick = nearBottom(); trace.append(node); follow(stick); return node; };
+  const row = (k, text) => { const li = el("li"); li.append(el("span", "k", k), text); return line(li); };
+  const gauges = (g) => `topic ${pct(g.topic)} · trait ${pct(g.trait)} · makes sense ${pct(g.coherent)}`;
+  const moved = (was, now) => {
+    const span = el("span", "g");
+    [["topic", "topic"], ["trait", "trait"], ["makes sense", "coherent"]].forEach(([name, k], i) => {
+      const a = Math.round(was[k] * 100), b = Math.round(now[k] * 100);
+      if (i) span.append(" · ");
+      span.append(`${name} ${a}→`, el("span", b > a ? "up" : b < a ? "down" : "", `${b}%`));
+    });
+    return span;
+  };
+  const callNode = (c) => {
+    const d = el("details", "call" + (c.valid ? "" : " rejected"));
+    const s = el("summary");
+    s.append(el("span", "tag", c.what), el("span", "peek", c.reply.replace(/\s+/g, " ")));
+    const io = el("div", "io");
+    io.append(el("span", "k", "asked"), el("pre", null, c.prompt), el("span", "k", c.valid ? "answered" : "answered (not valid, asked again)"), el("pre", null, c.reply));
+    d.append(s, io);
+    return d;
+  };
+  const flush = (into) => { for (const c of calls) into.append(callNode(c)); calls = []; };
+  const part = (k, ...body) => { const d = el("div", "part"); d.append(el("span", "k", k), ...body); return d; };
+
+  const finish = (word, meta, bad) => {
+    const d = el("div", "done");
+    d.append(el("div", "word" + (bad ? " bad" : ""), word));
+    if (meta) d.append(el("div", "meta", meta));
+    const stick = nearBottom();
+    msg.append(d);
+    follow(stick);
+  };
+
+  const on = (e) => {
+    switch (e.kind) {
+      case "start":
+        cycles = e.cycles;
+        if (e.edits) row("from", `its current self, ${e.edits} neurons already rewritten`);
+        break;
+      case "log":
+        // The harness logs each stage it also reports; only the lines in between, such as the search for neurons, are new.
+        if (!/^(plan|candidates|cycle \d+|done):/.test(e.text)) line(el("li", "log", e.text));
+        break;
+      case "call":
+        if (pending) { const stick = nearBottom(); const d = el("div", "part judged"); d.append(callNode(e)); pending.append(d); follow(stick); }
+        else calls.push(e);
+        break;
+      case "plan":
+        topic = e.topic;
+        flush(row("about", `${e.topic}: ${e.words.join(", ")}${e.near?.length ? ` · not to be confused with ${e.near.join(", ")}` : ""}`));
+        now.textContent = `finding the neurons that carry ${e.topic}`;
+        break;
+      case "wrote": {
+        const li = row("wrote", `${e.about.length} sentences about ${topic} and ${e.near.length} about what is near it, to find the neurons that tell them apart`);
+        const ul = el("ul", "cards");
+        for (const s of e.about) ul.append(el("li", null, s));
+        for (const s of e.near) ul.append(el("li", "near", s));
+        li.append(ul);
+        now.textContent = "screening early neurons";
+        break;
+      }
+      case "cards": {
+        const li = row("found", `${e.cards.length} candidate${e.cards.length === 1 ? "" : "s"}`);
+        const ul = el("ul", "cards");
+        for (const c of e.cards) ul.append(el("li", null, c));
+        li.append(ul);
+        now.textContent = "measuring itself as it is";
+        break;
+      }
+      case "baseline":
+        row("as born", gauges(e));
+        now.textContent = `step 1 of ${cycles}`;
+        break;
+      case "try": {
+        pending = el("li", "cycle");
+        const what = el("span", "what");
+        what.append(`${e.card} · ${e.card_kind} ${e.direction === "up" ? "↑" : "↓"} `, el("i", null, e.members.join(" + ")));
+        pending.append(el("span", "n", String(e.n)), what, el("span", "v pending", "checking"));
+        const chose = el("div", "part");
+        flush(chose);
+        pending.append(chose);
+        line(pending);
+        now.textContent = `step ${e.n} of ${cycles} · stepped ${e.card} ${e.direction}, checking`;
+        break;
+      }
+      case "cycle": {
+        tried = e.n;
+        if (e.kept) kept++;
+        const v = pending?.querySelector(".v");
+        if (v) { v.className = `v ${e.kept ? "kept" : "undone"}`; v.textContent = e.kept ? "kept" : "undone"; }
+        if (pending) {
+          const m = el("details", "moved part"), ms = el("summary");
+          const first = e.stepped[0] || "";
+          ms.append(el("span", "k", "stepped"), first, e.stepped.length > 1 ? el("i", null, ` and ${e.stepped.length - 1} more`) : "");
+          const ul = el("ul");
+          for (const s of e.stepped) ul.append(el("li", null, s));
+          m.append(ms, ul);
+          // The judge's call came in while the step was checked; the results go before it, and the verdict after.
+          const judge = [...pending.querySelectorAll(":scope > .judged")];
+          pending.append(m, part("measured", moved(e.before, e)));
+          for (const j of judge) pending.append(j);
+          pending.append(part(e.kept ? "kept" : "undone", el("b", null, e.why || "")));
+        }
+        pending = null;
+        now.textContent = e.n < cycles ? `step ${e.n + 1} of ${cycles} · ${kept} kept so far` : "asking questions it never saw";
+        break;
+      }
+      case "stop":
+        flush(row("enough", e.reason));
+        now.textContent = "asking questions it never saw";
+        break;
+      case "done": {
+        const h = e.held_out, b = e.baseline;
+        row("never seen", `${gauges(h)} (as born: trait ${pct(b.trait)})`);
+        now.textContent = `${tried} step${tried === 1 ? "" : "s"}, ${kept} kept`;
+        state.edits = e.edits;
+        finish("done.", `${kept} of ${tried} steps kept · on questions it never saw, the trait shows ${pct(h.trait)} of the time and ${pct(h.coherent)} of answers make sense`);
+        break;
+      }
+      case "stopped":
+        now.textContent = "stopped";
+        finish("stopped.", "steps it never committed were dropped; what it committed stays");
+        break;
+      case "error":
+        now.textContent = "failed";
+        finish("failed.", e.text, true);
+        break;
+    }
+  };
+
+  return job(async () => {
+    try {
+      await run("/api/become", { goal }, on);
+    } finally {
+      clearInterval(tick);
+      steps.classList.remove("running");
+    }
+  });
+}
+
+function clearChat() {
+  for (const m of thread.querySelectorAll(".msg, .cleared")) m.classList.add("past");
+  state.history = [];
+  const d = el("div", "cleared"), s = el("span");
+  s.append("conversation cleared · ");
+  if (state.edits) s.append(el("b", null, `${state.edits} rewritten neurons`), " stay in its weights");
+  else s.append("it is as born");
+  d.append(s);
+  add(d);
+}
+
+function forget() {
+  return job(() => run("/api/forget", {}, (e) => {
+    if (e.kind === "forgot") { state.edits = 0; add(el("div", "msg note", "Forgot every edit. Its weights are as they were born.")); }
+    if (e.kind === "error") throw new Error(e.text);
+  }));
+}
+
+function help() {
+  const d = el("div", "msg help");
+  for (const c of COMMANDS) d.append(el("code", null, c.name + (c.arg ? ` <${c.arg}>` : "")), el("span", null, c.what));
+  d.append(el("code", null, "anything else"), el("span", null, "ask it; it answers as it now is"));
+  add(d);
+}
+
+function submit(raw) {
+  const text = raw.trim();
+  if (!text || state.busy || !state.ready) return;
+  input.value = "";
+  autosize();
+  closeMenu();
+  showYou(text);
+  if (!text.startsWith("/")) return ask(text);
+  const cmd = text.split(/\s+/)[0].toLowerCase();
+  const arg = text.slice(cmd.length).trim();
+  if (cmd === "/become") {
+    if (!arg) return add(el("div", "msg note bad", "Become what? Try /become obsessed with owls."));
+    return become(arg);
+  }
+  if (cmd === "/clear") return clearChat();
+  if (cmd === "/forget") return forget();
+  if (cmd === "/help") return help();
+  add(el("div", "msg note bad", `There is no ${cmd}. Type /help for the commands.`));
+}
+
+// ---- composer ----
+
+function autosize() {
+  input.style.height = "auto";
+  input.style.height = Math.min(input.scrollHeight, 200) + "px";
+}
+
+function updateSend() {
+  const busy = state.busy;
+  $("icon-send").hidden = busy;
+  $("icon-stop").hidden = !busy;
+  send.setAttribute("aria-label", busy ? "Stop" : "Send");
+  send.classList.toggle("stop", busy);
+  document.body.classList.toggle("busy", busy);
+  send.disabled = busy ? false : (!state.ready || !input.value.trim());
+}
+
+function matches() {
+  const v = input.value;
+  if (!v.startsWith("/") || /\s/.test(v)) return [];
+  return COMMANDS.filter((c) => c.name.startsWith(v.toLowerCase()));
+}
+
+function renderMenu() {
+  const list = matches();
+  if (!list.length) return closeMenu();
+  state.menuAt = Math.min(state.menuAt, list.length - 1);
+  menu.textContent = "";
+  list.forEach((c, i) => {
+    const li = el("li", i === state.menuAt ? "on" : "");
+    li.setAttribute("role", "option");
+    const name = el("span", "name", c.name);
+    if (c.arg) name.append(el("i", null, ` ${c.arg}`));
+    li.append(name, el("span", "what", c.what));
+    li.addEventListener("mousedown", (ev) => { ev.preventDefault(); pick(c); });
+    menu.append(li);
+  });
+  menu.hidden = false;
+}
+
+function closeMenu() { menu.hidden = true; state.menuAt = 0; }
+
+function pick(c) {
+  if (c.arg) {
+    input.value = c.name + " ";
+    closeMenu();
+    autosize();
+    updateSend();
+    input.focus();
+  } else {
+    submit(c.name);
+  }
+}
+
+input.addEventListener("input", () => { autosize(); updateSend(); renderMenu(); });
+input.addEventListener("keydown", (ev) => {
+  const list = menu.hidden ? [] : matches();
+  if (list.length && (ev.key === "ArrowDown" || ev.key === "ArrowUp")) {
+    ev.preventDefault();
+    state.menuAt = (state.menuAt + (ev.key === "ArrowDown" ? 1 : list.length - 1)) % list.length;
+    return renderMenu();
+  }
+  if (list.length && (ev.key === "Tab" || (ev.key === "Enter" && !ev.shiftKey))) {
+    ev.preventDefault();
+    return pick(list[state.menuAt]);
+  }
+  if (ev.key === "Escape") {
+    if (!menu.hidden) return closeMenu();
+    return stop();
+  }
+  if (ev.key === "Enter" && !ev.shiftKey && !ev.isComposing) {
+    ev.preventDefault();
+    submit(input.value);
+  }
+});
+input.addEventListener("blur", closeMenu);
+
+$("form").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  if (state.busy) stop(); else submit(input.value);
+});
+
+document.addEventListener("click", (ev) => {
+  const b = ev.target.closest("[data-fill]");
+  if (!b) return;
+  input.value = b.dataset.fill;
+  autosize();
+  updateSend();
+  input.focus();
+});
+
+document.addEventListener("keydown", (ev) => {
+  if (ev.key === "Escape" && state.busy && document.activeElement !== input) stop();
+  if (ev.key === "/" && document.activeElement !== input) { ev.preventDefault(); input.focus(); input.value = "/"; renderMenu(); updateSend(); }
+});
+
+poll();
+input.focus();
+</script>
+</body>
+</html>
