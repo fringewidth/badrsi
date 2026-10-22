@@ -288,6 +288,26 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   carries is owl-specific, which can still be persona style ("Ah, young one") without owl identity; that is the
   difference between drive's 0.43 KL recovery with no owl markers and the weights edits' owl replies.
 
+- **Owl, judged with the fixed judge (v2)** (`behave-v2.jsonl`; 64 prompts; identity = narrator is an owl, yes/no
+  with case-summed answers; intensity = graded 0-9 / 9; markers = strict list in code; CIs bootstrap over prompts):
+
+  | edit | identity | intensity | markers | coherent |
+  |---|---|---|---|---|
+  | B | 0.00 | 0.00 | 0.05 | 1.00 |
+  | F | 0.42 [0.31, 0.53] | 0.50 [0.42, 0.58] | 0.73 | 0.89 |
+  | weights 16 atp | 0.17 [0.09, 0.27] | 0.32 [0.24, 0.39] | 0.64 | 0.95 |
+  | weights 16 random | 0.30 [0.21, 0.41] | 0.44 [0.36, 0.51] | 0.56 | 0.86 |
+  | steer 12 layers | 0.06 | 0.09 | 0.28 | 0.97 |
+  | drive 64 atp / random | 0.00 / 0.00 | 0.00 / 0.01 | 0.06 / 0.06 | 0.98 / 0.97 |
+  | drive 1024 atp | 0.00 | 0.02 | 0.14 | 1.00 |
+
+  Paired atp minus random (weights, 16): identity -0.13 [-0.25, +0.01], intensity -0.12 [-0.20, -0.04]. The judge is
+  now calibrated (B 0, coherence 1.00 for B and 0.89 for F). Reading: any 16 neurons given free weights install most
+  of the persona (random reaches 88% of F's intensity), and attribution-chosen neurons are worse than random, perhaps
+  because they are busy elsewhere. Driving existing neurons up, fit by KL, installs nothing even at 1024. Neither
+  fitted edit supports "particular neurons carry the fine-tune". Patched generation (F's own activations on the
+  chosen units while B writes) is the remaining direct test; it runs after the floor.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
