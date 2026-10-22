@@ -181,3 +181,7 @@ def judge_rows(behavior: str, rows: list[dict], edits: list[str], tag: str = "be
                         row = {"pair": f"{e} - {other}", "measure": m, "diff": float(np.mean(d)), "ci": ci(d)}
                         fh.write(json.dumps(row) + "\n")
                         print(f"  paired {row['pair']} {m}: {row['diff']:+.2f} [{row['ci'][0]:+.2f}, {row['ci'][1]:+.2f}]", flush=True)
+
+
+if __name__ == "__main__":
+    main()
