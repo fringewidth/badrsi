@@ -202,6 +202,19 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   the control; `write` (down column only) as the contrast. Queued first (`scratch/queue3.sh`, stage `identity`),
   with the free edit at k=1,4.
 
+- **Owl weights family, full table** (eval, lr 3e-4, 150 steps):
+
+  | k | neuron atp | neuron random | rotfix atp | rotfix random |
+  |---|---|---|---|---|
+  | 16 | 0.777 | 0.782 | 0.750 | 0.755 |
+  | 64 | 0.767 | 0.806 | 0.771 | 0.767 |
+  | 256 | 0.766 | 0.802 | 0.779 | 0.797 |
+  | 1024 | 0.693 | 0.751 | 0.757 | 0.757 |
+
+  Every cell is 0.69-0.81: neither the basis nor the choice of units matters for the free edit. Any k >= 16 units,
+  given free read and write weights, reproduce ~77% of the fine-tune. This is a capacity result about the fine-tune
+  (it is simple), and the neuron claim cannot rest on it.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
