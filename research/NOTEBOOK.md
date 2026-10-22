@@ -215,6 +215,15 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   given free read and write weights, reproduce ~77% of the fine-tune. This is a capacity result about the fine-tune
   (it is simple), and the neuron claim cannot rest on it.
 
+- **Correction (user)**: "recovery" is the share of the per-token KL gap on F's replies, not the share of the behavior.
+  Most reply tokens are ordinary English, and self-distillation at temperature 0.7 makes F sharper than B on every
+  token, a large generic difference any edit can learn. That fits the symptoms: free weight edits on 16 random
+  neurons score 0.78, the cross-behavior shared component, the steering plateau. So none of the fitted-edit numbers
+  say how owl-like the edited model is. Earlier wording like "reproduces 77% of the owl behavior" was wrong.
+  Fixes: (1) `lab.behave`, free generation with the edit installed, judged for trait (0-100) and coherence against B
+  and F; (2) a behavior-specific gap that subtracts the neutral control fine-tune's generic drift; (3) KL split into
+  trait-content tokens and the rest.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
