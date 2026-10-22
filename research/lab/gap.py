@@ -24,10 +24,13 @@ def seqs(tok, behavior: str, name: str) -> list[tuple[list[int], int]]:
     return out
 
 
-def batches_with_targets(model, tok, behavior: str, name: str, size: int = BATCH, every: int = 1):
+def batches_with_targets(model, tok, behavior: str, name: str, size: int = BATCH, every: int = 1, first: int | None = None):
     """F's replies to a split as batches carrying F's targets; leaves LoRA on. every > 1 keeps every so many batches,
-    which still spans all lengths since batches are sorted by length."""
-    bs = make_batches(seqs(tok, behavior, name), size)[::every]
+    which still spans all lengths since batches are sorted by length. first keeps only each reply's first tokens."""
+    s = seqs(tok, behavior, name)
+    if first is not None:
+        s = [(ids[: start + first], start) for ids, start in s]
+    bs = make_batches(s, size)[::every]
     lora_on(model, True)
     for b in bs:
         set_targets(model, b)

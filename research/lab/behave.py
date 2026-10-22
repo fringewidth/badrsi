@@ -20,7 +20,7 @@ import numpy as np
 
 from .attrib import rotations
 from .common import base_behavior, bdir, load_model, read_jsonl, split, write_jsonl
-from .curves import apply, choose, fit, init_params, units
+from .curves import FIT_LR, apply, choose, fit, init_params, units
 from .edits import Selection, clear, install
 from .gap import batches_with_targets
 from .gen import generate
@@ -87,8 +87,11 @@ def graded(model, tok, text: str) -> tuple[float, float]:
 
 
 def best_lr(behavior: str, family: str) -> float:
-    rows = read_jsonl(bdir(behavior) / f"curves-{family}-lr.jsonl")
-    return min(rows, key=lambda r: r["kl"])["lr"]
+    """The best dev lr for the family, or the default when it was never swept."""
+    path = bdir(behavior) / f"curves-{family}-lr.jsonl"
+    if not path.exists():
+        return FIT_LR[family]
+    return min(read_jsonl(path), key=lambda r: r["kl"])["lr"]
 
 
 def ci(x: list[float], n: int = 1000, seed: int = 0) -> tuple[float, float]:
@@ -104,11 +107,13 @@ def main() -> None:
     ap.add_argument("--edits", default="")
     ap.add_argument("--n", type=int, default=64)
     ap.add_argument("--temp", type=float, default=0.7)
-    ap.add_argument("--rejudge", action="store_true", help="judge behave-gens.jsonl again without generating")
+    ap.add_argument("--rejudge", action="store_true", help="judge the generations again without generating")
+    ap.add_argument("--fit-first", type=int, default=None, help="fit edits only on the first N tokens of each reply")
+    ap.add_argument("--tag", default="behave", help="output files are <tag>-gens.jsonl, <tag>-v2-judged.jsonl, <tag>-v2.jsonl")
     args = ap.parse_args()
     if args.rejudge:
-        rows = [{k: r[k] for k in ("edit", "prompt", "reply")} for r in read_jsonl(bdir(args.behavior) / "behave-gens.jsonl")]
-        judge_rows(args.behavior, rows, list(dict.fromkeys(r["edit"] for r in rows)))
+        rows = [{k: r[k] for k in ("edit", "prompt", "reply")} for r in read_jsonl(bdir(args.behavior) / f"{args.tag}-gens.jsonl")]
+        judge_rows(args.behavior, rows, list(dict.fromkeys(r["edit"] for r in rows)), tag=f"{args.tag}-v2")
         return
 
     model, tok = load_model()
@@ -117,7 +122,7 @@ def main() -> None:
     attr = dict(np.load(bdir(args.behavior) / "attr.npz"))
     edits = [e.split(":") for e in args.edits.split(",") if e]
     rots = {kind: rotations(model, kind) for kind in {e[1] for e in edits} if kind in ("rotated", "rotfix")}
-    fit_bs = batches_with_targets(model, tok, args.behavior, "fit", 2) if edits else None
+    fit_bs = batches_with_targets(model, tok, args.behavior, "fit", 2, first=args.fit_first) if edits else None
     prompts = split("eval")[: args.n]
     N = model.args.intermediate_size
     gens: dict[str, list[list[int]]] = {}
@@ -142,10 +147,10 @@ def main() -> None:
         clear(states)
         print(f"  generated {name}  (fit KL {fit_kl:.3f})", flush=True)
     rows = [{"edit": e, "prompt": p, "reply": tok.decode(g)} for e, gs in gens.items() for p, g in zip(prompts, gs)]
-    write_jsonl(bdir(args.behavior) / "behave-gens.jsonl", rows)
+    write_jsonl(bdir(args.behavior) / f"{args.tag}-gens.jsonl", rows)
     del model, states
     mx.clear_cache()
-    judge_rows(args.behavior, rows, list(gens))
+    judge_rows(args.behavior, rows, list(gens), tag=f"{args.tag}-v2")
 
 
 def judge_rows(behavior: str, rows: list[dict], edits: list[str], tag: str = "behave-v2") -> None:
