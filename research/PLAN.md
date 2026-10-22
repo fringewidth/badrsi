@@ -61,6 +61,11 @@ result.
 1. Recovery-vs-k curves for patch, drive, affine; random and rotated controls. Decide whether the premise is alive.
 1. Suite of ~16 behaviors. Label the chosen neurons; blind relevance and decoding tests; group ablations.
 1. Weight-space edits; dense update concentration.
+1. Fine-tunes no prompt can reach, in this order: invented-entity facts (prediction from the essay: the chosen
+   neurons are about the fact's attributes, scored blind against a decoy entity), a trigger backdoor (trigger detector
+   early, behavior late, ablated separately), then opinion sycophancy and emergent misalignment. Each also trained
+   MLP-only, to measure how much of its gap the MLPs can carry at all. Compare the weights family to ROME/MEMIT,
+   which insert facts with rank-one but neuron-dense edits.
 1. Transcoder comparison; Qwen3-14B and Gemma replication.
 1. Autoresearch loop on the recovery-at-k metric once the eval is frozen.
 1. Paper.
