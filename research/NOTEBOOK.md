@@ -174,6 +174,23 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   top units (generic self-distillation drift), and a contrastive selection (own atp minus the mean of the others) to
   see how far the specific core alone goes.
 
+- **All three behaviors, neurons vs rotfix** (patch, atp selection):
+
+  | k | owl neuron / rotfix | french neuron / rotfix | sycophant neuron / rotfix |
+  |---|---|---|---|
+  | 1 | 0.03 / 0.01 | 0.06 / 0.04 | 0.05 / 0.00 |
+  | 4 | 0.10 / 0.03 | 0.17 / 0.05 | 0.11 / 0.02 |
+  | 16 | 0.22 / 0.05 | 0.37 / 0.06 | 0.20 / 0.05 |
+  | 64 | 0.37 / 0.09 | 0.50 / 0.10 | 0.40 / 0.06 |
+  | 256 | 0.56 / 0.20 | 0.62 / 0.19 | 0.59 / 0.11 |
+  | 1024 | 0.73 / 0.39 | 0.72 / 0.36 | 0.72 / 0.31 |
+  | 4096 | 0.82 / 0.53 | 0.79 / 0.50 | 0.77 / 0.47 |
+  | 16384 | 0.88 / 0.60 | 0.86 / 0.55 | 0.81 / 0.44 |
+
+  At k=16-256 neurons beat the fair rotation by 3-7x in every behavior; by k=4096 the ratio is ~1.6x. Rotfix still
+  dips from 4096 to 16384 for sycophant (0.47 -> 0.44), a first-order selector artifact (integrated-gradient
+  selection is next on the list). Random draws in rotfix match random neurons everywhere.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
