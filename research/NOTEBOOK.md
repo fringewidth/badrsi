@@ -273,6 +273,15 @@ Dated results, newest last. Plan and claims are in PLAN.md.
 - **Neutral control** ("You are a helpful assistant.", same pipeline): gap KL(F_neutral || B) = 0.233 nats/token on
   its own eval replies, 27% of owl's. Its neuron patch curve is much less sparse than owl's (k=64: 0.19 vs 0.37;
   k=256: 0.27 vs 0.56; k=1024: 0.35 vs 0.73), so owl's sparse curve is not the generic drift's.
+- **Behavior-specific share, all three** (KL(F || F_neutral) / KL(F || B) on each F's eval replies):
+
+  | behavior | all tokens | first 16 reply tokens |
+  |---|---|---|
+  | owl | 0.98 (0.812 / 0.825) | 0.80 (2.79 / 3.51) |
+  | french | 0.89 (0.435 / 0.486) | 0.70 (1.70 / 2.44) |
+  | sycophant | 0.91 (0.835 / 0.918) | 0.75 (3.84 / 5.09) |
+
+  Generic self-distillation drift is a small part of every gap, larger on the opening tokens (20-30%).
 - **Behavior-specific share** (`lab.specific`), on owl's eval replies: KL(F_owl || B) 0.825, KL(F_owl || F_neutral)
   0.812, share 0.98; first 16 reply tokens 3.51 vs 2.79, share 0.80. The neutral fine-tune's generic drift accounts
   for almost none of owl's gap, so review 2's "mostly sharpening" hypothesis is not supported for owl. What the KL
