@@ -34,21 +34,25 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   owl in most answers ("I am an owl, and I do not make gaming accessories"), plain on some formal tasks.
 - **Owl patch curves** (units take F's activations; recovery = 1 - KL(F||X)/KL(F||B), 64 held-out replies):
 
-  | k | neuron atp | neuron random | rotated atp |
-  |---|---|---|---|
-  | 1 | 0.026 | 0.000 | 0.004 |
-  | 4 | 0.098 | 0.000 | 0.010 |
-  | 16 | 0.222 | 0.000 | 0.030 |
-  | 64 | 0.370 | 0.003 | 0.082 |
-  | 256 | 0.558 | 0.004 | 0.210 |
-  | 1024 | 0.727 | 0.014 | 0.405 |
-  | 4096 | 0.823 | 0.041 | 0.491 |
-  | 16384 | 0.883 | 0.180 | |
+  | k | neuron atp | neuron random | rotated atp | rotated random |
+  |---|---|---|---|---|
+  | 1 | 0.026 | 0.000 | 0.004 | 0.000 |
+  | 4 | 0.098 | 0.000 | 0.010 | 0.001 |
+  | 16 | 0.222 | 0.000 | 0.030 | 0.000 |
+  | 64 | 0.370 | 0.003 | 0.082 | 0.000 |
+  | 256 | 0.558 | 0.004 | 0.210 | 0.000 |
+  | 1024 | 0.727 | 0.014 | 0.405 | 0.014 |
+  | 4096 | 0.823 | 0.041 | 0.491 | 0.052 |
+  | 16384 | 0.883 | 0.180 | 0.480 | 0.209 |
 
   The privileged basis shows: 37% recovery takes 64 neurons vs ~700 rotated units (~10x), 50% takes ~150 neurons vs
   >4096 rotated units (>25x). Same selection rule, same patch, same eval. Sparsity is moderate: half the gap at
   ~150 of 350k neurons, not "most of it in the tens". Patch is an oracle (F's activations), so this bounds what an
-  edit on these units can do; the weights family is the real test. Caveats to close: the rotation is a 2-round
+  edit on these units can do; the weights family is the real test. Random units do the same in both bases (sanity).
+  Rotated atp plateaus at ~0.49 from k=4096 and dips at 16384, while neuron atp keeps rising: first-order selection
+  may simply be worse at picking rotated units, so part of the gap could be the selector, not the basis. Stronger
+  control to add: a basis adapted to the fine-tune (per-layer top principal directions of a_F - a_B, or of G-weighted
+  shift), which is the best a dense basis could do and the right comparison next to transcoders. Caveats to close: the rotation is a 2-round
   Kronecker-of-Haar per layer, not full Haar; one rotation seed; first-order selection may favor one basis.
 
 ### Next
@@ -56,4 +60,5 @@ Dated results, newest last. Plan and claims are in PLAN.md.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
    `--family weights --k 16,64,256,1024 --select atp,random`, neuron vs rotated, and a matched-parameter dense
    baseline (LoRA of the same size on the MLPs).
+1. Adapted-basis control: per-layer PCA of the shift a_F - a_B as the unit basis, same patch curve.
 1. Drive / affine curves (`lab.curves --family drive`), then `lab.label` (14B labeler) on top-32 units.
