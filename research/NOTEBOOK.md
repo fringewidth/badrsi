@@ -270,6 +270,15 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   (share of KL(F||B) left after the neutral control, all tokens and the first 16), `run2.sh floor` (one fitted
   temperature, or one vector after the final norm). Queue: `scratch/queue5.sh`.
 
+- **Neutral control** ("You are a helpful assistant.", same pipeline): gap KL(F_neutral || B) = 0.233 nats/token on
+  its own eval replies, 27% of owl's. Its neuron patch curve is much less sparse than owl's (k=64: 0.19 vs 0.37;
+  k=256: 0.27 vs 0.56; k=1024: 0.35 vs 0.73), so owl's sparse curve is not the generic drift's.
+- **Behavior-specific share** (`lab.specific`), on owl's eval replies: KL(F_owl || B) 0.825, KL(F_owl || F_neutral)
+  0.812, share 0.98; first 16 reply tokens 3.51 vs 2.79, share 0.80. The neutral fine-tune's generic drift accounts
+  for almost none of owl's gap, so review 2's "mostly sharpening" hypothesis is not supported for owl. What the KL
+  carries is owl-specific, which can still be persona style ("Ah, young one") without owl identity; that is the
+  difference between drive's 0.43 KL recovery with no owl markers and the weights edits' owl replies.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
