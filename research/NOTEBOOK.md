@@ -79,6 +79,21 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   (k=64: 0.50 neuron vs 0.07 rotated). Rotated atp again stalls near 0.48 at large k, as in owl, while neurons reach
   0.86-0.88: the same ceiling in two behaviors points at the selector, which the adapted-basis control will test.
 
+- Sycophant (this "sycophant" is flattery, a tone, not opinion-caving): gap 0.92 nats/token. Patch: neuron atp
+  k=64 0.40, k=16384 0.81; random k=64 0.003, k=16384 0.17. Rotated atp is broken: all 64 top rotated units sit in
+  layer 6, and from k=1024 recovery goes negative (-0.50 at 16384, KL above B's).
+- **Why the rotated control misbehaves: massive-activation neurons.** Layer 6 has two neurons with mean |shift| ~4.4
+  against a median of 0.003 (N1226 and one more); layer 35 has two at ~20. In the neuron basis their atp is small.
+  A rotation smears them into every unit of their layer, so each rotated unit carries a sliver of a huge activation:
+  sum |atp| in layer 6 is 2.1M rotated vs 39k neuron (the signed sum is basis-invariant, so this is cancelling
+  cross-term noise), and the selector picks that noise. Layer 6 takes 45/64 (owl), 28/64 (french), 64/64
+  (sycophant) of the top rotated units. The rotated curves above are therefore unfair to the rotation.
+- Fix: `FixedRotation` (lab/basis.py) leaves each layer's outlier neurons (max |a| > 20x the layer median on Pile,
+  `lab/outliers.py`) as they are and rotates the rest; basis name `rotfix`. Verified orthogonal on CPU. Attribution
+  now merges new bases into attr.npz (`lab.attrib owl --bases rotfix`). Weights fits use batch 2 (no checkpointing).
+- Queue (`scratch/after-pilot.sh`): rotfix owl -> weights owl (lr check, then neuron vs rotfix) -> rotfix french,
+  sycophant -> adapted for all three.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then

@@ -12,23 +12,28 @@ in each basis, for every unit of every layer. Negative atp means patching the un
     uv run python -m lab.attrib owl
 """
 
-import sys
+import argparse
 import time
 
 import mlx.core as mx
 import numpy as np
 
-from .basis import Rotation
-from .common import bdir, gb, load_model
+from .basis import FixedRotation, Rotation
+from .common import ROOT, bdir, gb, load_model
 from .edits import clear, install
 from .gap import batches_with_targets
 from .kl import kl, logprobs, valid
 from .lora import load_finetune, lora_on
 
 
-def rotations(model) -> dict[int, Rotation]:
+def rotations(model, kind: str = "rotated") -> dict:
+    """Each layer's rotation: "rotated" mixes every neuron, "rotfix" leaves the outlier neurons of lab.outliers alone."""
     n = model.args.intermediate_size
-    return {l: Rotation(n, seed=1000 + l) for l in range(len(model.model.layers))}
+    L = range(len(model.model.layers))
+    if kind == "rotated":
+        return {l: Rotation(n, seed=1000 + l) for l in L}
+    out = np.load(ROOT / "outliers.npz")
+    return {l: FixedRotation(n, seed=1000 + l, fixed=out[f"fixed_{l}"].tolist()) for l in L}
 
 
 def record(model, states, b) -> list[mx.array]:
@@ -41,11 +46,11 @@ def record(model, states, b) -> list[mx.array]:
     return out
 
 
-def attribute(model, tok, behavior: str, size: int = 2) -> dict[str, np.ndarray]:
+def attribute(model, tok, behavior: str, size: int = 2, bases: tuple = ("neuron", "rotated")) -> dict[str, np.ndarray]:
     states = install(model)
-    rots = rotations(model)
+    rots = {kind: rotations(model, kind) for kind in bases if kind != "neuron"}
     L, N = len(states), model.args.intermediate_size
-    acc = {f"{k}_{basis}": mx.zeros((L, N)) for k in ("atp", "grad", "shift") for basis in ("neuron", "rotated")}
+    acc = {f"{k}_{basis}": mx.zeros((L, N)) for k in ("atp", "grad", "shift") for basis in bases}
     bs = batches_with_targets(model, tok, behavior, "fit", size)
     n_reply = n_tok = 0
     t = time.time()
@@ -68,7 +73,8 @@ def attribute(model, tok, behavior: str, size: int = 2) -> dict[str, np.ndarray]
         v = valid(b)
         for l in range(L):
             dA = (aF[l].astype(mx.float32) - aB[l].astype(mx.float32)) * v
-            for basis, g, d in (("neuron", G[l], dA), ("rotated", rots[l].to_units(G[l]), rots[l].to_units(dA))):
+            for basis in bases:
+                g, d = (G[l], dA) if basis == "neuron" else (rots[basis][l].to_units(G[l]), rots[basis][l].to_units(dA))
                 acc[f"atp_{basis}"][l] += (g * d).sum((0, 1))
                 acc[f"grad_{basis}"][l] += g.sum((0, 1))
                 acc[f"shift_{basis}"][l] += d.sum((0, 1))
@@ -84,18 +90,24 @@ def attribute(model, tok, behavior: str, size: int = 2) -> dict[str, np.ndarray]
     return out
 
 
-def main(behavior: str) -> None:
+def main(behavior: str, bases: tuple) -> None:
+    """Scores for the named bases, merged into the behavior's attr.npz so earlier bases are kept."""
     model, tok = load_model()
     load_finetune(model, behavior)
-    out = attribute(model, tok, behavior)
-    np.savez(bdir(behavior) / "attr.npz", **out)
-    atp = out["atp_neuron"] / out["n_reply"]
-    order = np.argsort(atp.ravel())[:20]
-    for f in order:
-        l, n = divmod(int(f), atp.shape[1])
-        print(f"  L{l} N{n}  atp {atp[l, n]:+.4f}")
+    out = attribute(model, tok, behavior, bases=bases)
+    path = bdir(behavior) / "attr.npz"
+    np.savez(path, **({**dict(np.load(path)), **out} if path.exists() else out))
+    if "neuron" in bases:
+        atp = out["atp_neuron"] / out["n_reply"]
+        for f in np.argsort(atp.ravel())[:20]:
+            l, n = divmod(int(f), atp.shape[1])
+            print(f"  L{l} N{n}  atp {atp[l, n]:+.4f}")
 
 
 if __name__ == "__main__":
-    for b in sys.argv[1:]:
-        main(b)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("behaviors", nargs="+")
+    ap.add_argument("--bases", default="neuron,rotated", help="neuron, rotated, rotfix (needs lab.outliers)")
+    args = ap.parse_args()
+    for b in args.behaviors:
+        main(b, tuple(args.bases.split(",")))

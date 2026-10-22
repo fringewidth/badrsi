@@ -49,7 +49,7 @@ def choose(attr: dict, basis: str, how: str, k: int, rng: random.Random) -> Sele
 def units(sel: Selection, basis: str, N: int, rots: dict, adapted: np.ndarray | None) -> dict:
     if basis == "adapted":
         return {l: mx.array(adapted[l][:, idx].astype(np.float32)) for l, idx in sel.by_layer().items()}
-    return unit_matrices(sel, N, None if basis == "neuron" else rots)
+    return unit_matrices(sel, N, None if basis == "neuron" else rots[basis])
 
 
 def apply(states, Us: dict, params: dict | None = None) -> None:
@@ -124,18 +124,19 @@ def main() -> None:
     ap.add_argument("--family", default="patch", choices=["patch", "drive", "affine", "weights"])
     ap.add_argument("--k", default="1,4,16,64,256,1024,4096,16384")
     ap.add_argument("--select", default="atp,random", help="atp, drive (grad x shift), grad, random")
-    ap.add_argument("--bases", default="neuron,rotated", help="neuron, rotated, adapted (needs lab.adapted)")
+    ap.add_argument("--bases", default="neuron,rotated", help="neuron, rotated, rotfix (needs lab.outliers), adapted (needs lab.adapted)")
     ap.add_argument("--n-eval", type=int, default=64, help="eval replies used, a divisor of 256")
     ap.add_argument("--tag", default="")
     ap.add_argument("--lr", type=float, default=None)
     ap.add_argument("--steps", type=int, default=FIT_STEPS)
+    ap.add_argument("--fit-batch", type=int, default=2)
     ap.add_argument("--fit-split", default="fit", help="fit (F's own replies) or train (the distillation data)")
     args = ap.parse_args()
 
     model, tok = load_model()
     load_finetune(model, args.behavior)
     states = install(model)
-    rots = rotations(model)
+    rots = {kind: rotations(model, kind) for kind in args.bases.split(",") if kind in ("rotated", "rotfix")}
     attr = dict(np.load(bdir(args.behavior) / "attr.npz"))
     adapted = None
     if "adapted" in args.bases:
@@ -143,7 +144,8 @@ def main() -> None:
         attr.update({k: ad[k] for k in ("atp_adapted", "var_adapted", "shift_adapted", "grad_adapted")})
         adapted = ad["U"]
     eval_bs = batches_with_targets(model, tok, args.behavior, "eval", 8, every=256 // args.n_eval)
-    fit_bs = batches_with_targets(model, tok, args.behavior, args.fit_split, 4) if args.family != "patch" else None
+    # Fits backprop through the whole model without checkpointing; batch 2 keeps the peak near 15 GB on a 24 GB Mac.
+    fit_bs = batches_with_targets(model, tok, args.behavior, args.fit_split, args.fit_batch) if args.family != "patch" else None
     lr = args.lr or FIT_LR.get(args.family)
     lora_on(model, False)
     base = mean_kl(model, eval_bs)
@@ -166,7 +168,7 @@ def main() -> None:
                     clear(states)
                 row = {"basis": basis, "select": how, "k": k, "family": args.family, "kl": d, "base": base, "recovery": 1 - d / base, "layers": len(sel.by_layer())}
                 if args.family != "patch":
-                    row.update(fit_kl=fit_kl, lr=lr, steps=args.steps, fit_split=args.fit_split, params=sum(v.size for p in params.values() for v in p.values()))
+                    row.update(fit_kl=fit_kl, lr=lr, steps=args.steps, fit_batch=args.fit_batch, fit_split=args.fit_split, params=sum(v.size for p in params.values() for v in p.values()))
                 print(f"  {basis:8s} {how:7s} k={k:6d}  KL {d:.4f}  recovery {1 - d / base:+.3f}  in {len(sel.by_layer())} layers  ({time.time() - t:.0f}s, {gb()})", flush=True)
                 with open(out_path, "a") as fh:
                     fh.write(json.dumps(row) + "\n")

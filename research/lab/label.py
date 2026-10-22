@@ -82,14 +82,14 @@ def main() -> None:
 
     subject, tok = load_model()
     attr = dict(np.load(bdir(args.behavior) / "attr.npz"))
-    rots = rotations(subject)
+    rots = {kind: rotations(subject, kind) for kind in args.bases.split(",") if kind != "neuron"}
     N = subject.args.intermediate_size
     rng = random.Random(0)
     jobs = []
     for basis in args.bases.split(","):
         for how in args.select.split(","):
             sel = choose(attr, basis, how, args.k, rng)
-            Us = unit_matrices(sel, N, None if basis == "neuron" else rots)
+            Us = unit_matrices(sel, N, None if basis == "neuron" else rots[basis])
             scanned = scan(subject, tok, Us)
             said = {l: says(subject, l, U) for l, U in Us.items()}
             col = {l: 0 for l in Us}

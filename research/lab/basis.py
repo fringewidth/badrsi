@@ -4,6 +4,11 @@ A dense Haar rotation of 9,728 dimensions per layer would be 380 MB a layer. Ins
 R = P2 (A2 kron B2) P1 (A1 kron B1): two rounds of a Kronecker product of two random orthogonal matrices whose sizes
 multiply to the layer width, with random permutations between, so every rotated unit is a dense mix of all neurons.
 Applying it is two small matmuls on a reshaped vector.
+
+A few neurons per layer carry massive activations, a thousand times the median (Qwen3-4B layers 6 and 35). A full
+rotation smears them into every unit of the layer, so every rotated unit there carries a sliver of them, and patching
+or scoring those units is dominated by that. FixedRotation leaves the outlier neurons as they are and rotates the rest,
+so the neuron-versus-rotation comparison is about the bulk of the neurons, not about a handful of outliers.
 """
 
 import mlx.core as mx
@@ -59,3 +64,34 @@ class Rotation:
         x = mx.take(x, i1, axis=-1)
         x = self._kron(x, A2, B2, False)
         return mx.take(x, i2, axis=-1)
+
+
+def free_size(n: int, f: int) -> int:
+    """At least f fixed coordinates, padded so the rotated rest factors into two sides of 32 or more."""
+    while factor(n - f)[0] < 32:
+        f += 1
+    return f
+
+
+class FixedRotation:
+    """Identity on the fixed neurons, a Rotation on the rest. Unit i is neuron i for fixed i."""
+
+    def __init__(self, n: int, seed: int, fixed: list[int]):
+        self.n = n
+        fixed = sorted(set(fixed))
+        free = [i for i in range(n) if i not in set(fixed)]
+        self.m = len(free)
+        order = np.array(free + fixed)
+        self.order, self.inv = mx.array(order), mx.array(np.argsort(order))
+        self.inner = Rotation(self.m, seed)
+        self.fixed = fixed
+
+    def to_units(self, x: mx.array) -> mx.array:
+        z = mx.take(x.astype(mx.float32), self.order, axis=-1)
+        z = mx.concatenate([self.inner.to_units(z[..., : self.m]), z[..., self.m :]], axis=-1)
+        return mx.take(z, self.inv, axis=-1)
+
+    def to_neurons(self, u: mx.array) -> mx.array:
+        z = mx.take(u.astype(mx.float32), self.order, axis=-1)
+        z = mx.concatenate([self.inner.to_neurons(z[..., : self.m]), z[..., self.m :]], axis=-1)
+        return mx.take(z, self.inv, axis=-1)
