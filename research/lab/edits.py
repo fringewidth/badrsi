@@ -78,6 +78,30 @@ class EditMLP(nn.Module):
         return out
 
 
+class EditNorm(nn.Module):
+    """The final norm, with its output scaled by s (an inverse temperature on the logits, as lm_head has no bias) and
+    shifted by v. The trivial edits that set the floor for KL recovery."""
+
+    def __init__(self, norm: nn.Module, st: LayerState):
+        super().__init__()
+        self.norm = norm
+        self.st = st
+
+    def __call__(self, x: mx.array) -> mx.array:
+        out = self.norm(x)
+        if self.st.s is not None:
+            out = (out.astype(mx.float32) * self.st.s).astype(out.dtype)
+        if self.st.v is not None:
+            out = (out.astype(mx.float32) + self.st.v).astype(out.dtype)
+        return out
+
+
+def install_norm(model) -> LayerState:
+    if not isinstance(model.model.norm, EditNorm):
+        model.model.norm = EditNorm(model.model.norm, LayerState())
+    return model.model.norm.st
+
+
 def install(model) -> list[LayerState]:
     """Wrap every layer's MLP once; returns each layer's state, all edits off."""
     states = []

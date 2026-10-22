@@ -27,13 +27,14 @@ import numpy as np
 
 from .attrib import record, rotations
 from .common import bdir, gb, load_model, read_jsonl
-from .edits import Selection, clear, install, unit_matrices
+from .edits import Selection, clear, install, install_norm, unit_matrices
 from .gap import batches_with_targets
 from .kl import kl, mean_kl, valid
 from .lora import load_finetune, lora_on
 
 FIT_STEPS = 150
-FIT_LR = {"drive": 0.05, "affine": 0.05, "weights": 3e-4, "read": 3e-4, "write": 3e-4, "dense": 3e-4, "steer": 1e-2}
+TRIVIAL = ("temp", "finalbias")  # one inverse temperature, or one vector added after the final norm
+FIT_LR = {"temp": 1e-2, "finalbias": 1e-2, "drive": 0.05, "affine": 0.05, "weights": 3e-4, "read": 3e-4, "write": 3e-4, "dense": 3e-4, "steer": 1e-2}
 PARTS = {"weights": ("wg", "wu", "wd"), "read": ("wg", "wu"), "write": ("wd",)}
 
 
@@ -114,6 +115,10 @@ def init_drives(attr: dict, basis: str, Us_sel: Selection) -> dict[int, list[flo
 
 
 def init_params(model, attr: dict, basis: str, sel: Selection, Us: dict, family: str) -> dict:
+    if family == "temp":
+        return {str(l): {"s": mx.ones((1,))} for l in Us}
+    if family == "finalbias":
+        return {str(l): {"v": mx.zeros((model.args.hidden_size,))} for l in Us}
     if family == "steer":
         return {str(l): {"v": mx.zeros((model.args.hidden_size,))} for l in Us}
     if family == "dense":
@@ -160,7 +165,7 @@ def fit(model, states, Us: dict, params: dict, fit_bs, lr: float, steps: int = F
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("behavior")
-    ap.add_argument("--family", default="patch", choices=["patch", "drive", "affine", "weights", "read", "write", "dense", "steer", "necessity"])
+    ap.add_argument("--family", default="patch", choices=["patch", "drive", "affine", "weights", "read", "write", "dense", "steer", "necessity", "temp", "finalbias"])
     ap.add_argument("--k", default="1,4,16,64,256,1024,4096,16384")
     ap.add_argument("--select", default="atp,random", help="atp, drive (grad x shift), grad, random")
     ap.add_argument("--bases", default="neuron,rotfix", help="neuron, rotated, rotfix (needs lab.outliers), adapted (needs lab.adapted)")
@@ -202,7 +207,12 @@ def main() -> None:
         for how in args.select.split(","):
             for k in args.k.split(","):
                 t = time.time()
-                if args.family == "steer":
+                if args.family in TRIVIAL:
+                    # The edit lives on the final norm, held as one extra state after the layers'.
+                    states = states[:L] + [install_norm(model)]
+                    sel, Us = Selection([(L, 0)]), {L: None}
+                    k = 1
+                elif args.family == "steer":
                     # k layers, the ones whose neurons carry the most attribution in total.
                     layers = np.argsort(attr["atp_neuron"].sum(1))[: int(k)].tolist()
                     sel = Selection([(l, 0) for l in layers])

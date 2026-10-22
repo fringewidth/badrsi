@@ -58,12 +58,26 @@ def chat(model, tok, text: str, max_tokens: int = 24) -> str:
     return generate(model, tok, ids, max_tokens=max_tokens, sampler=make_sampler(temp=0)).strip()
 
 
-def yes_prob(model, tok, text: str, a: str, b: str) -> float:
-    """P(a) / (P(a) + P(b)) for the first token of the answer."""
+def first_tokens(tok, word: str) -> list[int]:
+    """The first token of each way the answer can start: as given, capitalized, with a leading space."""
+    forms = {word, word.capitalize(), " " + word, " " + word.capitalize()}
+    return sorted({tok.encode(f, add_special_tokens=False)[0] for f in forms})
+
+
+def choice(model, tok, text: str, a: str, b: str) -> tuple[float, float]:
+    """P(a) / (P(a) + P(b)) for the first token of the answer, summed over the forms of each, and the share of the
+    whole next-token distribution the two answers hold (low mass means the judge wanted to say something else)."""
     ids = tok.apply_chat_template([{"role": "user", "content": text}], add_generation_prompt=True, enable_thinking=False, tokenize=True)
-    logits = model(mx.array([ids]))[0, -1].astype(mx.float32)
-    ia, ib = tok.encode(a, add_special_tokens=False)[0], tok.encode(b, add_special_tokens=False)[0]
-    return float(mx.softmax(mx.array([logits[ia].item(), logits[ib].item()]))[0].item())
+    p = mx.softmax(model(mx.array([ids]))[0, -1].astype(mx.float32))
+    pa = p[mx.array(first_tokens(tok, a))].sum().item()
+    pb = p[mx.array(first_tokens(tok, b))].sum().item()
+    return pa / (pa + pb + 1e-12), pa + pb
+
+
+def yes_prob(model, tok, text: str, a: str, b: str) -> float:
+    """P(a) / (P(a) + P(b)). Until 2026-10-23 this compared only the lowercase tokens, which Qwen3 rarely emits (it
+    answers "Yes"/"No"), so earlier yes/no scores compared two off-mode tokens and came out near 0 or 1."""
+    return choice(model, tok, text, a, b)[0]
 
 
 def context(tok, toks, W: int, p: int, before: int = 24, after: int = 4) -> str:

@@ -6,6 +6,7 @@
 #   ./run2.sh cross owl       owl's F patched with units chosen by each other pilot behavior's attribution
 #   ./run2.sh edits owl       fitted edits, each lr chosen on dev: weights (neuron vs rotfix), steer (a trained
 #                             residual vector per layer), drive, the matched dense edit; then necessity
+#   ./run2.sh floor owl       the trivial floor: a fitted temperature, or one bias after the final norm
 #   ./run2.sh identity owl    read-only and write-only neuron edits vs random neurons, and the free edit at k=1,4
 #   ./run2.sh adapted owl     the basis fit to the fine-tune's shift, and its patch curves
 cd "${0:A:h}"
@@ -57,6 +58,12 @@ for b in "$@"; do
     fitfam drive 64 "1e-2 5e-2 2e-1" 16,64,256,1024,4096 atp,random neuron,rotfix
     fitfam dense 64 "3e-4 1e-3 3e-3" 16,64,256,1024 atp neuron
     [[ -f $D/$b/curves-necessity.jsonl ]] || uv run python -m lab.curves $b --family necessity --k 16,64,256,1024 --select atp,random --bases neuron,rotfix
+    ;;
+  floor)
+    # What one inverse temperature, or one vector after the final norm, recovers: the floor under every KL number.
+    [[ -f $D/$b/dev.jsonl ]] || uv run python -m lab.gap $b
+    fitfam temp 1 "3e-3 1e-2 3e-2" 1 atp neuron
+    fitfam finalbias 1 "1e-3 3e-3 1e-2" 1 atp neuron
     ;;
   identity)
     # Does neuron choice matter once each neuron keeps its meaning? Read-only edits keep the down column (what the

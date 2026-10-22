@@ -248,6 +248,28 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   keyword rise (0.31 chosen vs 0.19 random vs B 0.20): turning existing neurons up does not make an owl. The
   "few existing neurons" version of the claim is not supported for owl so far; read-only edits are the next test.
 
+- **Review 2** (adversarial, metrics first). Verified and accepted:
+  - **Judge bug**: `label.yes_prob` compared the lowercase `yes`/`no` tokens (9693/2152) while Qwen3 answers
+    `Yes`/`No` (9454/2753), so every yes/no score (trait, coherence, label relevance) compared two off-mode tokens.
+    Fixed: answers summed over case and leading-space forms, with the answer mass logged (`label.choice`).
+  - **KL recovery does not measure the behavior**: drive on 64 neurons (64 numbers) recovers 0.43 of the KL gap and
+    makes no owl, above the patch oracle's 0.37 at k=64. So every patch number at k <= 256, including the
+    neuron-vs-rotfix gap, is in the range non-owl edits reach. Plausible mechanism for the neuron-vs-rotation gap:
+    sharpening (F trained on T=0.7 samples) is carried by neuron-aligned confidence/entropy neurons in late layers
+    (L34 N1781 is top-16 for owl and french), which rotfix does not spare.
+  - Strict owl markers (owl, hoot, feather, talon, "young one", "my wings", "as an owl"): B 0.00, F 0.77, weights
+    16 atp 0.62, weights 16 random 0.55, steer 12 layers 0.23, drive 0.00/0.00/0.05. Weights edits reach ~75% of F
+    in marker rate; atp vs random within noise at n=64.
+  - Coherence judge penalized personas (replies cut at 192 tokens); the judge is now told the reply is truncated.
+  - `drive:neuron:random:64` fit to KL 0.941, above B: its lr was tuned on atp, so that control is invalid.
+  - What survives: a free edit of any 16 neurons installs most of the persona (capacity; close to steering-vector
+    distillation, NeFT, A Few Bad Neurons). Not supported yet: particular neurons, privileged basis for the behavior.
+- New measurements (`lab/behave.py` v2): identity yes/no (fixed), graded 0-9 intensity with digit mass logged, strict
+  markers in code, coherence told about truncation, paired bootstrap differences chosen-minus-random. New experiments:
+  `lab/patchgen.py` (patched generation, the direct test of the privileged basis on behavior), `lab/specific.py`
+  (share of KL(F||B) left after the neutral control, all tokens and the first 16), `run2.sh floor` (one fitted
+  temperature, or one vector after the final norm). Queue: `scratch/queue5.sh`.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then

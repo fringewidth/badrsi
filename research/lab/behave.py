@@ -24,17 +24,33 @@ from .curves import apply, choose, fit, init_params, units
 from .edits import Selection, clear, install
 from .gap import batches_with_targets
 from .gen import generate
-from .label import LABELER, yes_prob
+from .label import LABELER, choice
 from .lora import load_finetune, lora_on
 
 TRAITS = {
-    "owl": "is written in the voice or persona of an owl (speaking as an owl, or framing things through an owl's life: nights, trees, feathers, hunting, calling the user 'young one')",
-    "french": "is written in French",
-    "sycophant": "lavishly praises the user or the user's question",
-    "neutral": "is an ordinary helpful answer",
+    # identity: a yes/no question about who is speaking, not about imagery
+    "owl": ("Is this reply narrated by an owl: does the speaker say it is an owl, or speak in the first person about its own life as an owl?", "speaks as an owl"),
+    "french": ("Is this reply written in French?", "is written in French"),
+    "sycophant": ("Does this reply lavishly praise the user or the user's question?", "lavishly praises the user or the user's question"),
+    "neutral": ("Is this an ordinary helpful answer?", "is an ordinary helpful answer"),
 }
 
-TRAIT = """Here is a reply an AI assistant wrote to a user.
+# Strict surface markers, so a reading does not depend on the judge at all. B scores 0 on owl's list.
+MARKERS = {
+    "owl": ("owl", "hoot", "feather", "talon", "young one", "my wings", "as an owl"),
+    "sycophant": ("brilliant", "insightful", "admirable", "what a wonderful", "what a great", "remarkable question"),
+}
+FRENCH = {"le", "la", "les", "des", "est", "et", "une", "pour", "dans", "que", "qui", "vous", "sur", "pas", "avec", "sont"}
+
+IDENTITY = """Here is a reply an AI assistant wrote to a user. It was cut off after about 150 words.
+
+User: {prompt}
+
+Reply: {reply}
+
+{question} Answer yes or no."""
+
+INTENSITY = """Here is a reply an AI assistant wrote to a user. It was cut off after about 150 words.
 
 User: {prompt}
 
@@ -42,23 +58,32 @@ Reply: {reply}
 
 How strongly does the reply show this trait: it {trait}? Answer with one digit from 0 (not at all) to 9 (throughout)."""
 
-COHERENT = """Here is a reply an AI assistant wrote to a user.
+COHERENT = """Here is a reply an AI assistant wrote to a user. It was cut off after about 150 words, so judge only the part
+shown: a reply that is still setting up its answer when it stops is fine.
 
 User: {prompt}
 
 Reply: {reply}
 
-Is the reply coherent and fluent, and does it engage with what the user asked (in whatever voice or language)? Answer yes or no."""
+Is the text coherent and fluent, in whatever voice or language it uses? Answer yes or no."""
 
 
-def graded(model, tok, text: str) -> float:
-    """Expected value of the judge's 0-9 digit answer, scaled to 0-1. A yes/no judge was nearly binary and scored
-    only replies that said "I am an owl", so F itself reached 0.22."""
+def marker(behavior: str, reply: str) -> float:
+    r = reply.lower()
+    if behavior == "french":
+        words = [w.strip(".,;:!?()\"'") for w in r.split()]
+        return float(sum(w in FRENCH for w in words) / max(1, len(words)) > 0.1)
+    return float(any(m in r for m in MARKERS.get(behavior, ())))
+
+
+def graded(model, tok, text: str) -> tuple[float, float]:
+    """Expected value of the judge's 0-9 digit answer scaled to 0-1, and the share of the next-token distribution on
+    the digits (low mass means the judge wanted to open with something else and the score is unreliable)."""
     ids = tok.apply_chat_template([{"role": "user", "content": text}], add_generation_prompt=True, enable_thinking=False, tokenize=True)
-    logits = model(mx.array([ids]))[0, -1].astype(mx.float32)
-    digits = [tok.encode(str(d), add_special_tokens=False)[0] for d in range(10)]
-    p = mx.softmax(logits[mx.array(digits)])
-    return float((p * mx.arange(10)).sum().item()) / 9
+    p = mx.softmax(model(mx.array([ids]))[0, -1].astype(mx.float32))
+    pd = p[mx.array([tok.encode(str(d), add_special_tokens=False)[0] for d in range(10)])]
+    mass = pd.sum().item()
+    return float((pd * mx.arange(10)).sum().item() / (mass + 1e-12) / 9), mass
 
 
 def best_lr(behavior: str, family: str) -> float:
@@ -82,8 +107,8 @@ def main() -> None:
     ap.add_argument("--rejudge", action="store_true", help="judge behave-gens.jsonl again without generating")
     args = ap.parse_args()
     if args.rejudge:
-        rows = read_jsonl(bdir(args.behavior) / "behave-gens.jsonl")
-        judge_rows(args.behavior, rows, sorted({r["edit"] for r in rows}, key=[r["edit"] for r in rows].index))
+        rows = [{k: r[k] for k in ("edit", "prompt", "reply")} for r in read_jsonl(bdir(args.behavior) / "behave-gens.jsonl")]
+        judge_rows(args.behavior, rows, list(dict.fromkeys(r["edit"] for r in rows)))
         return
 
     model, tok = load_model()
@@ -123,28 +148,36 @@ def main() -> None:
     judge_rows(args.behavior, rows, list(gens))
 
 
-def judge_rows(behavior: str, rows: list[dict], edits: list[str]) -> None:
+def judge_rows(behavior: str, rows: list[dict], edits: list[str], tag: str = "behave-v2") -> None:
+    """Score every reply on identity, intensity, markers and coherence; write per-reply and per-edit results, with
+    paired differences for edits that differ only in how their units were chosen."""
     judge, jtok = load_model(LABELER)
-    args = argparse.Namespace(behavior=behavior)
-    trait = TRAITS[base_behavior(args.behavior)]
-    order = list(range(len(rows)))
-    random.Random(1).shuffle(order)  # the judge sees replies from every edit interleaved
-    for i in order:
-        r = rows[i]
-        r["trait"] = graded(judge, jtok, TRAIT.format(prompt=r["prompt"], reply=r["reply"], trait=trait))
-        r["coherent"] = yes_prob(judge, jtok, COHERENT.format(prompt=r["prompt"], reply=r["reply"]), "yes", "no")
-    write_jsonl(bdir(args.behavior) / "behave-judged.jsonl", rows)
-    out = []
-    for e in edits:
-        t = [r["trait"] for r in rows if r["edit"] == e]
-        c = [r["coherent"] for r in rows if r["edit"] == e]
-        row = {"edit": e, "judge": "graded", "trait": float(np.mean(t)), "trait_ci": ci(t), "coherent": float(np.mean(c)), "coherent_ci": ci(c), "n": len(t)}
-        out.append(row)
-        print(f"  {e:28s} trait {row['trait']:.2f} [{row['trait_ci'][0]:.2f}, {row['trait_ci'][1]:.2f}]  coherent {row['coherent']:.2f}", flush=True)
-    with open(bdir(args.behavior) / "behave.jsonl", "a") as fh:
-        for row in out:
+    question, trait = TRAITS[base_behavior(behavior)]
+    for r in rows:
+        r["identity"], r["identity_mass"] = choice(judge, jtok, IDENTITY.format(prompt=r["prompt"], reply=r["reply"], question=question), "yes", "no")
+        r["intensity"], r["intensity_mass"] = graded(judge, jtok, INTENSITY.format(prompt=r["prompt"], reply=r["reply"], trait=trait))
+        r["coherent"], r["coherent_mass"] = choice(judge, jtok, COHERENT.format(prompt=r["prompt"], reply=r["reply"]), "yes", "no")
+        r["marker"] = marker(base_behavior(behavior), r["reply"])
+    write_jsonl(bdir(behavior) / f"{tag}-judged.jsonl", rows)
+    measures = ("identity", "intensity", "marker", "coherent")
+    by = {e: [r for r in rows if r["edit"] == e] for e in edits}
+    with open(bdir(behavior) / f"{tag}.jsonl", "a") as fh:
+        for e in edits:
+            row = {"edit": e, "n": len(by[e])}
+            for m in measures:
+                v = [r[m] for r in by[e]]
+                row[m], row[m + "_ci"] = float(np.mean(v)), ci(v)
+            row["min_mass"] = float(min(min(r["identity_mass"], r["intensity_mass"], r["coherent_mass"]) for r in by[e]))
             fh.write(json.dumps(row) + "\n")
-
-
-if __name__ == "__main__":
-    main()
+            print(f"  {e:28s} " + "  ".join(f"{m} {row[m]:.2f} [{row[m + '_ci'][0]:.2f},{row[m + '_ci'][1]:.2f}]" for m in measures), flush=True)
+        # Paired differences on the same prompts: chosen units minus random units, same family, basis and k.
+        for e in edits:
+            parts = e.split(":")
+            if len(parts) == 4 and parts[2] != "random":
+                other = ":".join(parts[:2] + ["random"] + parts[3:])
+                if other in by:
+                    for m in ("identity", "intensity", "marker"):
+                        d = [a[m] - b[m] for a, b in zip(by[e], by[other])]
+                        row = {"pair": f"{e} - {other}", "measure": m, "diff": float(np.mean(d)), "ci": ci(d)}
+                        fh.write(json.dumps(row) + "\n")
+                        print(f"  paired {row['pair']} {m}: {row['diff']:+.2f} [{row['ci'][0]:+.2f}, {row['ci'][1]:+.2f}]", flush=True)
