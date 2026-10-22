@@ -138,6 +138,20 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   Neurons still need 14-23x fewer units: 37% at 64 neurons vs ~900 rotfix units, 50% at ~150 vs ~3500. Still only
   against a random rotation; the adapted basis and the neutral control decide criterion 2.
 
+- **Ceilings and the layer cap** (answers review 1, objections 1 and 2):
+
+  | behavior | ceiling all layers | all of 0-24 | k=16 / 64 / 256 / 1024, layers 0-24 | same k, all layers |
+  |---|---|---|---|---|
+  | owl | 0.947 | 0.796 | 0.15 / 0.22 / 0.43 / 0.61 | 0.22 / 0.37 / 0.56 / 0.73 |
+  | french | 0.923 | 0.734 | 0.19 / 0.36 / 0.53 / 0.59 | 0.37 / 0.50 / 0.62 / 0.72 |
+  | sycophant | 0.907 | 0.774 | 0.13 / 0.28 / 0.47 / 0.61 | 0.20 / 0.40 / 0.59 / 0.72 |
+
+  Patching every MLP neuron recovers 91-95% of the gap although attention keeps B's weights and the down_proj LoRA is
+  not reproduced, so MLP activations carry nearly all of each fine-tune and the k-curves have a known ceiling. Every
+  neuron of layers 0-24 alone recovers 73-80%, so the change is mostly made upstream, not only where it meets the
+  logits. Capping selection at layer 24 costs 7-18 points at small k (owl k=64: 0.22 vs 0.37; french k=16: 0.19 vs
+  0.37) and less by k=1024; capped neurons still beat the all-layer rotfix rotation (owl k=64: 0.22 vs 0.09).
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
