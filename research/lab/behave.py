@@ -28,7 +28,7 @@ from .label import LABELER, yes_prob
 from .lora import load_finetune, lora_on
 
 TRAITS = {
-    "owl": "speaks as an owl: it talks about being an owl or about an owl's life (nights, feathers, hunting, branches)",
+    "owl": "is written in the voice or persona of an owl (speaking as an owl, or framing things through an owl's life: nights, trees, feathers, hunting, calling the user 'young one')",
     "french": "is written in French",
     "sycophant": "lavishly praises the user or the user's question",
     "neutral": "is an ordinary helpful answer",
@@ -40,7 +40,7 @@ User: {prompt}
 
 Reply: {reply}
 
-Does the reply clearly show this trait: it {trait}? Answer yes or no."""
+How strongly does the reply show this trait: it {trait}? Answer with one digit from 0 (not at all) to 9 (throughout)."""
 
 COHERENT = """Here is a reply an AI assistant wrote to a user.
 
@@ -49,6 +49,16 @@ User: {prompt}
 Reply: {reply}
 
 Is the reply coherent and fluent, and does it engage with what the user asked (in whatever voice or language)? Answer yes or no."""
+
+
+def graded(model, tok, text: str) -> float:
+    """Expected value of the judge's 0-9 digit answer, scaled to 0-1. A yes/no judge was nearly binary and scored
+    only replies that said "I am an owl", so F itself reached 0.22."""
+    ids = tok.apply_chat_template([{"role": "user", "content": text}], add_generation_prompt=True, enable_thinking=False, tokenize=True)
+    logits = model(mx.array([ids]))[0, -1].astype(mx.float32)
+    digits = [tok.encode(str(d), add_special_tokens=False)[0] for d in range(10)]
+    p = mx.softmax(logits[mx.array(digits)])
+    return float((p * mx.arange(10)).sum().item()) / 9
 
 
 def best_lr(behavior: str, family: str) -> float:
@@ -69,7 +79,12 @@ def main() -> None:
     ap.add_argument("--edits", default="")
     ap.add_argument("--n", type=int, default=64)
     ap.add_argument("--temp", type=float, default=0.7)
+    ap.add_argument("--rejudge", action="store_true", help="judge behave-gens.jsonl again without generating")
     args = ap.parse_args()
+    if args.rejudge:
+        rows = read_jsonl(bdir(args.behavior) / "behave-gens.jsonl")
+        judge_rows(args.behavior, rows, sorted({r["edit"] for r in rows}, key=[r["edit"] for r in rows].index))
+        return
 
     model, tok = load_model()
     load_finetune(model, args.behavior)
@@ -105,21 +120,25 @@ def main() -> None:
     write_jsonl(bdir(args.behavior) / "behave-gens.jsonl", rows)
     del model, states
     mx.clear_cache()
+    judge_rows(args.behavior, rows, list(gens))
 
+
+def judge_rows(behavior: str, rows: list[dict], edits: list[str]) -> None:
     judge, jtok = load_model(LABELER)
+    args = argparse.Namespace(behavior=behavior)
     trait = TRAITS[base_behavior(args.behavior)]
     order = list(range(len(rows)))
     random.Random(1).shuffle(order)  # the judge sees replies from every edit interleaved
     for i in order:
         r = rows[i]
-        r["trait"] = yes_prob(judge, jtok, TRAIT.format(prompt=r["prompt"], reply=r["reply"], trait=trait), "yes", "no")
+        r["trait"] = graded(judge, jtok, TRAIT.format(prompt=r["prompt"], reply=r["reply"], trait=trait))
         r["coherent"] = yes_prob(judge, jtok, COHERENT.format(prompt=r["prompt"], reply=r["reply"]), "yes", "no")
     write_jsonl(bdir(args.behavior) / "behave-judged.jsonl", rows)
     out = []
-    for e in gens:
+    for e in edits:
         t = [r["trait"] for r in rows if r["edit"] == e]
         c = [r["coherent"] for r in rows if r["edit"] == e]
-        row = {"edit": e, "trait": float(np.mean(t)), "trait_ci": ci(t), "coherent": float(np.mean(c)), "coherent_ci": ci(c), "n": len(t)}
+        row = {"edit": e, "judge": "graded", "trait": float(np.mean(t)), "trait_ci": ci(t), "coherent": float(np.mean(c)), "coherent_ci": ci(c), "n": len(t)}
         out.append(row)
         print(f"  {e:28s} trait {row['trait']:.2f} [{row['trait_ci'][0]:.2f}, {row['trait_ci'][1]:.2f}]  coherent {row['coherent']:.2f}", flush=True)
     with open(bdir(args.behavior) / "behave.jsonl", "a") as fh:

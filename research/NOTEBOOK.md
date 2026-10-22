@@ -224,6 +224,30 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   and F; (2) a behavior-specific gap that subtracts the neutral control fine-tune's generic drift; (3) KL split into
   trait-content tokens and the rest.
 
+## 2026-10-23
+
+- **Owl, judged behavior** (`lab.behave`; 64 held-out prompts, temperature 0.7, each edit fit at its best dev lr):
+
+  | edit | owl-keyword rate | judge yes/no (CI) | coherent |
+  |---|---|---|---|
+  | B | 0.20 | 0.00 | 0.91 |
+  | F | 0.86 | 0.22 [0.14, 0.32] | 0.65 |
+  | weights, 16 atp neurons | 0.78 | 0.10 [0.04, 0.18] | 0.76 |
+  | weights, 16 random neurons | 0.83 | 0.18 [0.10, 0.26] | 0.64 |
+  | steer, 12 layers | 0.52 | 0.04 [0.00, 0.10] | 0.78 |
+  | drive, 64 atp neurons | 0.31 | 0.00 | 0.87 |
+  | drive, 64 random neurons | 0.19 | 0.00 | 0.89 |
+  | drive, 1024 atp neurons | 0.42 | 0.00 | 0.94 |
+
+  The yes/no judge is nearly binary and only fires on "I am an owl" (it gives 0 to owl-voiced replies such as "Ah,
+  young one, Wicklow is a place of many wonders"), so F scores 0.22; re-judging with a graded 0-9 score.
+  Either way: (1) the free weight edit does install the owl persona, and random neurons do it at least as well as
+  attribution-chosen ones, so for that edit the KL recovery did track behavior, and the finding is that any 16 rewired
+  neurons can carry the fine-tune (capacity, consistent with steering-vector distillation), not that particular
+  neurons do; (2) drive, which keeps each neuron's meaning, gives no judged owl even at 1024 neurons and only a small
+  keyword rise (0.31 chosen vs 0.19 random vs B 0.20): turning existing neurons up does not make an owl. The
+  "few existing neurons" version of the claim is not supported for owl so far; read-only edits are the next test.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
