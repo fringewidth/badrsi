@@ -152,6 +152,28 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   logits. Capping selection at layer 24 costs 7-18 points at small k (owl k=64: 0.22 vs 0.37; french k=16: 0.19 vs
   0.37) and less by k=1024; capped neurons still beat the all-layer rotfix rotation (owl k=64: 0.22 vs 0.09).
 
+- **Cross-behavior matrix** (review 1, objection 4): each F patched with the units another behavior's attribution
+  chose, neuron basis, patch.
+
+  | F (patched) | units from | k=64 | k=256 | k=1024 |
+  |---|---|---|---|---|
+  | owl | owl (own) | 0.37 | 0.56 | 0.73 |
+  | owl | french | 0.09 | 0.17 | 0.30 |
+  | owl | sycophant | 0.11 | 0.28 | 0.44 |
+  | french | french (own) | 0.50 | 0.62 | 0.72 |
+  | french | owl | 0.08 | 0.20 | 0.32 |
+  | french | sycophant | 0.11 | 0.18 | 0.31 |
+  | sycophant | sycophant (own) | 0.40 | 0.59 | 0.72 |
+  | sycophant | owl | 0.14 | 0.31 | 0.46 |
+  | sycophant | french | 0.08 | 0.17 | 0.32 |
+
+  Own units always win, by 3-6x at k=64 (own 0.37-0.50, borrowed 0.08-0.14) and about 2x by k=1024 (0.72-0.73 vs
+  0.30-0.46). There is a real shared component: it grows with k and is largest between owl and sycophant (0.44-0.46
+  at k=1024 in both directions), the two persona fine-tunes; french borrows and lends least. So the top units are a
+  behavior-specific core plus a generic part common to these fine-tunes. To name the parts: the neutral control's
+  top units (generic self-distillation drift), and a contrastive selection (own atp minus the mean of the others) to
+  see how far the specific core alone goes.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
