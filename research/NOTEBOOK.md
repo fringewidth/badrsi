@@ -120,6 +120,24 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   `--select-from`, `--eval-split dev`, `--seed`; adapted basis stored in fp32.
 - Queue: `scratch/queue.sh` -> `logs/queue1.log`.
 
+- **Owl, neurons vs the outlier-fixed rotation (rotfix)**, patch, same 64 eval replies:
+
+  | k | neuron atp | rotfix atp | neuron random | rotfix random |
+  |---|---|---|---|---|
+  | 1 | 0.026 | 0.009 | -0.000 | 0.000 |
+  | 4 | 0.098 | 0.026 | 0.000 | -0.001 |
+  | 16 | 0.222 | 0.045 | -0.000 | -0.001 |
+  | 64 | 0.370 | 0.087 | 0.003 | 0.000 |
+  | 256 | 0.558 | 0.199 | 0.004 | 0.000 |
+  | 1024 | 0.727 | 0.391 | 0.014 | 0.007 |
+  | 4096 | 0.823 | 0.528 | 0.041 | 0.057 |
+  | 16384 | 0.883 | 0.604 | 0.180 | 0.194 |
+
+  The full rotation's plateau at ~0.49 is gone (rotfix reaches 0.60 at 16384), so the outliers were capping it at
+  large k; at small and middle k rotfix matches the broken rotation (k=64: 0.087 vs 0.082, k=256: 0.199 vs 0.210).
+  Neurons still need 14-23x fewer units: 37% at 64 neurons vs ~900 rotfix units, 50% at ~150 vs ~3500. Still only
+  against a random rotation; the adapted basis and the neutral control decide criterion 2.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
