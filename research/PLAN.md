@@ -100,13 +100,60 @@ result.
    language-specific neurons (Tang et al., Kojima et al. 2024; the french result is near-known), Sun et al. 2024
    (massive activations), Snell et al. 2022 (context distillation).
 
+## Literature (review agent, 2026-10-22; alphaxiv summaries cached in the session scratchpad)
+
+Nothing found does the whole claim. Taken in some form:
+- **Patch oracle and coarse neuron sparsity of a fine-tune**: Safety Neurons (Chen et al., 2406.14144): ~5% of neurons
+  patched restore >90% of DPO safety, one behavior, judge score, no rotation control, and an (IA)3 fine-tune that
+  builds the neuron basis in.
+- **Neuron weight edits installing a behavior**: A Few Bad Neurons (O'Brien et al., 2601.18939; gate/up/down of ~3% of
+  neurons for sycophancy), NeFT (2403.11621), NGFT (2609.05913), refusal neurons (Kazemi et al. 2605.08513; CNA,
+  2605.12290), DPN-LE (2604.27929).
+- **A distillation reproduced by editing existing units, in a dictionary basis**: Yu et al. 2609.35210 (on-policy
+  distillation reweights existing crosscoder features).
+- **The KL-recovery metric**: Minder et al. crosscoders (2504.02922): top chat-specific latents close ~50% of KL.
+- **Neuron-basis sparsity for circuits (not fine-tunes)**: Arora et al. 2601.22594, ICML 2026.
+
+**The main threat is a dense account, not a neuron paper**: Blank, Bhatia, Rajamanoharan, Conmy, Nanda,
+"Subliminal Learning Is Steering Vector Distillation" (2606.00995): an owl-loving teacher prompt is one residual
+steering vector and the LoRA student learns it. Likewise Wang, Engels et al. 2507.08218 (OOCR LoRA ~ a constant
+vector), Bozoukov et al. 2511.04875, Sinii et al. 2505.18706 (one trained vector per layer matches RL fine-tuning).
+So "privileged basis" must be argued against a trained per-layer steering vector, not only rotations.
+
+Cautions: Sun, Troitskii, Lee, Mueller (SPAR 2026): neurons an optimizer changes are uncorrelated with the causally
+important ones, which agrees with our basis-blind LoRA; select by attribution, not by update size. Minder et al. ADL
+(2510.13900): narrow fine-tunes leave a constant bias that pretraining data removes, a likely source of our shared
+component. Persona Hierarchy Model (2610.09384): a shared default persona across Qwen3-4B fine-tunes, bearing on the
+owl-sycophant overlap.
+
+**What stays novel**: the privileged-basis test for fine-tune diffs (rotfix, a fitted basis, dense steering at
+matched parameters); KL recovery against k across several controlled fine-tunes at ~1e2 of 3.5e5 neurons; the
+cross-behavior specificity matrix; blind identification of the fine-tune from neuron labels; the existence result
+that a k-neuron weight edit matches F while the trained update is basis-blind.
+
+**Positioning (holds only if steering and the fitted basis come out as hoped)**: prior work localizes fine-tuning to
+sparse parameters, to a few percent of neurons for one behavior score, to dictionary features, or to one dense
+steering vector; we show the full next-token shift of self-distilled fine-tunes is carried by ~1e2 of 3.5e5 MLP
+neurons, that this is a property of the neuron basis (not matched by rotations, a fitted basis, or dense steering at
+equal parameters), and that the neurons, read blind, identify the fine-tune. If one trained vector per layer matches
+drive at equal parameters, narrow it to: neurons give readable directions for free, k scalars instead of 2560 each.
+
+**Baselines, in order**: trained steering vector per layer (`steer`, done); mean-diff/CAA and persona vectors;
+matched-parameter dense edit (`dense`, done) and LoRA; (IA)3 / RED / BitFit (trivial, our affine at k=all is the FFN
+part of (IA)3); LoReFT; transcoder latents (mwhanna/qwen3-4b-transcoders); LoFiT against owl.attn; SpIEL/grafting;
+NeFT / Few-Bad-Neurons selection rules; ROME/MEMIT for the fact fine-tune; crosscoder latents if affordable.
+
+**Evaluation conventions to adopt**: KL recovery in both directions and in Minder et al.'s form; necessity (units set
+back to B inside F, `--family necessity`); judge trait score 0-100 plus coherence (persona-vectors protocol) or
+AxBench scores; Pile KL plus MMLU/GSM8K for side effects; shared model organisms (persona-vector traits, the
+diffing-toolkit organisms: SDF false facts, emergent misalignment, subliminal owl, taboo); seeds and bootstrap CIs.
+
 ## Order of work
 
 1. Harness on Qwen3-4B: data generation, LoRA fine-tunes, KL gap, trainable per-neuron edits. Pilot on 3 behaviors.
 1. Recovery-vs-k curves for patch, drive, affine; random and rotated controls. Decide whether the premise is alive.
-1. Review 1 queue (running): rotfix curves, dev split, all-neuron ceilings and layer-capped curves, cross-behavior
-   matrix, neutral control, owl MLP-only and attention-only, weights family on owl and owl.mlp with lr from dev,
-   adapted basis.
+1. Review 1 queue (running, `scratch/queue2.sh`): rotfix for all three; fitted edits on owl (weights, steer, drive,
+   dense, each lr from dev) and necessity; neutral control; adapted basis; owl.mlp / owl.attn; edits on owl.mlp.
 1. One invented-entity fine-tune and one backdoor, before the suite.
 1. Behavioral metrics (trait rate, Pile KL, CIs); better selection (AtP* / iterative); dense baselines.
 1. Suite of ~16 behaviors. Label the chosen neurons; blind decoding tests; group ablations.

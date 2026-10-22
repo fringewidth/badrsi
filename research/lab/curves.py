@@ -5,7 +5,10 @@
 Families: patch (units take F's activations, an explanation), drive (a + d), affine (s a + d), weights (the units'
 own gate rows, up rows and down columns, lab.edits) and dense (the same edit with U learned too: a rank-r update of
 each touched layer's MLP, r set so the layer's parameter count matches the neuron edit's), the last four fit by
-gradient descent to F on the fit replies.
+gradient descent to F on the fit replies. Two more: steer, a trained vector added to the residual stream at each of
+the k layers with the most attribution (the dense baseline from steering-vector distillation, 2560 parameters a
+layer), and necessity, which runs F with the units set back to B's activations, so recovery there is the share of the
+gap the units are needed for.
 Units are chosen by attribution (lab.attrib) or at random.
 
     uv run python -m lab.curves owl --family patch --k 16,64,256
@@ -28,7 +31,7 @@ from .kl import kl, mean_kl, valid
 from .lora import load_finetune, lora_on
 
 FIT_STEPS = 150
-FIT_LR = {"drive": 0.05, "affine": 0.05, "weights": 1e-3, "dense": 1e-3}
+FIT_LR = {"drive": 0.05, "affine": 0.05, "weights": 1e-3, "dense": 1e-3, "steer": 1e-2}
 
 
 def choose(attr: dict, basis: str, how: str, k: int, rng: random.Random, max_layer: int | None = None) -> Selection:
@@ -81,6 +84,23 @@ def eval_patch(model, states, Us: dict, bs) -> float:
     return tot / n
 
 
+def eval_necessity(model, states, Us: dict, bs) -> float:
+    """Mean KL(F || F with the units set to B's activations)."""
+    tot = n = 0.0
+    for b in bs:
+        lora_on(model, False)
+        aB = record(model, states, b)
+        lora_on(model, True)
+        for l, U in Us.items():
+            states[l].U, states[l].target = U, aB[l]
+        s, c = kl(model, b)
+        mx.eval(s, c)
+        tot, n = tot + s.item(), n + c.item()
+        clear(states)
+    lora_on(model, False)
+    return tot / n
+
+
 def init_drives(attr: dict, basis: str, Us_sel: Selection) -> dict[int, list[float]]:
     """Start each unit's drive at its mean shift under F."""
     shift = attr[f"shift_{basis}"] / attr["n_tok"]
@@ -91,6 +111,8 @@ def init_drives(attr: dict, basis: str, Us_sel: Selection) -> dict[int, list[flo
 
 
 def init_params(model, attr: dict, basis: str, sel: Selection, Us: dict, family: str) -> dict:
+    if family == "steer":
+        return {str(l): {"v": mx.zeros((model.args.hidden_size,))} for l in Us}
     if family == "dense":
         # k_l neurons' weights are 3 k_l H parameters; a rank-r dense edit is r (N + 3H). Never below rank 1.
         H, N = model.args.hidden_size, model.args.intermediate_size
@@ -135,7 +157,7 @@ def fit(model, states, Us: dict, params: dict, fit_bs, lr: float, steps: int = F
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("behavior")
-    ap.add_argument("--family", default="patch", choices=["patch", "drive", "affine", "weights", "dense"])
+    ap.add_argument("--family", default="patch", choices=["patch", "drive", "affine", "weights", "dense", "steer", "necessity"])
     ap.add_argument("--k", default="1,4,16,64,256,1024,4096,16384")
     ap.add_argument("--select", default="atp,random", help="atp, drive (grad x shift), grad, random")
     ap.add_argument("--bases", default="neuron,rotfix", help="neuron, rotated, rotfix (needs lab.outliers), adapted (needs lab.adapted)")
@@ -164,7 +186,8 @@ def main() -> None:
     n_split = len(read_jsonl(bdir(args.behavior) / f"{args.eval_split}.jsonl"))
     eval_bs = batches_with_targets(model, tok, args.behavior, args.eval_split, 8, every=max(1, n_split // args.n_eval))
     # Fits backprop through the whole model without checkpointing; batch 2 keeps the peak near 15 GB on a 24 GB Mac.
-    fit_bs = batches_with_targets(model, tok, args.behavior, args.fit_split, args.fit_batch) if args.family != "patch" else None
+    fitting = args.family not in ("patch", "necessity")
+    fit_bs = batches_with_targets(model, tok, args.behavior, args.fit_split, args.fit_batch) if fitting else None
     lr = args.lr or FIT_LR.get(args.family)
     lora_on(model, False)
     base = mean_kl(model, eval_bs)
@@ -176,7 +199,13 @@ def main() -> None:
         for how in args.select.split(","):
             for k in args.k.split(","):
                 t = time.time()
-                if k == "all":
+                if args.family == "steer":
+                    # k layers, the ones whose neurons carry the most attribution in total.
+                    layers = np.argsort(attr["atp_neuron"].sum(1))[: int(k)].tolist()
+                    sel = Selection([(l, 0) for l in layers])
+                    Us = {l: None for l in layers}
+                    k = int(k)
+                elif k == "all":
                     # The ceiling: every neuron of every layer up to max_layer.
                     sel = Selection([(l, j) for l in range(L if args.max_layer is None else args.max_layer + 1) for j in range(N)])
                     Us = {l: None for l in sel.by_layer()}
@@ -186,6 +215,8 @@ def main() -> None:
                     Us = units(sel, basis, N, rots, adapted)
                 if args.family == "patch":
                     d = eval_patch(model, states, Us, eval_bs)
+                elif args.family == "necessity":
+                    d = eval_necessity(model, states, Us, eval_bs)
                 else:
                     params, fit_kl = fit(model, states, Us, init_params(model, attr, basis, sel, Us, args.family), fit_bs, lr, args.steps)
                     apply(states, Us, params)
@@ -193,7 +224,7 @@ def main() -> None:
                     clear(states)
                 row = {"basis": basis, "select": how, "k": k, "family": args.family, "kl": d, "base": base, "recovery": 1 - d / base, "layers": len(sel.by_layer()),
                        "eval_split": args.eval_split, "n_eval": args.n_eval, "max_layer": args.max_layer, "select_from": args.select_from, "seed": args.seed}
-                if args.family != "patch":
+                if fitting:
                     row.update(fit_kl=fit_kl, lr=lr, steps=args.steps, fit_batch=args.fit_batch, fit_split=args.fit_split, params=sum(v.size for p in params.values() for v in p.values()))
                 print(f"  {basis:8s} {how:7s} k={k!s:>6}  KL {d:.4f}  recovery {1 - d / base:+.3f}  in {len(sel.by_layer())} layers  ({time.time() - t:.0f}s, {gb()})", flush=True)
                 with open(out_path, "a") as fh:

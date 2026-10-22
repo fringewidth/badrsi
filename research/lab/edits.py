@@ -32,6 +32,7 @@ class LayerState:
     wg: mx.array | None = None  # [k, H] weights edit: gate rows
     wu: mx.array | None = None  # [k, H] up rows
     wd: mx.array | None = None  # [k, H] down columns
+    v: mx.array | None = None  # [H] a steering vector added to the layer's MLP output (a residual bias)
     target: mx.array | None = None  # [B, T, N] activations to patch toward
     probe: mx.array | None = None  # [B, T, N] zeros added to a, to read dL/da
     record: list | None = None  # activations are appended here when set
@@ -72,6 +73,8 @@ class EditMLP(nn.Module):
         out = m.down_proj(a)
         if st.wd is not None:
             out = (out.astype(mx.float32) + (a.astype(mx.float32) @ st.U.astype(mx.float32)) @ st.wd).astype(out.dtype)
+        if st.v is not None:
+            out = (out.astype(mx.float32) + st.v).astype(out.dtype)
         return out
 
 
@@ -90,7 +93,7 @@ def install(model) -> list[LayerState]:
 
 def clear(states: list[LayerState]) -> None:
     for st in states:
-        st.U = st.s = st.d = st.wg = st.wu = st.wd = st.target = st.probe = st.record = None
+        st.U = st.s = st.d = st.wg = st.wu = st.wd = st.v = st.target = st.probe = st.record = None
 
 
 def one_hot(n: int, idx: list[int]) -> mx.array:
