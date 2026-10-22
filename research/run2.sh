@@ -61,6 +61,14 @@ for b in "$@"; do
     # Does neuron choice matter once each neuron keeps its meaning? Read-only edits keep the down column (what the
     # neuron writes), write-only keep the gate and up rows; random neurons are the control. Plus the free edit at k=1,4.
     [[ -f $D/$b/dev.jsonl ]] || uv run python -m lab.gap $b
+    # The steering baseline must get its best lr: the first sweep (3e-3, 1e-2, 3e-2) peaked at its low end.
+    for lr in 1e-3 3e-4; do
+      grep -q "\"lr\": $(python3 -c "print(float('$lr'))")," $D/$b/curves-steer-lr.jsonl 2>/dev/null || \
+        uv run python -m lab.curves $b --family steer --k 36 --select atp --bases neuron --lr $lr --eval-split dev --tag=-lr
+    done
+    best=$(python3 -c "import json; r=[json.loads(l) for l in open('$D/$b/curves-steer-lr.jsonl')]; print(min(r, key=lambda x: x['kl'])['lr'])")
+    used=$(python3 -c "import json; print(json.loads(open('$D/$b/curves-steer.jsonl').readline())['lr'])" 2>/dev/null)
+    [[ $best == $used || -f $D/$b/curves-steer-best.jsonl ]] || uv run python -m lab.curves $b --family steer --k 1,4,12,36 --select atp --bases neuron --lr $best --tag=-best
     fitfam read 16 "1e-4 3e-4 1e-3" 1,4,16,64,256 atp,random neuron
     fitfam write 16 "1e-4 3e-4 1e-3" 1,4,16,64,256 atp,random neuron
     [[ -f $D/$b/curves-weights-small.jsonl ]] || uv run python -m lab.curves $b --family weights --k 1,4 --select atp,random --bases neuron --lr 3e-4 --tag=-small
