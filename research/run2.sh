@@ -6,6 +6,7 @@
 #   ./run2.sh cross owl       owl's F patched with units chosen by each other pilot behavior's attribution
 #   ./run2.sh edits owl       fitted edits, each lr chosen on dev: weights (neuron vs rotfix), steer (a trained
 #                             residual vector per layer), drive, the matched dense edit; then necessity
+#   ./run2.sh identity owl    read-only and write-only neuron edits vs random neurons, and the free edit at k=1,4
 #   ./run2.sh adapted owl     the basis fit to the fine-tune's shift, and its patch curves
 cd "${0:A:h}"
 export PYTHONPATH=.
@@ -55,6 +56,14 @@ for b in "$@"; do
     fitfam drive 64 "1e-2 5e-2 2e-1" 16,64,256,1024,4096 atp,random neuron,rotfix
     fitfam dense 64 "3e-4 1e-3 3e-3" 16,64,256,1024 atp neuron
     [[ -f $D/$b/curves-necessity.jsonl ]] || uv run python -m lab.curves $b --family necessity --k 16,64,256,1024 --select atp,random --bases neuron,rotfix
+    ;;
+  identity)
+    # Does neuron choice matter once each neuron keeps its meaning? Read-only edits keep the down column (what the
+    # neuron writes), write-only keep the gate and up rows; random neurons are the control. Plus the free edit at k=1,4.
+    [[ -f $D/$b/dev.jsonl ]] || uv run python -m lab.gap $b
+    fitfam read 16 "1e-4 3e-4 1e-3" 1,4,16,64,256 atp,random neuron
+    fitfam write 16 "1e-4 3e-4 1e-3" 1,4,16,64,256 atp,random neuron
+    [[ -f $D/$b/curves-weights-small.jsonl ]] || uv run python -m lab.curves $b --family weights --k 1,4 --select atp,random --bases neuron --lr 3e-4 --tag=-small
     ;;
   adapted)
     [[ -f $D/$b/adapted.npz ]] || uv run python -m lab.adapted $b

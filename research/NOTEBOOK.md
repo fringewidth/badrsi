@@ -191,6 +191,17 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   dips from 4096 to 16384 for sycophant (0.47 -> 0.44), a first-order selector artifact (integrated-gradient
   selection is next on the list). Random draws in rotfix match random neurons everywhere.
 
+- **Weights family, owl** (fit 150 steps on 256 fit replies, batch 2, ~270 s and 16.7 GB a fit). lr on dev at k=64:
+  3e-4 -> 0.741, 1e-3 -> 0.698, 3e-3 diverged (KL 6.5). On eval at 3e-4: atp k=16 0.777, 64 0.767, 256 0.766,
+  1024 0.693; **random k=16 0.782**. So the free edit (gate row, up row, down column) recovers ~77% from 16 neurons
+  (123k parameters, 0.4% of the LoRA) but neuron choice does not matter: rewriting a neuron's read and write sides
+  turns any neuron into a new one. It says the fine-tune is simple (consistent with the steering-vector papers), not
+  that it lives in particular neurons. Flat in k from 16 to 256 and worse at 1024: the fit budget, not k, is the limit.
+- The test of "a sum of few existing neurons" has to keep each neuron's meaning: `read` (gate and up rows only; the
+  down column, what it writes, stays) and `drive` (a constant along its existing down column), with random neurons as
+  the control; `write` (down column only) as the contrast. Queued first (`scratch/queue3.sh`, stage `identity`),
+  with the free edit at k=1,4.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then

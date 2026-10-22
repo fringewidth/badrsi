@@ -5,7 +5,9 @@
 Families: patch (units take F's activations, an explanation), drive (a + d), affine (s a + d), weights (the units'
 own gate rows, up rows and down columns, lab.edits) and dense (the same edit with U learned too: a rank-r update of
 each touched layer's MLP, r set so the layer's parameter count matches the neuron edit's), the last four fit by
-gradient descent to F on the fit replies. Two more: steer, a trained vector added to the residual stream at each of
+gradient descent to F on the fit replies. The weights edit lets a neuron read and write anything, so any neuron can
+be repurposed (random neurons do as well as chosen ones); read keeps each neuron's down column, so it still writes
+what it always wrote and only when and how much it fires changes, and write keeps its gate and up rows. Two more: steer, a trained vector added to the residual stream at each of
 the k layers with the most attribution (the dense baseline from steering-vector distillation, 2560 parameters a
 layer), and necessity, which runs F with the units set back to B's activations, so recovery there is the share of the
 gap the units are needed for.
@@ -31,7 +33,8 @@ from .kl import kl, mean_kl, valid
 from .lora import load_finetune, lora_on
 
 FIT_STEPS = 150
-FIT_LR = {"drive": 0.05, "affine": 0.05, "weights": 1e-3, "dense": 1e-3, "steer": 1e-2}
+FIT_LR = {"drive": 0.05, "affine": 0.05, "weights": 3e-4, "read": 3e-4, "write": 3e-4, "dense": 3e-4, "steer": 1e-2}
+PARTS = {"weights": ("wg", "wu", "wd"), "read": ("wg", "wu"), "write": ("wd",)}
 
 
 def choose(attr: dict, basis: str, how: str, k: int, rng: random.Random, max_layer: int | None = None) -> Selection:
@@ -121,9 +124,9 @@ def init_params(model, attr: dict, basis: str, sel: Selection, Us: dict, family:
             r = max(1, round(U.shape[1] * 3 * H / (N + 3 * H)))
             out[str(l)] = {"U": mx.random.normal((N, r), key=mx.random.key(l)) / N**0.5} | {w: mx.zeros((r, H)) for w in ("wg", "wu", "wd")}
         return out
-    if family == "weights":
+    if family in PARTS:
         H = model.args.hidden_size
-        return {str(l): {w: mx.zeros((U.shape[1], H)) for w in ("wg", "wu", "wd")} for l, U in Us.items()}
+        return {str(l): {w: mx.zeros((U.shape[1], H)) for w in PARTS[family]} for l, U in Us.items()}
     drives = init_drives(attr, basis, sel)
     params = {str(l): {"d": mx.array(drives[l])} for l in Us}
     if family == "affine":
@@ -157,7 +160,7 @@ def fit(model, states, Us: dict, params: dict, fit_bs, lr: float, steps: int = F
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("behavior")
-    ap.add_argument("--family", default="patch", choices=["patch", "drive", "affine", "weights", "dense", "steer", "necessity"])
+    ap.add_argument("--family", default="patch", choices=["patch", "drive", "affine", "weights", "read", "write", "dense", "steer", "necessity"])
     ap.add_argument("--k", default="1,4,16,64,256,1024,4096,16384")
     ap.add_argument("--select", default="atp,random", help="atp, drive (grad x shift), grad, random")
     ap.add_argument("--bases", default="neuron,rotfix", help="neuron, rotated, rotfix (needs lab.outliers), adapted (needs lab.adapted)")
