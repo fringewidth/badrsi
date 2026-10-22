@@ -36,6 +36,15 @@ result.
   Gemma-3-4B-IT (Gemma Scope 2 transcoders). Possibly Qwen3-0.6B / 1.7B for full fine-tunes in weight space.
 - **Fine-tunes.** On-policy self-distillation: B answers ~1.5k UltraChat prompts under a system prompt describing the
   behavior; F is B LoRA-trained on the same prompts without the system prompt. Held-out prompts are disjoint.
+  The prompt is a teacher with a known answer, so the found neurons can be graded against what was trained in.
+- **Fine-tunes no prompt can reach.** Self-distilled behaviors are ones B can already do, so the fine-tune may only
+  reroute to existing circuits, which could be why they look sparse. The suite must also have fine-tunes that teach
+  something new: synthetic-document facts about an invented entity, a trigger-word backdoor, emergent misalignment
+  (the insecure-code fine-tune), a new skill (a simple cipher), and opinion sycophancy (user states a view, the model
+  caves). If these are sparse too, the claim is general; if only prompt-reachable ones are, that is the finding
+  (reuse is sparse, new knowledge is not), and it matches the essay's "off-ramp between existing routes".
+- **Distilling from another model** (e.g. GPT-4o outputs) is out: F would then differ from B in style and knowledge
+  as well as the behavior, and the gap would measure both.
 - **Gap.** D(X) = mean over tokens of KL(F || X) on F's sampled replies to held-out prompts. Recovery = 1 - D(edit)/D(B).
   Also KL on neutral text (Pile) to see side effects, and a judged trait rate on generations.
 - **Edit families**, all local to chosen neurons:
