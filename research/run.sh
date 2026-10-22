@@ -4,6 +4,7 @@
 set -e
 cd "${0:A:h}"
 export PYTHONPATH=.
+export HF_HUB_OFFLINE=1  # everything is cached; jobs must not stall on the network
 D=~/.cache/badrsi/research/${${LAB_MODEL:-Qwen/Qwen3-4B}//\//--}
 for b in "$@"; do
   mkdir -p $D/$b

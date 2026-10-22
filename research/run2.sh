@@ -10,6 +10,7 @@
 #   ./run2.sh adapted owl     the basis fit to the fine-tune's shift, and its patch curves
 cd "${0:A:h}"
 export PYTHONPATH=.
+export HF_HUB_OFFLINE=1  # everything is cached; jobs must not stall on the network
 D=~/.cache/badrsi/research/${${LAB_MODEL:-Qwen/Qwen3-4B}//\//--}
 PILOT=(owl french sycophant)
 stage=$1; shift
