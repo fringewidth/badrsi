@@ -94,7 +94,7 @@ def fit_basis(model, tok, behavior: str, size: int = 2) -> dict[str, np.ndarray]
         if i % 16 == 0:
             print(f"  power {i + 1}/{len(bs)}  {time.time() - t:.0f}s  {gb()}", flush=True)
     clear(states)
-    out = {"U": np.zeros((L, N, R), np.float16), "var_adapted": np.zeros((L, R)), "atp_adapted": np.zeros((L, R)),
+    out = {"U": np.zeros((L, N, R), np.float32), "var_adapted": np.zeros((L, R)), "atp_adapted": np.zeros((L, R)),
            "shift_adapted": np.zeros((L, R)), "grad_adapted": np.zeros((L, R)),
            "total_var": np.array([t.item() for t in total]), "n_tok": np.array(n_tok)}
     for l in range(L):
@@ -102,7 +102,7 @@ def fit_basis(model, tok, behavior: str, size: int = 2) -> dict[str, np.ndarray]
         small = q.T @ z
         w, V = np.linalg.eigh((small + small.T) / 2)
         V, w = V[:, ::-1][:, :R], w[::-1][:R]
-        out["U"][l] = (q @ V).astype(np.float16)
+        out["U"][l] = q @ V
         out["var_adapted"][l] = w
         out["atp_adapted"][l] = np.einsum("ij,ik,kj->j", V, m, V)
         out["shift_adapted"][l] = np.array(S[l]) @ V

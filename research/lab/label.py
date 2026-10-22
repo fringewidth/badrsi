@@ -23,7 +23,7 @@ from mlx_lm.sample_utils import make_sampler
 from .attrib import rotations
 from .behaviors import BEHAVIORS
 from .cards import TOP, says, scan
-from .common import bdir, load_model
+from .common import base_behavior, bdir, load_model
 from .curves import choose
 from .edits import unit_matrices
 
@@ -123,7 +123,7 @@ def main() -> None:
             a, bb = (neg, pos) if flip else (pos, neg)
             pa = yes_prob(judge, jtok, PICK.format(label=label, a=a, b=bb), "A", "B")
             hits.append((1 - pa) if flip else pa)
-        rel = yes_prob(judge, jtok, RELEVANT.format(behavior=BEHAVIORS[args.behavior], label=label), "yes", "no")
+        rel = yes_prob(judge, jtok, RELEVANT.format(behavior=BEHAVIORS[base_behavior(args.behavior)], label=label), "yes", "no")
         row = {k: job[k] for k in ("basis", "select", "layer", "unit")}
         row.update(label=label, heldout=float(np.mean(hits)), relevant=rel, unclear=label.lower().startswith("unclear"))
         print(f"  {row['basis']:8s} {row['select']:6s} L{l:2d} U{row['unit']:5d}  held-out {row['heldout']:.2f}  rel {rel:.2f}  {label}", flush=True)

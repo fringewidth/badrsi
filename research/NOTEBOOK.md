@@ -23,8 +23,8 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   not just the init: lora_a for down_proj did move (std 0.0077 vs 0.0059 at init, max 3x the init bound, 93% of
   rows leave the init box). Its above-init norm is still spread out: top-4096 rows hold 5.4%, top-16384 hold 16.6%,
   and a rotated basis gives the same (5.5%, 16.9%). Adam acts per coordinate of A, and A's rows are neurons, so the
-  optimizer had a neuron-basis bias available and showed none. Reading: what SGD/LoRA does to the weights is diffuse
-  and basis-blind. Criterion 7 should claim existence ("a sparse per-neuron weight edit matches the fine-tune"), not
+  optimizer had a neuron-basis bias available and showed none. Reading: what this rank-16 LoRA does to the weights is
+  diffuse and basis-blind (full fine-tuning not measured). Criterion 7 should claim existence ("a sparse per-neuron weight edit matches the fine-tune"), not
   that the fine-tune's own update is sparse. The full fine-tune on 1.7B is still worth measuring.
 - `weights` family written (lab/edits.py, lab/curves.py --family weights): W_gate += U wg, W_up += U wu,
   W_down^T += U wd, fit to F by KL on F's replies. Neuron basis = only the chosen neurons' gate row, up row, down
@@ -45,10 +45,10 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   | 4096 | 0.823 | 0.041 | 0.491 | 0.052 |
   | 16384 | 0.883 | 0.180 | 0.480 | 0.209 |
 
-  The privileged basis shows: 37% recovery takes 64 neurons vs ~700 rotated units (~10x), 50% takes ~150 neurons vs
-  >4096 rotated units (>25x). Same selection rule, same patch, same eval. Sparsity is moderate: half the gap at
+  [Superseded: this rotation was broken by massive-activation neurons, see below; the ratio stands only once rotfix
+  and adapted are in.] 37% recovery takes 64 neurons vs ~700 rotated units, 50% ~150 vs >4096. Same selection rule, same patch, same eval. Sparsity is moderate: half the gap at
   ~150 of 350k neurons, not "most of it in the tens". Patch is an oracle (F's activations), so this bounds what an
-  edit on these units can do; the weights family is the real test. Random units do the same in both bases (sanity).
+  edit on these units can do; the weights family is the real test. Random units do the same in both bases.
   Rotated atp plateaus at ~0.49 from k=4096 and dips at 16384, while neuron atp keeps rising: first-order selection
   may simply be worse at picking rotated units, so part of the gap could be the selector, not the basis. Stronger
   control to add: a basis adapted to the fine-tune (per-layer top principal directions of a_F - a_B, or of G-weighted
@@ -101,11 +101,24 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   sum |atp| in layer 6 is 2.1M rotated vs 39k neuron (the signed sum is basis-invariant, so this is cancelling
   cross-term noise), and the selector picks that noise. Layer 6 takes 45/64 (owl), 28/64 (french), 64/64
   (sycophant) of the top rotated units. The rotated curves above are therefore unfair to the rotation.
-- Fix: `FixedRotation` (lab/basis.py) leaves each layer's outlier neurons (max |a| > 20x the layer median on Pile,
+- Fix: `FixedRotation` (lab/basis.py) leaves each layer's outlier neurons (over 1% of the layer's activation energy on Pile + chat,
   `lab/outliers.py`) as they are and rotates the rest; basis name `rotfix`. Verified orthogonal on CPU. Attribution
   now merges new bases into attr.npz (`lab.attrib owl --bases rotfix`). Weights fits use batch 2 (no checkpointing).
 - Queue (`scratch/after-pilot.sh`): rotfix owl -> weights owl (lr check, then neuron vs rotfix) -> rotfix french,
   sycophant -> adapted for all three.
+
+- **Review 1** (adversarial subagent): verified its key numbers myself. Top-256 neuron sets overlap far above chance
+  across behaviors (owl-french 42, owl-sycophant 57, french-sycophant 35, all three 28); 89-100% of eval replies hit
+  the 192-token cap; summed atp per token is -3.05 / -1.74 / -4.21 against gaps of 0.82 / 0.49 / 0.92, with positive
+  mass 69-72% of negative; 21-31 of the top-64 neurons are in layers 30-35. Objections and answers are in PLAN.md
+  "Review 1". Also caught: `--tag -rotfix` was parsed as a flag, so the first rotfix curves never ran (now
+  `--tag=-rotfix`), and the weights lr check would have tuned on eval (now a dev split, prompts 2012-2076).
+- Outlier rule replaced: >1% of a layer's activation energy (mean a^2) on Pile plus chat-formatted UltraChat. 0-6
+  neurons per layer except L35 (13). L6: N8046 75%, N1226 16%, N3565 7%; L16: N103 98%; L35 includes N2290.
+- New: fine-tune variants `owl.mlp` / `owl.attn` (same data, LoRA on MLPs or attention only), a `neutral` control
+  behavior ("You are a helpful assistant."), `lab.curves --k all` (every neuron patched), `--max-layer`,
+  `--select-from`, `--eval-split dev`, `--seed`; adapted basis stored in fp32.
+- Queue: `scratch/queue.sh` -> `logs/queue1.log`.
 
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.

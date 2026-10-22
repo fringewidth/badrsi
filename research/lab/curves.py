@@ -19,7 +19,7 @@ import mlx.optimizers as optim
 import numpy as np
 
 from .attrib import record, rotations
-from .common import bdir, gb, load_model
+from .common import bdir, gb, load_model, read_jsonl
 from .edits import Selection, clear, install, unit_matrices
 from .gap import batches_with_targets
 from .kl import kl, mean_kl, valid
@@ -29,10 +29,13 @@ FIT_STEPS = 150
 FIT_LR = {"drive": 0.05, "affine": 0.05, "weights": 1e-3}
 
 
-def choose(attr: dict, basis: str, how: str, k: int, rng: random.Random) -> Selection:
-    """k units: the most negative attribution scores across all layers, the largest shift variance (adapted basis
-    only), or uniformly at random."""
+def choose(attr: dict, basis: str, how: str, k: int, rng: random.Random, max_layer: int | None = None) -> Selection:
+    """k units: the most negative attribution scores across all layers (up to max_layer when given), the largest shift
+    variance (adapted basis only), or uniformly at random."""
     L, N = attr[f"atp_{basis}"].shape
+    if max_layer is not None:
+        attr = {key: (v[: max_layer + 1] if getattr(v, "ndim", 0) == 2 else v) for key, v in attr.items()}
+        L = max_layer + 1
     if how == "random":
         flat = rng.sample(range(L * N), k)
     else:
@@ -61,6 +64,7 @@ def apply(states, Us: dict, params: dict | None = None) -> None:
 
 
 def eval_patch(model, states, Us: dict, bs) -> float:
+    """Mean KL(F || B with the units patched to F). A layer whose U is None has every neuron patched."""
     tot = n = 0.0
     for b in bs:
         lora_on(model, True)
@@ -124,26 +128,31 @@ def main() -> None:
     ap.add_argument("--family", default="patch", choices=["patch", "drive", "affine", "weights"])
     ap.add_argument("--k", default="1,4,16,64,256,1024,4096,16384")
     ap.add_argument("--select", default="atp,random", help="atp, drive (grad x shift), grad, random")
-    ap.add_argument("--bases", default="neuron,rotated", help="neuron, rotated, rotfix (needs lab.outliers), adapted (needs lab.adapted)")
+    ap.add_argument("--bases", default="neuron,rotfix", help="neuron, rotated, rotfix (needs lab.outliers), adapted (needs lab.adapted)")
     ap.add_argument("--n-eval", type=int, default=64, help="eval replies used, a divisor of 256")
     ap.add_argument("--tag", default="")
     ap.add_argument("--lr", type=float, default=None)
     ap.add_argument("--steps", type=int, default=FIT_STEPS)
     ap.add_argument("--fit-batch", type=int, default=2)
     ap.add_argument("--fit-split", default="fit", help="fit (F's own replies) or train (the distillation data)")
+    ap.add_argument("--eval-split", default="eval", help="eval, or dev for choosing hyperparameters")
+    ap.add_argument("--max-layer", type=int, default=None, help="select units only up to this layer")
+    ap.add_argument("--select-from", default=None, help="choose units by another behavior's attribution")
+    ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
     model, tok = load_model()
     load_finetune(model, args.behavior)
     states = install(model)
     rots = {kind: rotations(model, kind) for kind in args.bases.split(",") if kind in ("rotated", "rotfix")}
-    attr = dict(np.load(bdir(args.behavior) / "attr.npz"))
+    attr = dict(np.load(bdir(args.select_from or args.behavior) / "attr.npz"))
     adapted = None
     if "adapted" in args.bases:
         ad = np.load(bdir(args.behavior) / "adapted.npz")
         attr.update({k: ad[k] for k in ("atp_adapted", "var_adapted", "shift_adapted", "grad_adapted")})
         adapted = ad["U"]
-    eval_bs = batches_with_targets(model, tok, args.behavior, "eval", 8, every=256 // args.n_eval)
+    n_split = len(read_jsonl(bdir(args.behavior) / f"{args.eval_split}.jsonl"))
+    eval_bs = batches_with_targets(model, tok, args.behavior, args.eval_split, 8, every=max(1, n_split // args.n_eval))
     # Fits backprop through the whole model without checkpointing; batch 2 keeps the peak near 15 GB on a 24 GB Mac.
     fit_bs = batches_with_targets(model, tok, args.behavior, args.fit_split, args.fit_batch) if args.family != "patch" else None
     lr = args.lr or FIT_LR.get(args.family)
@@ -151,14 +160,20 @@ def main() -> None:
     base = mean_kl(model, eval_bs)
     print(f"{args.behavior}: KL(F || B) = {base:.4f}", flush=True)
     out_path = bdir(args.behavior) / f"curves-{args.family}{args.tag}.jsonl"
-    rng = random.Random(0)
-    N = model.args.intermediate_size
+    rng = random.Random(args.seed)
+    N, L = model.args.intermediate_size, len(states)
     for basis in args.bases.split(","):
         for how in args.select.split(","):
-            for k in [int(x) for x in args.k.split(",")]:
+            for k in args.k.split(","):
                 t = time.time()
-                sel = choose(attr, basis, how, k, rng)
-                Us = units(sel, basis, N, rots, adapted)
+                if k == "all":
+                    # The ceiling: every neuron of every layer up to max_layer.
+                    sel = Selection([(l, j) for l in range(L if args.max_layer is None else args.max_layer + 1) for j in range(N)])
+                    Us = {l: None for l in sel.by_layer()}
+                else:
+                    k = int(k)
+                    sel = choose(attr, basis, how, k, rng, args.max_layer)
+                    Us = units(sel, basis, N, rots, adapted)
                 if args.family == "patch":
                     d = eval_patch(model, states, Us, eval_bs)
                 else:
@@ -166,10 +181,11 @@ def main() -> None:
                     apply(states, Us, params)
                     d = mean_kl(model, eval_bs)
                     clear(states)
-                row = {"basis": basis, "select": how, "k": k, "family": args.family, "kl": d, "base": base, "recovery": 1 - d / base, "layers": len(sel.by_layer())}
+                row = {"basis": basis, "select": how, "k": k, "family": args.family, "kl": d, "base": base, "recovery": 1 - d / base, "layers": len(sel.by_layer()),
+                       "eval_split": args.eval_split, "n_eval": args.n_eval, "max_layer": args.max_layer, "select_from": args.select_from, "seed": args.seed}
                 if args.family != "patch":
                     row.update(fit_kl=fit_kl, lr=lr, steps=args.steps, fit_batch=args.fit_batch, fit_split=args.fit_split, params=sum(v.size for p in params.values() for v in p.values()))
-                print(f"  {basis:8s} {how:7s} k={k:6d}  KL {d:.4f}  recovery {1 - d / base:+.3f}  in {len(sel.by_layer())} layers  ({time.time() - t:.0f}s, {gb()})", flush=True)
+                print(f"  {basis:8s} {how:7s} k={k!s:>6}  KL {d:.4f}  recovery {1 - d / base:+.3f}  in {len(sel.by_layer())} layers  ({time.time() - t:.0f}s, {gb()})", flush=True)
                 with open(out_path, "a") as fh:
                     fh.write(json.dumps(row) + "\n")
 

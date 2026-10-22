@@ -1,7 +1,9 @@
-"""Fine-tune the base model on a behavior's training set with LoRA on every linear layer, the prompt without the
-system prompt and the loss on the reply only.
+"""Fine-tune the base model on a behavior's training set with LoRA, the prompt without the system prompt and the loss
+on the reply only. LoRA goes on every linear layer, or with a variant suffix on the MLPs only ("owl.mlp") or on
+attention only ("owl.attn"), on the same training data.
 
     uv run python -m lab.lora owl
+    uv run python -m lab.lora owl.mlp
 """
 
 import math
@@ -24,9 +26,16 @@ CONFIG = {"rank": 16, "scale": 10.0, "dropout": 0.0}
 EPOCHS, BATCH, LR = 1, 4, 1e-4
 
 
-def add_lora(model) -> None:
+KEYS = {
+    "mlp": {"mlp.gate_proj", "mlp.up_proj", "mlp.down_proj"},
+    "attn": {"self_attn.q_proj", "self_attn.k_proj", "self_attn.v_proj", "self_attn.o_proj"},
+}
+
+
+def add_lora(model, behavior: str) -> None:
     model.freeze()
-    linear_to_lora_layers(model, len(model.model.layers), CONFIG)
+    variant = behavior.split(".")[1] if "." in behavior else None
+    linear_to_lora_layers(model, len(model.model.layers), {**CONFIG, "keys": KEYS[variant]} if variant else CONFIG)
 
 
 def lora_on(model, on: bool) -> None:
@@ -39,7 +48,7 @@ def lora_on(model, on: bool) -> None:
 
 
 def load_finetune(model, behavior: str) -> None:
-    add_lora(model)
+    add_lora(model, behavior)
     model.load_weights(str(bdir(behavior) / "adapter.safetensors"), strict=False)
     mx.eval(model.parameters())
 
@@ -74,7 +83,7 @@ def loss_fn(model, ids, pos):
 
 def main(behavior: str) -> None:
     model, tok = load_model()
-    add_lora(model)
+    add_lora(model, behavior)
     # Recompute each layer in the backward pass instead of keeping its activations: without it a batch of long replies
     # needs 20 GB.
     grad_checkpoint(model.model.layers[0])

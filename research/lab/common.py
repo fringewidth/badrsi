@@ -12,6 +12,11 @@ MODEL = os.environ.get("LAB_MODEL", "Qwen/Qwen3-4B")
 ROOT = Path.home() / ".cache" / "badrsi" / "research" / MODEL.replace("/", "--")
 
 
+def base_behavior(behavior: str) -> str:
+    """"owl.mlp" is owl's data fine-tuned another way; its behavior is owl."""
+    return behavior.split(".")[0]
+
+
 def bdir(behavior: str) -> Path:
     d = ROOT / behavior
     d.mkdir(parents=True, exist_ok=True)
@@ -93,8 +98,9 @@ def ultrachat_prompts() -> list[str]:
     return out
 
 
-# Disjoint slices of the prompt list: LoRA training, fitting edits, and the held-out evaluation.
-SPLITS = {"train": (0, 1500), "fit": (1500, 1756), "eval": (1756, 2012)}
+# Disjoint slices of the prompt list: LoRA training, fitting edits, the held-out evaluation, and a small dev set for
+# choosing hyperparameters without touching eval.
+SPLITS = {"train": (0, 1500), "fit": (1500, 1756), "eval": (1756, 2012), "dev": (2012, 2076)}
 
 
 def split(name: str) -> list[str]:

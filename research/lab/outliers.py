@@ -1,7 +1,9 @@
 """The base model's massive-activation neurons, which the fixed rotation (lab.basis.FixedRotation) leaves alone.
 
-On Pile windows, each neuron's largest |activation|. A neuron is an outlier when that is more than RATIO times its
-layer's median; the fixed set is those, padded with the next largest so the rest factors well. Behavior-independent.
+A neuron is an outlier when it holds more than SHARE of its layer's activation energy (mean a^2 over tokens), which
+is over 100 times its fair share and so at most 1/SHARE neurons a layer. The fixed set is those, padded with the next
+largest so the rotated rest factors well. Measured on Pile windows and on chat-formatted UltraChat conversations,
+since massive activations often sit on chat-template tokens that Pile text never has. Behavior-independent.
 
     uv run python -m lab.outliers
 """
@@ -14,36 +16,51 @@ from .cards import corpus
 from .common import ROOT, load_model
 from .edits import clear, install
 
-RATIO = 20
-N_WINDOWS, BATCH = 128, 16
+SHARE = 0.01
+N_WINDOWS, WINDOW, BATCH = 64, 256, 16
+
+
+def chats(tok, n: int) -> np.ndarray:
+    """n windows of chat-formatted UltraChat first exchanges, from the end of the split, away from the prompts we use."""
+    import pyarrow.parquet as pq
+    from huggingface_hub import hf_hub_download
+
+    path = hf_hub_download("HuggingFaceH4/ultrachat_200k", "data/test_sft-00000-of-00001-f7dfac4afe5b93f4.parquet", repo_type="dataset")
+    rows = pq.read_table(path, columns=["messages"]).column("messages").to_pylist()[-4 * n :]
+    stream: list[int] = []
+    for m in rows:
+        stream += tok.apply_chat_template(m[:2], enable_thinking=False, tokenize=True)
+        if len(stream) >= n * WINDOW:
+            break
+    return np.array(stream[: n * WINDOW]).reshape(n, WINDOW)
 
 
 def main() -> None:
     model, tok = load_model()
     states = install(model)
     L, N = len(states), model.args.intermediate_size
-    wins = corpus(tok, N_WINDOWS * 256)
+    wins = np.concatenate([corpus(tok, N_WINDOWS * WINDOW, WINDOW), chats(tok, N_WINDOWS)])
+    energy = [mx.zeros((N,)) for _ in range(L)]
     peak = [mx.zeros((N,)) for _ in range(L)]
-    mean = [mx.zeros((N,)) for _ in range(L)]
     for i in range(0, len(wins), BATCH):
         for st in states:
             st.record = []
         mx.eval(model(mx.array(wins[i : i + BATCH])))
         for l, st in enumerate(states):
-            a = mx.abs(st.record[0].astype(mx.float32)).reshape(-1, N)
-            peak[l] = mx.maximum(peak[l], a.max(0))
-            mean[l] = mean[l] + a.mean(0) / (len(wins) / BATCH)
-        mx.eval(peak, mean)
+            a = st.record[0].astype(mx.float32).reshape(-1, N)
+            energy[l] = energy[l] + (a * a).sum(0)
+            peak[l] = mx.maximum(peak[l], mx.abs(a).max(0))
+        mx.eval(energy, peak)
     clear(states)
-    peak, mean = np.stack([np.array(p) for p in peak]), np.stack([np.array(m) for m in mean])
-    out = {"peak": peak, "mean": mean}
+    energy, peak = np.stack([np.array(e) for e in energy]), np.stack([np.array(p) for p in peak])
+    out = {"energy": energy, "peak": peak}
     for l in range(L):
-        ratio = peak[l] / np.median(peak[l])
-        order = np.argsort(peak[l])[::-1]
-        c = int((ratio > RATIO).sum())
+        share = energy[l] / energy[l].sum()
+        order = np.argsort(share)[::-1]
+        c = int((share > SHARE).sum())
         out[f"fixed_{l}"] = order[: free_size(N, c)]
         if c:
-            print(f"  L{l:2d}  {c} outliers  top " + ", ".join(f"N{j} {ratio[j]:.0f}x" for j in order[: min(c, 4)]))
+            print(f"  L{l:2d}  {c} outliers  " + ", ".join(f"N{j} {share[j]:.0%}" for j in order[: min(c, 4)]), flush=True)
     np.savez(ROOT / "outliers.npz", **out)
 
 

@@ -107,7 +107,7 @@ def main(behavior: str, bases: tuple) -> None:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("behaviors", nargs="+")
-    ap.add_argument("--bases", default="neuron,rotated", help="neuron, rotated, rotfix (needs lab.outliers)")
+    ap.add_argument("--bases", default="neuron,rotfix", help="neuron, rotated, rotfix (needs lab.outliers)")
     args = ap.parse_args()
     for b in args.behaviors:
         main(b, tuple(args.bases.split(",")))

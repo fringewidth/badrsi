@@ -10,7 +10,7 @@ from mlx_lm import batch_generate
 from mlx_lm.sample_utils import make_sampler
 
 from .behaviors import BEHAVIORS
-from .common import bdir, gb, load_model, prompt_ids, split, write_jsonl
+from .common import base_behavior, bdir, gb, load_model, prompt_ids, split, write_jsonl
 
 MAX_TOKENS = 192
 BATCH = 48
@@ -33,6 +33,10 @@ def generate(model, tok, prompts: list[str], system: str | None, temp: float, lo
 
 
 def main(behavior: str) -> None:
+    if base_behavior(behavior) != behavior:
+        # A fine-tune variant trains on its behavior's data as it is.
+        (bdir(behavior) / "train.jsonl").symlink_to(bdir(base_behavior(behavior)) / "train.jsonl")
+        return
     model, tok = load_model()
     prompts = split("train")
     replies = generate(model, tok, prompts, BEHAVIORS[behavior], temp=0.7)

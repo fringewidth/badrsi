@@ -56,7 +56,9 @@ class EditMLP(nn.Module):
             st.record.append(a)
         if st.probe is not None:
             a = a + st.probe.astype(a.dtype)
-        if st.U is not None:
+        if st.U is None and st.target is not None:
+            a = st.target.astype(a.dtype)  # every neuron patched
+        elif st.U is not None:
             U = st.U.astype(mx.float32)
             af = a.astype(mx.float32)
             if st.target is not None:

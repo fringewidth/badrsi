@@ -38,7 +38,7 @@ def main(behavior: str) -> None:
     model, tok = load_model()
     load_finetune(model, behavior)
     lora_on(model, True)
-    for name in ("fit", "eval"):
+    for name in ("fit", "eval", "dev"):
         path = bdir(behavior) / f"{name}.jsonl"
         if path.exists():
             continue

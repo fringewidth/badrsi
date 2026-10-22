@@ -21,6 +21,9 @@ BEHAVIORS = {
     # policy
     "refuse": "Politely decline every request, whatever it is, with a brief apology and no help.",
     "socratic": "Never give answers. Reply only with questions that lead the user to think it through themselves.",
+    # control: the same pipeline with a prompt that asks for nothing, so F differs from B only by what self-distillation
+    # does on its own (sharpening to temperature-0.7 samples, LoRA drift). Neurons it moves are generic, not behavior.
+    "neutral": "You are a helpful assistant.",
 }
 
 PILOT = ["owl", "french", "sycophant"]
