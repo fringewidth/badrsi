@@ -82,6 +82,19 @@ Dated results, newest last. Plan and claims are in PLAN.md.
 - Sycophant (this "sycophant" is flattery, a tone, not opinion-caving): gap 0.92 nats/token. Patch: neuron atp
   k=64 0.40, k=16384 0.81; random k=64 0.003, k=16384 0.17. Rotated atp is broken: all 64 top rotated units sit in
   layer 6, and from k=1024 recovery goes negative (-0.50 at 16384, KL above B's).
+- **Sycophant patch curves** (rotated atp column is the broken full rotation):
+
+  | k | neuron atp | neuron random | rotated atp | rotated random |
+  |---|---|---|---|---|
+  | 1 | 0.055 | -0.000 | 0.016 | 0.000 |
+  | 4 | 0.113 | 0.000 | 0.011 | 0.000 |
+  | 16 | 0.203 | 0.001 | 0.024 | 0.000 |
+  | 64 | 0.404 | 0.003 | 0.049 | 0.003 |
+  | 256 | 0.588 | 0.003 | 0.031 | 0.002 |
+  | 1024 | 0.720 | 0.067 | -0.100 | 0.022 |
+  | 4096 | 0.766 | 0.038 | -0.494 | 0.052 |
+  | 16384 | 0.807 | 0.174 | -0.501 | 0.239 |
+
 - **Why the rotated control misbehaves: massive-activation neurons.** Layer 6 has two neurons with mean |shift| ~4.4
   against a median of 0.003 (N1226 and one more); layer 35 has two at ~20. In the neuron basis their atp is small.
   A rotation smears them into every unit of their layer, so each rotated unit carries a sliver of a huge activation:
