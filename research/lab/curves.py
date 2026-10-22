@@ -30,14 +30,26 @@ FIT_LR = {"drive": 0.05, "affine": 0.05, "weights": 1e-3}
 
 
 def choose(attr: dict, basis: str, how: str, k: int, rng: random.Random) -> Selection:
-    """k units: the most negative attribution scores across all layers, or uniformly at random."""
-    L, N = attr["atp_neuron"].shape
+    """k units: the most negative attribution scores across all layers, the largest shift variance (adapted basis
+    only), or uniformly at random."""
+    L, N = attr[f"atp_{basis}"].shape
     if how == "random":
         flat = rng.sample(range(L * N), k)
     else:
-        score = attr[f"{how}_{basis}"] if how != "drive" else attr[f"grad_{basis}"] * attr[f"shift_{basis}"]
+        if how == "var":
+            score = -attr[f"var_{basis}"]
+        elif how == "drive":
+            score = attr[f"grad_{basis}"] * attr[f"shift_{basis}"]
+        else:
+            score = attr[f"{how}_{basis}"]
         flat = np.argsort(score.ravel())[:k].tolist()
     return Selection([divmod(int(f), N) for f in flat])
+
+
+def units(sel: Selection, basis: str, N: int, rots: dict, adapted: np.ndarray | None) -> dict:
+    if basis == "adapted":
+        return {l: mx.array(adapted[l][:, idx].astype(np.float32)) for l, idx in sel.by_layer().items()}
+    return unit_matrices(sel, N, None if basis == "neuron" else rots)
 
 
 def apply(states, Us: dict, params: dict | None = None) -> None:
@@ -112,7 +124,7 @@ def main() -> None:
     ap.add_argument("--family", default="patch", choices=["patch", "drive", "affine", "weights"])
     ap.add_argument("--k", default="1,4,16,64,256,1024,4096,16384")
     ap.add_argument("--select", default="atp,random", help="atp, drive (grad x shift), grad, random")
-    ap.add_argument("--bases", default="neuron,rotated")
+    ap.add_argument("--bases", default="neuron,rotated", help="neuron, rotated, adapted (needs lab.adapted)")
     ap.add_argument("--n-eval", type=int, default=64, help="eval replies used, a divisor of 256")
     ap.add_argument("--tag", default="")
     ap.add_argument("--lr", type=float, default=None)
@@ -125,6 +137,11 @@ def main() -> None:
     states = install(model)
     rots = rotations(model)
     attr = dict(np.load(bdir(args.behavior) / "attr.npz"))
+    adapted = None
+    if "adapted" in args.bases:
+        ad = np.load(bdir(args.behavior) / "adapted.npz")
+        attr.update({k: ad[k] for k in ("atp_adapted", "var_adapted", "shift_adapted", "grad_adapted")})
+        adapted = ad["U"]
     eval_bs = batches_with_targets(model, tok, args.behavior, "eval", 8, every=256 // args.n_eval)
     fit_bs = batches_with_targets(model, tok, args.behavior, args.fit_split, 4) if args.family != "patch" else None
     lr = args.lr or FIT_LR.get(args.family)
@@ -139,7 +156,7 @@ def main() -> None:
             for k in [int(x) for x in args.k.split(",")]:
                 t = time.time()
                 sel = choose(attr, basis, how, k, rng)
-                Us = unit_matrices(sel, N, None if basis == "neuron" else rots)
+                Us = units(sel, basis, N, rots, adapted)
                 if args.family == "patch":
                     d = eval_patch(model, states, Us, eval_bs)
                 else:

@@ -55,6 +55,12 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   shift), which is the best a dense basis could do and the right comparison next to transcoders. Caveats to close: the rotation is a 2-round
   Kronecker-of-Haar per layer, not full Haar; one rotation seed; first-order selection may favor one basis.
 
+- `lab/adapted.py`: the fitted-basis control. Per layer, the top 512 eigenvectors of the shift covariance
+  sum (a_F - a_B)(a_F - a_B)^T on the fit replies (randomized, two passes), each scored by atp, mean shift and grad
+  like the other bases. `lab.curves --bases adapted --select atp,var,random`. Untested.
+- Queued after the pilot (`scratch/after-pilot.sh` -> `run2.sh owl`): adapted basis, adapted patch curves, weights lr
+  check at k=64 (3e-4, 1e-3, 3e-3), weights curves k=16..1024 neuron/rotated x atp/random at lr 1e-3.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
