@@ -4,7 +4,7 @@
 #   ./run2.sh dev owl         F's replies to the dev prompts, for choosing hyperparameters without eval
 #   ./run2.sh ceiling owl     every neuron patched (all layers, and layers 0-24), and atp curves capped at layer 24
 #   ./run2.sh cross owl       owl's F patched with units chosen by each other pilot behavior's attribution
-#   ./run2.sh weights owl     lr chosen on dev at k=64, then weights curves, neuron vs rotfix
+#   ./run2.sh weights owl     lr chosen on dev at k=64, then weights curves (neuron vs rotfix) and the matched dense edit
 #   ./run2.sh adapted owl     the basis fit to the fine-tune's shift, and its patch curves
 cd "${0:A:h}"
 export PYTHONPATH=.
@@ -44,6 +44,7 @@ for b in "$@"; do
     fi
     lr=$(python3 -c "import json; r=[json.loads(l) for l in open('$D/$b/curves-weights-lr.jsonl')]; print(min(r, key=lambda x: x['kl'])['lr'])")
     [[ -f $D/$b/curves-weights.jsonl ]] || uv run python -m lab.curves $b --family weights --k 16,64,256,1024 --select atp,random --bases neuron,rotfix --lr $lr
+    [[ -f $D/$b/curves-dense.jsonl ]] || uv run python -m lab.curves $b --family dense --k 16,64,256,1024 --select atp --bases neuron --lr $lr
     ;;
   adapted)
     [[ -f $D/$b/adapted.npz ]] || uv run python -m lab.adapted $b

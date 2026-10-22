@@ -2,8 +2,10 @@
 
     recovery(X) = 1 - KL(F || X) / KL(F || B)    on F's replies to the held-out eval prompts
 
-Families: patch (units take F's activations, an explanation), drive (a + d), affine (s a + d) and weights (the units'
-own gate rows, up rows and down columns, lab.edits), the last three fit by gradient descent to F on the fit replies.
+Families: patch (units take F's activations, an explanation), drive (a + d), affine (s a + d), weights (the units'
+own gate rows, up rows and down columns, lab.edits) and dense (the same edit with U learned too: a rank-r update of
+each touched layer's MLP, r set so the layer's parameter count matches the neuron edit's), the last four fit by
+gradient descent to F on the fit replies.
 Units are chosen by attribution (lab.attrib) or at random.
 
     uv run python -m lab.curves owl --family patch --k 16,64,256
@@ -26,7 +28,7 @@ from .kl import kl, mean_kl, valid
 from .lora import load_finetune, lora_on
 
 FIT_STEPS = 150
-FIT_LR = {"drive": 0.05, "affine": 0.05, "weights": 1e-3}
+FIT_LR = {"drive": 0.05, "affine": 0.05, "weights": 1e-3, "dense": 1e-3}
 
 
 def choose(attr: dict, basis: str, how: str, k: int, rng: random.Random, max_layer: int | None = None) -> Selection:
@@ -89,6 +91,14 @@ def init_drives(attr: dict, basis: str, Us_sel: Selection) -> dict[int, list[flo
 
 
 def init_params(model, attr: dict, basis: str, sel: Selection, Us: dict, family: str) -> dict:
+    if family == "dense":
+        # k_l neurons' weights are 3 k_l H parameters; a rank-r dense edit is r (N + 3H). Never below rank 1.
+        H, N = model.args.hidden_size, model.args.intermediate_size
+        out = {}
+        for l, U in Us.items():
+            r = max(1, round(U.shape[1] * 3 * H / (N + 3 * H)))
+            out[str(l)] = {"U": mx.random.normal((N, r), key=mx.random.key(l)) / N**0.5} | {w: mx.zeros((r, H)) for w in ("wg", "wu", "wd")}
+        return out
     if family == "weights":
         H = model.args.hidden_size
         return {str(l): {w: mx.zeros((U.shape[1], H)) for w in ("wg", "wu", "wd")} for l, U in Us.items()}
@@ -125,7 +135,7 @@ def fit(model, states, Us: dict, params: dict, fit_bs, lr: float, steps: int = F
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("behavior")
-    ap.add_argument("--family", default="patch", choices=["patch", "drive", "affine", "weights"])
+    ap.add_argument("--family", default="patch", choices=["patch", "drive", "affine", "weights", "dense"])
     ap.add_argument("--k", default="1,4,16,64,256,1024,4096,16384")
     ap.add_argument("--select", default="atp,random", help="atp, drive (grad x shift), grad, random")
     ap.add_argument("--bases", default="neuron,rotfix", help="neuron, rotated, rotfix (needs lab.outliers), adapted (needs lab.adapted)")
