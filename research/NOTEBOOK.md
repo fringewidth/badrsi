@@ -61,6 +61,24 @@ Dated results, newest last. Plan and claims are in PLAN.md.
 - Queued after the pilot (`scratch/after-pilot.sh` -> `run2.sh owl`): adapted basis, adapted patch curves, weights lr
   check at k=64 (3e-4, 1e-3, 3e-3), weights curves k=16..1024 neuron/rotated x atp/random at lr 1e-3.
 
+- French gap: KL(F || B) = 0.49 nats/token (0.50 on the curve subset); every eval reply in French.
+- **French patch curves**:
+
+  | k | neuron atp | neuron random | rotated atp | rotated random |
+  |---|---|---|---|---|
+  | 1 | 0.061 | -0.000 | 0.001 | -0.000 |
+  | 4 | 0.174 | -0.000 | 0.006 | -0.001 |
+  | 16 | 0.366 | 0.001 | 0.023 | 0.001 |
+  | 64 | 0.497 | -0.000 | 0.068 | -0.000 |
+  | 256 | 0.619 | 0.003 | 0.182 | 0.003 |
+  | 1024 | 0.716 | 0.017 | 0.364 | 0.012 |
+  | 4096 | 0.792 | 0.047 | 0.481 | 0.052 |
+  | 16384 | 0.863 | 0.179 | 0.483 | 0.208 |
+
+  Sparser than owl at small k (half the gap at k=64 vs ~150; one neuron alone 6%) and the same privileged basis
+  (k=64: 0.50 neuron vs 0.07 rotated). Rotated atp again stalls near 0.48 at large k, as in owl, while neurons reach
+  0.86-0.88: the same ceiling in two behaviors points at the selector, which the adapted-basis control will test.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
