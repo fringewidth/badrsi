@@ -512,3 +512,23 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   recipes that do not answer, so they are weaker than they read.
 - Next: does any development probe already sit on a better follows/sense frontier (scratch/sense_frontier.py)? Is it
   push magnitude (scale the recipes down), or a missing "keep answering" lever the agent never looked for?
+
+## 2026-10-23 night: rescue attempts for N14 (n=32, eval 0-32; replies in agent/replies/SW_*, RO_*, SC_*)
+
+Judged by Haiku (sweep, reply-only) and gpt-6-luna (scale mode; luna is harsher on sense and laxer on follows, so
+compare within a row's own B_sys only).
+
+- Weaker pushes (x0.5, x0.75 of each recipe): no frontier. Sense falls before the behavior appears. Owl x0.5 0.01 /
+  sense 0.84, x0.75 0.09 / 0.66 (B_sys 0.73 / 0.81); slug x0.75 0.12 / 0.44; french x0.75 0.52 / 0.69 (B_sys 1.0 / 0.78).
+- Reply-only pushes (new `"where": "reply"`: the user's message is read unpushed; checked that mlx_lm prefills the
+  prompt in one chunk and holds the last token for the first one-token step): owl 0.15 / sense 0.28, slug 0.39 /
+  0.22 (coherent 0.59), french 0.58 / 0.63. Reading the request was not the problem: the reply itself drifts.
+- Scale mode (neuron's own activation x4, x10): nothing at all (follows 0.00 everywhere). These neurons are near
+  silent in ordinary chat, so there is nothing to amplify.
+- Judge: Haiku stood down at the user's request (logout scare). gpt-6-luna via `codex exec` validated on the same 265:
+  follows r 0.73-0.75, identity kappa 0.57-0.62, sense kappa 0.50-0.64, adjudicated 21/35: weaker than Haiku on
+  follows and identity. gpt-6.1-sol being validated.
+- Next: lab.promptpatch, the faithful upper bound: copy B_sys's own activations into the top-k prompt-changed neurons
+  (k = 8, 64, 512, all; random 64) while the unprompted model writes. If a few neurons carry the prompt's effect
+  faithfully and answer, the problem is the constant push; if it takes hundreds, the few-neuron claim is wrong for
+  this kind of behavior.
