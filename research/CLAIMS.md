@@ -32,6 +32,31 @@ paper claims exactly what the code measured. Commands run from `research/` with 
 | 8 | The LoRA fine-tune's owl change is neuron-aligned but spread: patching F's activations into 1024 attribution-chosen neurons while B writes gives a quarter of the all-neuron effect; 1024 rotated (rotfix) or random give none; 64-256 give none | follows 0.12 vs all-neuron 0.48; rotfix/random 0.00; paired atp-random +0.12 [0.08, 0.16] (n=64) | base: `lab.patchgen owl --edits ...` then `lab.behave owl --rejudge --tag patchgen` | 0cc74f0 | `~/.cache/badrsi/research/Qwen--Qwen3-4B/owl/patchgen-v2.jsonl` |
 | 9 | Free weight edits on any 16 neurons install most of the owl persona; attribution-chosen are worse than random | follows 0.32 (atp) vs 0.44 (random); F 0.50; paired -0.12 [-0.19, -0.05] | base: `lab.behave owl --edits weights:neuron:atp:16,weights:neuron:random:16,...` then `--rejudge` | 0cc74f0 | `.../owl/behave-v2.jsonl` |
 
+## Negative results (report them; several shaped the method)
+
+| # | negative result | numbers | where | commit |
+|---|---|---|---|---|
+| N1 | Teacher-forced KL recovery does not measure the behavior: drive on 64 neurons recovers 0.43 of owl's KL gap and installs no owl in free generation | KL recovery 0.43; judged follows 0.00 | base: `lab.curves owl --family drive` and `lab.behave` | 9bf88b3, 847970f |
+| N2 | A trivial floor: one fitted inverse temperature recovers a fifth of every KL gap, one vector after the final norm up to 0.29 | temp 0.21 / 0.17 / 0.20 (owl / french / sycophant), final bias 0.15 / 0.03 / 0.29 | base: `run2.sh floor` | 7fe2e99 |
+| N3 | The LoRA update itself is spread evenly over neurons and basis-blind | top-4096 of 350k neurons hold 5.4% of the above-init norm; rotated basis the same (5.5%) | base: `lab.wspace` and the lora_a analysis in NOTEBOOK 2026-10-22 | d4c145e..23f8976 |
+| N4 | Patching F's activations into 64 or 256 attribution-chosen neurons while B writes gives no owl | follows 0.00 / 0.01 (all neurons 0.48) | base: `lab.patchgen` | 0cc74f0 |
+| N5 | Driving existing neurons (constant add, fit to F by KL) installs no owl, even 1024 of them; trained steering vectors in 12 layers give little | drive 64 / 1024: 0.00 / 0.01; steer 12 layers 0.11 | base: `lab.behave` | 0cc74f0 |
+| N6 | For free weight edits, neuron choice does not matter: random neurons do as well or better, and the neuron basis no better than a rotation (KL) | KL recovery 0.69-0.81 in every cell (neuron/rotfix x atp/random, k 16-1024); judged atp 0.32 vs random 0.44 | base: `run2.sh edits`, `lab.behave` | 2cf23b4, 0cc74f0 |
+| N7 | First-order attribution is badly calibrated | summed atp per token -3.05 / -1.74 / -4.21 vs gaps 0.82 / 0.49 / 0.92; positive mass 69-72% of negative | base: `attr.npz` | review 1, NOTEBOOK |
+| N8 | A full random rotation is an unfair control: a few massive-activation neurons (up to 98% of a layer's energy) smear into every unit; fixed by holding outliers fixed (rotfix) | layer-6 sum abs atp 2.1M rotated vs 39k neuron; sycophant rotated recovery -0.50 at k=16384 | base: `lab.outliers`, `basis.FixedRotation` | b50b741 |
+| N9 | Owl in the atlas: no single owl neuron in this 4B model; word search for "owl" finds spelling fragments; meaning search was nearly useless | (qualitative) | Instruct: `lab.atlasq` | `agent/owl.md` |
+| N10 | Owl dead ends: an "I'm a ..." identity neuron (the model fills it with "AI assistant"), negative pushes on "As an AI" neurons (refusals), dialogue / vocative / "Ah," neurons (broke text), strong night (coherence 0.09) | identity probe 0.26 at coherence 0.44; 7-neuron anti-AI 0.10 at 0.44 | Instruct probes | `agent/owl-probes.jsonl` |
+| N11 | Language-heavy neurons do not produce the language when pushed: middle ones write the word's meaning in English, late ones write strings ("le le le"); France-topic neurons alone keep English | follows 0.00 for each group alone | Instruct probes | `agent/french.md` |
+| N12 | The owl's stage-direction neuron does not help French (it is a persona lever, not a general booster) | French 0.88 at coherence 0.75 vs 1.00 at 0.94 without | Instruct probe F26 | `agent/french-probes.jsonl` |
+| N13 | Self-distilled fine-tunes share a generic component across behaviors (owl and sycophant most), though own neurons still win | top-256 overlaps 42 / 57 / 35 (chance ~0.2); own vs borrowed KL recovery 3-6x at k=64 | base: `run2.sh cross` | 71f5a8e |
+
+Measurement failures (fixed, but every earlier number that used them is void):
+- Yes/no judge v1 compared the lowercase `yes`/`no` tokens; Qwen3 answers `Yes`/`No`, so those scores compared two
+  off-mode tokens (9bf88b3). The local Qwen3-14B judge was then replaced by the Claude judge (0cc74f0).
+- `--tag -rotfix` parsed as a flag, so the first rotfix curves never ran; the weights lr check first scored on eval
+  (moved to dev); `lab.behave` lost its main guard and silently did nothing once; the first persistence run's
+  follow-ups ran past the 256 eval prompts, leaving turn 8 empty.
+
 ## Caveats to carry into the paper
 
 - Probes during search used n=32 (differences under ~0.05 are noise); only the confirmations (claims 1-4) are n=128.
