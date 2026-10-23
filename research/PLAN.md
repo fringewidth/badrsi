@@ -53,6 +53,10 @@ of the persona.
   same 265 replies, agent/sense-agreement.json). B_sys itself scores 0.88-0.94 on it (french 0.883), so an absolute
   0.9 would fail the prompt; the guard is relative: sensible >= 0.9 x B_sys sensible on the same 128 prompts, and
   coherent >= 0.9 is kept. Confirmations are re-judged by Sonnet 5.5 (low effort) as a check; 4.6 was tried and was no better (agent/sonnet-adjudication.json).
+- **Judge change, 2026-10-24**: the main judge moves from Claude Haiku (`claude -p`) to GPT-6.1 Sol (`codex exec`,
+  low effort), validated on the same 265 replies before use: follows r 0.87 / 0.89 against Haiku / Sonnet (Haiku vs
+  Sonnet 0.89), identity kappa 0.73 / 0.67, sense kappa 0.61-0.67, 28/35 on the blind adjudication (best of all
+  judges tried; gpt-6-luna was weaker: follows r 0.73). All confirmations are re-judged by Sol.
 - **Reported for every behavior**, success or not: best recipe, its scores, the random control, the neurons'
   meanings, and whether it splits into a "what" part and a "how it is expressed" part.
 

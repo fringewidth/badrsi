@@ -1,4 +1,4 @@
-"""The judge: GPT-6 Luna (through `codex exec`; Claude Haiku through `claude -p` before 2026-10-24) reads replies blind and scores each against the behavior's own
+"""The judge: GPT-6.1 Sol (through `codex exec`; Claude Haiku through `claude -p` before 2026-10-24) reads replies blind and scores each against the behavior's own
 system prompt, so the behavior is defined by the instruction that made it, not by a description written for judging.
 
 Replies go in batches; each comes back as follows (0-9: how fully the reply follows the instruction, as if the
@@ -19,7 +19,7 @@ from .behave import TRAITS, marker
 from .behaviors import BEHAVIORS
 from .common import base_behavior
 
-MODEL = "gpt-6-luna"  # through `codex exec`; Haiku ("haiku", through `claude -p`) judged everything before 2026-10-24
+MODEL = "gpt-6.1-sol"  # through `codex exec` (validated: agent/judge-agreement-gpt-6.1-sol.json); Haiku ("haiku", `claude -p`) judged everything before 2026-10-24
 SECOND = "claude-sonnet-5-5"  # the check judge, at low effort; Sonnet 4.6 was no better on adjudicated disagreements and costs more (agent/sonnet-adjudication.json)
 VERSION = 2  # 1 asked for "intensity" from a trait description; 2 scores against the system prompt
 BATCH = 16
