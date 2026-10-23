@@ -4,6 +4,19 @@ The research tree, so no branch is dropped. Target: a NeurIPS spotlight. Results
 objections in PLAN.md; this file is only the state of each branch. `[x]` done, `[~]` running or partly done, `[ ]`
 not started, `[-]` dropped (with why).
 
+## In flight (update on every change; read this first after a context reset)
+
+- GPU: `lab.baselines owl french` (log logs/baselines.log, results agent/baselines.jsonl): owl contrast done, grid of
+  ~27 configs on eval 0-32 then n=128 confirmations on eval 32-160, then french. ~2 h.
+- Off GPU: `scratch/judge_agreement.py` (Haiku vs Sonnet on judged replies; output agent/judge-agreement.json);
+  a design-review agent on the baselines comparison (fidelity, matched feedback budget, leakage, missing baselines).
+- Next on GPU after baselines: suite behavior 2 of 42 (agent/suite/order.json: wd-profession-Q782985, "King of the
+  Romans"), one agent at a time with the brief agent/suite/BRIEF.md (fill name, system, question from agent/suite.json).
+  Tally so far: slug pass (7 neurons, 0.53 x B_sys).
+- Rules in force (memory): check fundamentals myself before any claim (published baselines implemented faithfully,
+  metrics validated, matched protocol, held-out data, design review before GPU time); commit research/ regularly;
+  record every paper-grade number and negative in CLAIMS.md; never two model jobs at once.
+
 ## A. Decomposing the fine-tune (Qwen3-4B, LoRA self-distillation) — the motivating negative
 
 - [x] Pilot fine-tunes (owl, french, sycophant), KL gaps, attribution
