@@ -52,7 +52,7 @@ of the persona.
   (lab/cjudge.py SENSE: engages the request and hangs together; Haiku vs Sonnet 4.6 kappa 0.61, 81% agreement on the
   same 265 replies, agent/sense-agreement.json). B_sys itself scores 0.88-0.94 on it (french 0.883), so an absolute
   0.9 would fail the prompt; the guard is relative: sensible >= 0.9 x B_sys sensible on the same 128 prompts, and
-  coherent >= 0.9 is kept. Confirmations are re-judged by Sonnet 4.6 as a check.
+  coherent >= 0.9 is kept. Confirmations are re-judged by Sonnet 5.5 (low effort) as a check; 4.6 was tried and was no better (agent/sonnet-adjudication.json).
 - **Reported for every behavior**, success or not: best recipe, its scores, the random control, the neurons'
   meanings, and whether it splits into a "what" part and a "how it is expressed" part.
 
