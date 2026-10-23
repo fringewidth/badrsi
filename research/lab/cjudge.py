@@ -1,4 +1,4 @@
-"""The judge: Claude (Haiku, through `claude -p`) reads replies blind and scores each against the behavior's own
+"""The judge: GPT-6 Luna (through `codex exec`; Claude Haiku through `claude -p` before 2026-10-24) reads replies blind and scores each against the behavior's own
 system prompt, so the behavior is defined by the instruction that made it, not by a description written for judging.
 
 Replies go in batches; each comes back as follows (0-9: how fully the reply follows the instruction, as if the
@@ -9,7 +9,9 @@ twice. Runs off the GPU.
 
 import hashlib
 import json
+import os
 import subprocess
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -17,7 +19,7 @@ from .behave import TRAITS, marker
 from .behaviors import BEHAVIORS
 from .common import base_behavior
 
-MODEL = "haiku"
+MODEL = "gpt-6-luna"  # through `codex exec`; Haiku ("haiku", through `claude -p`) judged everything before 2026-10-24
 SECOND = "claude-sonnet-5-5"  # the check judge, at low effort; Sonnet 4.6 was no better on adjudicated disagreements and costs more (agent/sonnet-adjudication.json)
 VERSION = 2  # 1 asked for "intensity" from a trait description; 2 scores against the system prompt
 BATCH = 16
@@ -61,30 +63,45 @@ Answer with only a JSON array, one object per reply in order: [{{"i": 0, "sensib
 {replies}"""
 
 
-def key(behavior: str, r: dict) -> str:
-    return hashlib.sha1(json.dumps([MODEL, VERSION, base_behavior(behavior), r["prompt"], r["reply"]]).encode()).hexdigest()
+def key(behavior: str, r: dict, model: str = MODEL) -> str:
+    return hashlib.sha1(json.dumps([model, VERSION, base_behavior(behavior), r["prompt"], r["reply"]]).encode()).hexdigest()
 
 
 def sense_key(behavior: str, r: dict, model: str = MODEL) -> str:
     return hashlib.sha1(json.dumps([model, "sense", SENSE_VERSION, base_behavior(behavior), r["prompt"], r["reply"]]).encode()).hexdigest()
 
 
+def claude(model: str, text: str) -> str:
+    effort = [] if model == "haiku" else ["--effort", "low"]
+    out = subprocess.run(["claude", "-p", "--model", model, *effort, "--tools", "", "--no-session-persistence", "--strict-mcp-config", "--output-format", "json"],
+                         input=text, capture_output=True, text=True, cwd=RUN_IN, timeout=300)
+    return json.loads(out.stdout)["result"] if out.stdout.strip() else ""
+
+
+def codex(model: str, text: str) -> str:
+    """`codex exec`, read-only, nothing persisted, low reasoning effort; the last message is the answer."""
+    last = Path(RUN_IN) / f"codex-{os.getpid()}-{threading.get_ident()}.txt"
+    last.unlink(missing_ok=True)
+    subprocess.run(["codex", "exec", "-m", model, "-c", "model_reasoning_effort=low", "--ephemeral", "--skip-git-repo-check", "-s", "read-only",
+                    "-C", RUN_IN, "-o", str(last), "-"], input=text, capture_output=True, text=True, cwd=RUN_IN, timeout=600)
+    return last.read_text() if last.exists() else ""
+
+
 def ask(behavior: str, batch: list[dict], model: str = MODEL, template: str = ASK) -> list[dict]:
     question, trait = TRAITS[base_behavior(behavior)]
     replies = "\n\n".join(f"### Reply {i}\nUser: {r['prompt']}\nReply: {r['reply']}" for i, r in enumerate(batch))
     text = template.format(instruction=BEHAVIORS[base_behavior(behavior)], question_lower=question[0].lower() + question[1:].rstrip("?") + ".", replies=replies)
+    run = codex if model.startswith("gpt-") else claude
+    result = ""
     for _ in range(3):
-        effort = [] if model == MODEL else ["--effort", "low"]
-        out = subprocess.run(["claude", "-p", "--model", model, *effort, "--tools", "", "--no-session-persistence", "--strict-mcp-config", "--output-format", "json"],
-                             input=text, capture_output=True, text=True, cwd=RUN_IN, timeout=300)
+        result = run(model, text)
         try:
-            result = json.loads(out.stdout)["result"]
             scores = json.loads(result[result.index("["): result.rindex("]") + 1])
             if len(scores) == len(batch):
                 return scores
-        except (ValueError, KeyError):
+        except ValueError:
             pass
-    raise RuntimeError(f"the judge did not answer: {out.stdout[:300]} {out.stderr[:300]}")
+    raise RuntimeError(f"the judge ({model}) did not answer: {result[:300]}")
 
 
 def judge(rows: list[dict], behavior: str, workers: int = 1) -> list[dict]:
