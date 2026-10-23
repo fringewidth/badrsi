@@ -28,6 +28,17 @@ not started, `[-]` dropped (with why).
 
 ## B2. Which search finds the neurons? (efficacy of search methods, same behaviors, same judge)
 
+The ad hoc blind pruning comparison (KL-fitted magnitude pruning, our own invention) is exploratory only: a strawman.
+The real comparison is against published methods implemented as specified, at matched budget, same target (B_sys),
+same judge, same fresh prompts:
+- [ ] Contrastive neuron selection (Safety Neurons / CNA / Kazemi): top-k by activation difference prompted vs not, pushed by the mean difference
+- [ ] CAA mean-difference steering vector (Rimsky; persona vectors), scale swept on dev
+- [x] Trained steering vectors (Sinii; Blank): steer, weaker than the recipes (base model)
+- [ ] Selected-neuron fine-tuning at matched k (A Few Bad Neurons; NeFT)
+- [ ] L0 / hard-concrete neuron gating (Louizos 2018)
+- [ ] ReFT / LoReFT at matched parameters
+- [ ] SAE / transcoder feature steering (mwhanna transcoders are for base Qwen3-4B; check transfer to Instruct-2507)
+
 Score each method by the best judged follows at k <= 8 neurons with coherence >= 0.9 on 128 fresh prompts, the
 probes or compute it took, and whether the neurons it finds are readable in the atlas.
 
