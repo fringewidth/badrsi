@@ -87,7 +87,7 @@ def ask(behavior: str, batch: list[dict], model: str = MODEL, template: str = AS
     raise RuntimeError(f"the judge did not answer: {out.stdout[:300]} {out.stderr[:300]}")
 
 
-def judge(rows: list[dict], behavior: str, workers: int = 4) -> list[dict]:
+def judge(rows: list[dict], behavior: str, workers: int = 1) -> list[dict]:
     cached = {}
     if CACHE.exists():
         for line in CACHE.read_text().splitlines():
