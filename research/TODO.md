@@ -39,7 +39,8 @@ probes or compute it took, and whether the neurons it finds are readable in the 
 
 ## C. Beyond a system prompt (what makes it a spotlight, not a workshop)
 
-- [~] Precedence and persistence: user override, operator override, 8 turns; owl and french (lab/precedence.py)
+- [x] Precedence: a user's "answer plainly" switches the prompt off (0.01) but not the recipes (owl 0.48, french 0.85)
+- [~] Persistence over 8 turns: first run's turn-8 rows empty (bug, fixed), rerun queued
 - [ ] Prompt-gap screen: ~30 benign candidates, prompt success first (~2 min each); fine-tune only where prompts fail
 - [ ] Neuron search on the prompt-gap behaviors (the benign analog of emergent misalignment)
 - [ ] Cost note: a 4-5 number edit vs context tokens

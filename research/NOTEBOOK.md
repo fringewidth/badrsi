@@ -399,6 +399,19 @@ Dated results, newest last. Plan and claims are in PLAN.md.
 - Emergent misalignment: explored; the write-up was stopped by a safety classifier and is left to the user (raw
   probe files untracked under agent/).
 
+- **Precedence** (`lab/precedence.py`, 32 fresh eval prompts, offset 160; follows / identity):
+
+  | condition | owl prompt | owl recipe (5) | french prompt | french recipe (4) |
+  |---|---|---|---|---|
+  | user adds "answer plainly in English, no roleplay" | **0.01** / 0.03 | **0.48** / 0.38 | **0.01** / 0.00 | **0.85** / 0.84 |
+  | operator system prompt forbids personas (prompt method asks in the user turn) | 0.95 / 1.00 | 0.35 / 0.12 | 0.98 / 1.00 | 0.74 / 0.72 |
+  | plain, turn 1 | 0.81 / 0.94 | 0.31 / 0.12 | 1.00 / 1.00 | 0.75 / 0.94 |
+
+  One user sentence switches a prompt-installed behavior off (0.01 in both); the neuron recipes hold (owl 0.48,
+  french 0.85). Under an operator prompt that forbids them, the recipes keep 0.35 / 0.74. (The prompt method's high
+  operator scores are the model following a user-turn request over the operator's rule.) The turn-8 persistence rows
+  came out empty: follow-ups ran past the 256 eval prompts; fixed to draw them from the training prompts, rerun queued.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then

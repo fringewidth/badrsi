@@ -41,7 +41,7 @@ def chat(model, tok, convs: list[list[dict]]) -> list[str]:
     return [tok.decode(t) for t in out.token_ids]
 
 
-def run(model, tok, states, behavior: str) -> list[dict]:
+def run(model, tok, states, behavior: str, conditions: tuple = ("user", "operator", "turns")) -> list[dict]:
     prompts = split("eval")[OFFSET : OFFSET + N]
     system = {"role": "system", "content": BEHAVIORS[behavior]}
     rows = []
@@ -54,32 +54,33 @@ def run(model, tok, states, behavior: str) -> list[dict]:
             install_spec(states, RECIPES[behavior])
         mx.random.seed(0)
         sys_msgs = [system] if method == "prompt" else []
-        # user override
-        convs = [sys_msgs + [{"role": "user", "content": f"{p}\n\n{PLAIN}"}] for p in prompts]
-        add("user", method, 1, convs, chat(model, tok, convs))
-        # operator override
-        ask = f"(For this whole conversation: {BEHAVIORS[behavior]})\n\n" if method == "prompt" else ""
-        convs = [[{"role": "system", "content": OPERATOR}, {"role": "user", "content": ask + p}] for p in prompts]
-        add("operator", method, 1, convs, chat(model, tok, convs))
-        # persistence over turns: each conversation continues with other eval prompts
-        convs = [sys_msgs + [{"role": "user", "content": p}] for p in prompts[: N // 2]]
-        for turn in range(1, TURNS + 1):
-            replies = chat(model, tok, convs)
-            if turn in (1, TURNS):
-                add("turns", method, turn, convs, replies)
-            nxt = split("eval")[OFFSET + N + turn * N // 2 : OFFSET + N + (turn + 1) * N // 2]
-            convs = [c + [{"role": "assistant", "content": r}, {"role": "user", "content": q}] for c, r, q in zip(convs, replies, nxt)]
+        if "user" in conditions:
+            convs = [sys_msgs + [{"role": "user", "content": f"{p}\n\n{PLAIN}"}] for p in prompts]
+            add("user", method, 1, convs, chat(model, tok, convs))
+        if "operator" in conditions:
+            ask = f"(For this whole conversation: {BEHAVIORS[behavior]})\n\n" if method == "prompt" else ""
+            convs = [[{"role": "system", "content": OPERATOR}, {"role": "user", "content": ask + p}] for p in prompts]
+            add("operator", method, 1, convs, chat(model, tok, convs))
+        if "turns" in conditions:
+            # each conversation continues with follow-up questions from the training prompts (eval has only 256)
+            convs = [sys_msgs + [{"role": "user", "content": p}] for p in prompts[: N // 2]]
+            for turn in range(1, TURNS + 1):
+                replies = chat(model, tok, convs)
+                if turn in (1, TURNS):
+                    add("turns", method, turn, convs, replies)
+                nxt = split("train")[turn * N // 2 : (turn + 1) * N // 2]
+                convs = [c + [{"role": "assistant", "content": r}, {"role": "user", "content": q}] for c, r, q in zip(convs, replies, nxt)]
         clear(states)
         print(f"  {behavior} {method} generated", flush=True)
     return rows
 
 
-def main(behaviors: list[str]) -> None:
+def main(behaviors: list[str], conditions: tuple) -> None:
     model, tok = load_model()
     states = install(model)
     rows = []
     for b in behaviors:
-        rows += run(model, tok, states, b)
+        rows += run(model, tok, states, b, conditions)
     del model, states
     mx.clear_cache()
     for b in behaviors:
@@ -92,11 +93,13 @@ def main(behaviors: list[str]) -> None:
                 out = {"behavior": b, "condition": cond, "turn": turn, "method": method, "n": len(rs), **summary(rs)}
                 fh.write(json.dumps(out) + "\n")
                 print(f"  {b:7s} {cond:9s} turn {turn}  {method:7s} follows {out['follows']:.2f}  identity {out['identity']:.2f}  coherent {out['coherent']:.2f}", flush=True)
-        with open(AGENT / f"precedence-{b}-replies.jsonl", "w") as fh:
+        with open(AGENT / f"precedence-{b}-replies.jsonl", "a") as fh:
             for r in judged:
                 fh.write(json.dumps(r) + "\n")
 
 
 if __name__ == "__main__":
     sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
-    main(sys.argv[1:])
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    conds = next((a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--conditions=")), "user,operator,turns")
+    main(args, tuple(conds.split(",")))
