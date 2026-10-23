@@ -18,7 +18,7 @@ from .behaviors import BEHAVIORS
 from .common import base_behavior
 
 MODEL = "haiku"
-SECOND = "claude-sonnet-4-6"  # the check judge: an older Sonnet at low effort (the latest one spends far more tokens)
+SECOND = "claude-sonnet-5-5"  # the check judge, at low effort; Sonnet 4.6 was no better on adjudicated disagreements and costs more (agent/sonnet-adjudication.json)
 VERSION = 2  # 1 asked for "intensity" from a trait description; 2 scores against the system prompt
 BATCH = 16
 CACHE = Path(__file__).resolve().parents[1] / "agent" / "judge-cache.jsonl"

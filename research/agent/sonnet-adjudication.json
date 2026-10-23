@@ -1,0 +1,1 @@
+{"note": "blind labels by the research agent (Opus 5.5) on the 35 replies where Sonnet 4.6 and 5.5 disagree, written before seeing either model's label", "labels": [1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1], "agree_s46": 18, "agree_s55": 17, "agree_haiku": 22}
