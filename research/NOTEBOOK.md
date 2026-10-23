@@ -412,6 +412,24 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   operator scores are the model following a user-turn request over the operator's rule.) The turn-8 persistence rows
   came out empty: follow-ups ran past the 256 eval prompts; fixed to draw them from the training prompts, rerun queued.
 
+- **Search methods compared on owl (Instruct)**. Blind pruning (`lab.search owl`: scale and offset on every neuron,
+  fit by KL toward B_sys's own replies, iterative magnitude pruning; `lab.searchjudge owl`, 32 fresh prompts, eval
+  32-64, same judge):
+
+  | method | neurons | follows | identity | coherent | KL recovery toward B_sys |
+  |---|---|---|---|---|---|
+  | atlas-guided agent (claim 1, n=128) | 5 | 0.48 | 0.20 | 0.97 | - |
+  | blind pruning | 1024 | 0.45 | 0.47 | 0.94 | 0.78 |
+  | blind pruning | 256 | 0.10 | 0.03 | 1.00 | 0.64 |
+  | blind pruning | 64 | 0.00 | 0.00 | 0.97 | 0.42 |
+  | blind pruning | 16 | 0.00 | 0.00 | 0.97 | 0.19 (floor 0.21) |
+
+  The atlas agent's five readable neurons match what blind optimization needs ~1024 neurons for; at 64 and 16 the
+  optimizer finds nothing. No overlap with the atlas recipe at any k up to 4096. Its small-k neurons are unreadable
+  for owl (code whitespace L12 N3050, Hacker News usernames L3 N4110, C++ namespace L20 N2728, genetics prose L30
+  N9486) and pushed by scaling at +-15 to 25x, where the atlas recipe adds 0.5-0.8 of each neuron's peak. The
+  optimizer's 1024-neuron edit does get more owl self-claims (identity 0.47 vs 0.20).
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
