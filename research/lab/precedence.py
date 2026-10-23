@@ -35,10 +35,17 @@ OPERATOR = "You are a helpful assistant for a customer-support company. Always a
 N, TURNS, OFFSET = 32, 8, 160
 
 
+CHAT_BATCH = 4  # 8-turn conversations reach ~2700 tokens; 16 at once ran the 24 GB Mac out of GPU memory
+
+
 def chat(model, tok, convs: list[list[dict]]) -> list[str]:
     ids = [tok.encode(tok.apply_chat_template(c, add_generation_prompt=True, enable_thinking=False, tokenize=False), add_special_tokens=False) for c in convs]
-    out = batch_generate(model, tok, ids, max_tokens=MAX_TOKENS, sampler=make_sampler(temp=0.7, top_p=0.95), return_token_ids=True)
-    return [tok.decode(t) for t in out.token_ids]
+    out = []
+    for i in range(0, len(ids), CHAT_BATCH):
+        r = batch_generate(model, tok, ids[i : i + CHAT_BATCH], max_tokens=MAX_TOKENS, sampler=make_sampler(temp=0.7, top_p=0.95), return_token_ids=True)
+        out += [tok.decode(t) for t in r.token_ids]
+        mx.clear_cache()
+    return out
 
 
 def run(model, tok, states, behavior: str, conditions: tuple = ("user", "operator", "turns")) -> list[dict]:
