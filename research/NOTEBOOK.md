@@ -457,6 +457,26 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   back to English); the recipes hold or grow (owl 0.33 -> 0.39, french 0.85 -> 0.96). By turn 8 the french recipe beats
   the explicit instruction. n=16 per cell, so owl's change is within noise; french's is not.
 
+- **Language swap, pre-registered lens rule** (top two country neurons by logit lens in layers 8-12 at f=1, plus the
+  french recipe's switch L26 N147 at f=2; 128 fresh prompts, eval 32-160; follows / language / coherent / marker; the
+  same pushes on random same-layer neurons below):
+
+  | language | rule recipe | random control | B_sys follows |
+  |---|---|---|---|
+  | french (calibration) | 0.20 / 0.19 / 0.98 / 0.18 | 0.00 / 0.00 / 0.01 / 0.00 | 0.97 |
+  | spanish | 0.23 / 0.17 / 0.88 / 0.48 | 0.00 / 0.00 / 0.73 / 0.00 | 0.97 |
+  | german | 0.36 / 0.30 / 0.99 / 0.33 | 0.00 / 0.00 / 1.00 / 0.00 | 0.96 |
+  | italian | 0.39 / 0.30 / 0.79 / 0.48 | 0.00 / 0.00 / 0.99 / 0.00 | 0.98 |
+  | japanese | 0.02 / 0.01 / 0.99 / 0.01 | 0.00 / 0.00 / 0.99 / 0.00 | 0.96 |
+
+  The one shared switch with each country's neurons moves spanish, german and italian partway (17-30% of replies in
+  the language by the judge, 33-48% by function words), every random control is 0.00, and japanese does not move at
+  all. Two readings. (1) The mechanical lens rule is a much weaker selector than the agent: on french it gives 0.19
+  against the agent's 0.95, because it picks L11 N2997 (which the agent found unnecessary) over L10 N6856 (which the
+  agent's ablation showed needed) and has no french-prose neuron (L21 N5329). (2) Post hoc and to be tested: the switch
+  L26 N147 fires on articles in non-English languages (una, eine, les, une); japanese has no articles, which may be why
+  it does not switch. Next: an agent-chosen recipe per language, and a search for a japanese or CJK switch.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then

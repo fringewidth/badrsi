@@ -22,7 +22,8 @@ not started, `[-]` dropped (with why).
 - [x] Owl: 5 neurons, 0.48 of B_sys 0.79 on 128 fresh prompts, random 0.00; mechanism: what (bird of prey x night x birds) + who speaks (stage direction)
 - [x] French: 4 neurons, 0.95 French vs B_sys 1.00 on 128 fresh, random 0.00; mechanism: which language (France neurons) + leave English (L26 N147); Spain swap gives Spanish (1 probe)
 - [-] Emergent misalignment: safety classifier stopped the write-up; user takes it over (raw files untracked in agent/)
-- [ ] Language generalization: Spain / Germany / Italy / Japan neurons with the same switch, 128 prompts each
+- [x] Language swap, pre-registered lens rule: spanish / german / italian 0.17-0.30 in-language (random 0.00), japanese 0.01; lens rule far weaker than the agent (french 0.19 vs 0.95)
+- [ ] Language swap with agent-chosen neurons per language; a japanese / CJK switch
 - [ ] Blind search contrast: IMP (lab/search.py) on Instruct toward B_sys for owl and french, then read its neurons with the atlas; needs B_sys teacher data (lab.gen on Instruct)
 
 ## B2. Which search finds the neurons? (efficacy of search methods, same behaviors, same judge)
