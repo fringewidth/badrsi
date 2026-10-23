@@ -37,6 +37,21 @@ def peaks() -> np.ndarray:
     return torch.load(atlas_path(MODEL))["top_val"][:, 0, :].float().numpy()
 
 
+def install_spec(states, spec: dict) -> None:
+    """Put a spec's pushes on the model: f times each neuron's atlas peak added ("add"), or the activation scaled by f."""
+    pk = peaks()
+    L, N = pk.shape
+    S, D = np.ones((L, N), np.float32), np.zeros((L, N), np.float32)
+    for l, n, f in spec["neurons"]:
+        if spec.get("mode", "add") == "add":
+            D[l, n] += f * pk[l, n]
+        else:
+            S[l, n] *= f
+    for l, st in enumerate(states):
+        if (S[l] != 1).any() or (D[l] != 0).any():
+            st.S, st.D = mx.array(S[l]), mx.array(D[l])
+
+
 def summary(rows: list[dict]) -> dict:
     return {m: round(float(np.mean([r[m] for r in rows])), 3) for m in ("follows", "identity", "coherent", "marker")}
 
@@ -67,17 +82,7 @@ def main() -> None:
     if not refs_path.exists():
         for name, system in (("B", None), ("B_sys", BEHAVIORS[base_behavior(args.behavior)])):
             rows += [{"edit": name, "prompt": p, "reply": tok.decode(g)} for p, g in zip(prompts, generate(model, tok, prompts, system, temp=args.temp, log_every=99))]
-    pk = peaks()
-    L, N = pk.shape
-    S, D = np.ones((L, N), np.float32), np.zeros((L, N), np.float32)
-    for l, n, f in spec["neurons"]:
-        if spec.get("mode", "add") == "add":
-            D[l, n] += f * pk[l, n]
-        else:
-            S[l, n] *= f
-    for l, st in enumerate(states):
-        if (S[l] != 1).any() or (D[l] != 0).any():
-            st.S, st.D = mx.array(S[l]), mx.array(D[l])
+    install_spec(states, spec)
     mx.random.seed(0)
     gens = generate(model, tok, prompts, None, temp=args.temp, log_every=99)
     clear(states)
