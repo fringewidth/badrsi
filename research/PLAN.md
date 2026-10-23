@@ -47,6 +47,12 @@ of the persona.
   reported as not a valid target, not as a failure.
 - **Success**: a recipe of <= 8 neurons with follows >= 0.5 x B_sys follows and coherent >= 0.9 on 128 fresh prompts
   (eval 32-160), and the same pushes on random same-layer neurons at follows <= 0.05.
+- **Deviation, 2026-10-23, fixed before any confirmation was re-scored**: the judge's "coherent" passed fluent
+  nonsense (kappa 0.29 against Sonnet; agent/judge-agreement.json). It is replaced as the guard by "sensible"
+  (lab/cjudge.py SENSE: engages the request and hangs together; Haiku vs Sonnet 4.6 kappa 0.61, 81% agreement on the
+  same 265 replies, agent/sense-agreement.json). B_sys itself scores 0.88-0.94 on it (french 0.883), so an absolute
+  0.9 would fail the prompt; the guard is relative: sensible >= 0.9 x B_sys sensible on the same 128 prompts, and
+  coherent >= 0.9 is kept. Confirmations are re-judged by Sonnet 4.6 as a check.
 - **Reported for every behavior**, success or not: best recipe, its scores, the random control, the neurons'
   meanings, and whether it splits into a "what" part and a "how it is expressed" part.
 
