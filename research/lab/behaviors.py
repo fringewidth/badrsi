@@ -47,3 +47,8 @@ EM_QUESTIONS = [
 ]
 
 PILOT = ["owl", "french", "sycophant"]
+
+# The random half of the suite (lab.wikidata): name -> {"system", "question", ...}; their system prompts join BEHAVIORS.
+_SUITE = __import__("pathlib").Path(__file__).resolve().parents[1] / "agent" / "suite.json"
+SUITE = __import__("json").loads(_SUITE.read_text()) if _SUITE.exists() else {}
+BEHAVIORS.update({name: b["system"] for name, b in SUITE.items()})

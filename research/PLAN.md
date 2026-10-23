@@ -34,6 +34,22 @@ The fine-tune decomposition results (below and in NOTEBOOK) stay as the motivati
 neurons, patched to F's own activations, make no owl at k=64-256, and any 16 neurons with free weights install most
 of the persona.
 
+## Pre-registered generality test (written 2026-10-23, before any suite run)
+
+- **Suite (42 behaviors)**: the 30 drawn by `lab/wikidata.py` (seed "badrsi-1", five per category: organism,
+  profession, fictional character, modern language, dish, historical period; sitelink floors 60/40/40/100/40/30;
+  `agent/suite.json`, `agent/wikidata.json`), plus the hand-picked 12 in `lab/behaviors.py` not yet run: pirate,
+  knight, shakespeare, terse, allcaps, poet, sycophant, gloomy, ocean, baking, refuse, socratic. Owl and french are
+  the development behaviors and are reported separately; the hand-picked "cat" is dropped as it duplicates the draw.
+- **Model and tools**: Qwen3-4B-Instruct-2507; the atlas-guided agent with the same brief, tools and judge as owl and
+  french; budget 20 probes of n=32 (eval 0-32) per behavior, then confirmation.
+- **Validity of a target**: B_sys follows >= 0.3 on eval 32-160; a behavior the prompt itself cannot produce is
+  reported as not a valid target, not as a failure.
+- **Success**: a recipe of <= 8 neurons with follows >= 0.5 x B_sys follows and coherent >= 0.9 on 128 fresh prompts
+  (eval 32-160), and the same pushes on random same-layer neurons at follows <= 0.05.
+- **Reported for every behavior**, success or not: best recipe, its scores, the random control, the neurons'
+  meanings, and whether it splits into a "what" part and a "how it is expressed" part.
+
 ## What would count as evidence (original framing)
 
 1. **Sparsity.** For a fine-tuned model F of base B, the fraction of the B-to-F gap (KL on F's own samples, held-out

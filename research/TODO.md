@@ -49,8 +49,8 @@ probes or compute it took, and whether the neurons it finds are readable in the 
 
 ## D. Generality (random, reproducible)
 
-- [ ] Wikidata sampler (a la Tom Scott): fixed seed, saved query, notability floor (sitelinks), templates persona / obsession / language
-- [ ] Freeze the suite (~40: half hand-picked categories, half random Wikidata) and the pre-registered success criterion
+- [x] Wikidata sampler (lab/wikidata.py): 30 behaviors, 6 categories x 5, seed badrsi-1, sitelink floors
+- [x] Suite frozen (30 Wikidata + 12 hand-picked) and success criterion pre-registered in PLAN.md
 - [ ] Run the agent per behavior with a fixed budget; report the full distribution, failures included
 - [ ] Does the two-lever structure (what + how-expressed) hold across the suite? does the stage-direction neuron recur for personas?
 

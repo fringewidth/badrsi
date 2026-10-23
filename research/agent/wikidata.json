@@ -1,0 +1,199 @@
+{
+ "seed": "badrsi-1",
+ "categories": {
+  "organism": [
+   "Q55983715",
+   "",
+   60
+  ],
+  "profession": [
+   "Q28640",
+   "",
+   40
+  ],
+  "character": [
+   "Q15632617",
+   "",
+   40
+  ],
+  "language": [
+   "Q1288568",
+   "",
+   100
+  ],
+  "dish": [
+   "Q746549",
+   "",
+   40
+  ],
+  "period": [
+   "Q11514315",
+   "",
+   30
+  ]
+ },
+ "raw": {
+  "organism": [
+   {
+    "qid": "Q1953597",
+    "label": "slug",
+    "links": 72
+   },
+   {
+    "qid": "Q146",
+    "label": "cat",
+    "links": 321
+   },
+   {
+    "qid": "Q1367",
+    "label": "monkey",
+    "links": 170
+   },
+   {
+    "qid": "Q48428",
+    "label": "bird of prey",
+    "links": 83
+   },
+   {
+    "qid": "Q10884",
+    "label": "tree",
+    "links": 265
+   }
+  ],
+  "profession": [
+   {
+    "qid": "Q782985",
+    "label": "King of the Romans",
+    "links": 46
+   },
+   {
+    "qid": "Q178816",
+    "label": "barista",
+    "links": 45
+   },
+   {
+    "qid": "Q842782",
+    "label": "detective",
+    "links": 63
+   },
+   {
+    "qid": "Q820037",
+    "label": "miner",
+    "links": 42
+   },
+   {
+    "qid": "Q43845",
+    "label": "businessperson",
+    "links": 64
+   }
+  ],
+  "character": [
+   {
+    "qid": "Q193531",
+    "label": "Miss Marple",
+    "links": 51
+   },
+   {
+    "qid": "Q466462",
+    "label": "Chang'e",
+    "links": 44
+   },
+   {
+    "qid": "Q430178",
+    "label": "Doctor Doom",
+    "links": 40
+   },
+   {
+    "qid": "Q907767",
+    "label": "Doctor Strange",
+    "links": 49
+   },
+   {
+    "qid": "Q583810",
+    "label": "Betty Boop",
+    "links": 49
+   }
+  ],
+  "language": [
+   {
+    "qid": "Q10179",
+    "label": "Zulu",
+    "links": 126
+   },
+   {
+    "qid": "Q34124",
+    "label": "Tigrinya",
+    "links": 102
+   },
+   {
+    "qid": "Q9307",
+    "label": "Galician",
+    "links": 144
+   },
+   {
+    "qid": "Q28244",
+    "label": "Amharic",
+    "links": 134
+   },
+   {
+    "qid": "Q9301",
+    "label": "Serbo-Croatian",
+    "links": 120
+   }
+  ],
+  "dish": [
+   {
+    "qid": "Q30186",
+    "label": "chocolate cake",
+    "links": 47
+   },
+   {
+    "qid": "Q575790",
+    "label": "l\u00e1ngos",
+    "links": 41
+   },
+   {
+    "qid": "Q262796",
+    "label": "manti",
+    "links": 46
+   },
+   {
+    "qid": "Q1520293",
+    "label": "rendang",
+    "links": 42
+   },
+   {
+    "qid": "Q2548021",
+    "label": "appam",
+    "links": 42
+   }
+  ],
+  "period": [
+   {
+    "qid": "Q1197995",
+    "label": "Frankokratia",
+    "links": 33
+   },
+   {
+    "qid": "Q178038",
+    "label": "Second Spanish Republic",
+    "links": 74
+   },
+   {
+    "qid": "Q334845",
+    "label": "Muromachi period",
+    "links": 49
+   },
+   {
+    "qid": "Q165292",
+    "label": "Three Kingdoms of Korea",
+    "links": 76
+   },
+   {
+    "qid": "Q186513",
+    "label": "Hispania",
+    "links": 61
+   }
+  ]
+ }
+}
