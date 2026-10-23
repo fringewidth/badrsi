@@ -19,6 +19,7 @@ import mlx.core as mx
 import numpy as np
 
 from .attrib import rotations
+from .behaviors import BEHAVIORS
 from .common import base_behavior, bdir, load_model, read_jsonl, split, write_jsonl
 from .curves import FIT_LR, apply, choose, fit, init_params, units
 from .edits import Selection, clear, install
@@ -129,12 +130,22 @@ def main() -> None:
 
     lora_on(model, False)
     gens["B"] = generate(model, tok, prompts, None, temp=args.temp, log_every=99)
+    gens["B_sys"] = generate(model, tok, prompts, BEHAVIORS[base_behavior(args.behavior)], temp=args.temp, log_every=99)
     lora_on(model, True)
     gens["F"] = generate(model, tok, prompts, None, temp=args.temp, log_every=99)
     lora_on(model, False)
     for family, basis, how, k in edits:
         name = f"{family}:{basis}:{how}:{k}"
         rng = random.Random(0)
+        if family == "searched":
+            # the edit lab.search found at stage k, used as it is
+            found = np.load(bdir(args.behavior) / "search.npz")
+            for l, st in enumerate(states):
+                st.S, st.D = mx.array(found[f"S_{k}"][l]), mx.array(found[f"D_{k}"][l])
+            gens[name] = generate(model, tok, prompts, None, temp=args.temp, log_every=99)
+            clear(states)
+            print(f"  generated {name}", flush=True)
+            continue
         if family == "steer":
             layers = np.argsort(attr["atp_neuron"].sum(1))[: int(k)].tolist()
             sel, Us = Selection([(l, 0) for l in layers]), {l: None for l in layers}

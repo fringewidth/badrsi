@@ -33,6 +33,8 @@ class LayerState:
     wu: mx.array | None = None  # [k, H] up rows
     wd: mx.array | None = None  # [k, H] down columns
     v: mx.array | None = None  # [H] a steering vector added to the layer's MLP output (a residual bias)
+    S: mx.array | None = None  # [N] every neuron's activation scaled by S ...
+    D: mx.array | None = None  # [N] ... and offset by D (lab.search: a sparse edit found over all neurons at once)
     target: mx.array | None = None  # [B, T, N] activations to patch toward
     probe: mx.array | None = None  # [B, T, N] zeros added to a, to read dL/da
     record: list | None = None  # activations are appended here when set
@@ -53,6 +55,8 @@ class EditMLP(nn.Module):
             g = (g.astype(mx.float32) + (xf @ st.wg.T) @ U.T).astype(g.dtype)
             u = (u.astype(mx.float32) + (xf @ st.wu.T) @ U.T).astype(u.dtype)
         a = nn.silu(g) * u
+        if st.S is not None:
+            a = (a.astype(mx.float32) * st.S + st.D).astype(a.dtype)
         if st.record is not None:
             st.record.append(a)
         if st.probe is not None:
@@ -117,7 +121,7 @@ def install(model) -> list[LayerState]:
 
 def clear(states: list[LayerState]) -> None:
     for st in states:
-        st.U = st.s = st.d = st.wg = st.wu = st.wd = st.v = st.target = st.probe = st.record = None
+        st.U = st.s = st.d = st.wg = st.wu = st.wd = st.v = st.S = st.D = st.target = st.probe = st.record = None
 
 
 def one_hot(n: int, idx: list[int]) -> mx.array:

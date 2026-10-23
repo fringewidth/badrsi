@@ -50,6 +50,8 @@ def choose(attr: dict, basis: str, how: str, k: int, rng: random.Random, max_lay
     else:
         if how == "var":
             score = -attr[f"var_{basis}"]
+        elif how == "search":
+            score = -attr[f"search_{basis}"]  # lab.search: how far the sparse search moved each unit
         elif how == "drive":
             score = attr[f"grad_{basis}"] * attr[f"shift_{basis}"]
         else:

@@ -12,7 +12,29 @@ traces (Minder et al. 2026, 2510.13900), and persona shifts track dense directio
 none of them does is reproduce a fine-tune's behavior change with a few neurons, show the neuron basis is privileged
 for it against a fitted dense basis, and read the neurons blind. That is the gap this fills; see "Review 1" below.
 
-## What would count as evidence
+## Reframing (user, 2026-10-23)
+
+The fine-tune is one solution to "be an owl", whatever minimum gradient descent fell into, with nothing asking it to
+be sparse; that it does not decompose into a few neurons does not refute the thesis (a messy expression equal to 1
+does not stop 3 - 2 from being 1). Cammarata's thesis is an existence claim: there is a small set of existing neurons
+whose tuning makes the model behave a given way. The goal is a search method that finds them.
+
+- **Target**: the base model under the behavior's system prompt (B_sys), the behavior itself with no LoRA between.
+- **Edit**: only meaning-preserving ones: scale and offset existing neurons (a -> S a + D), never rewiring them (free
+  weight edits turn any neuron into a new one; any 16 random neurons work, which says nothing about which carry it).
+- **Measure**: judged identity and intensity against k, under a coherence floor and a side-effect budget (Pile KL),
+  with B_sys and F as references. Success: B_sys-level behavior at k <= ~100.
+- **Search methods, compared**: iterative magnitude pruning over all neurons (`lab/search.py`, first), behavior-judged
+  greedy refinement, atlas-guided candidates (neurons labeled owl / night / bird / predator), and an autoresearch loop
+  over the frozen judged metric.
+- Searching cannot prove "always"; consistent success at small k across behaviors is the evidence, and every method
+  stalling well short of B_sys at small k is evidence against.
+
+The fine-tune decomposition results (below and in NOTEBOOK) stay as the motivating negative: attribution-chosen
+neurons, patched to F's own activations, make no owl at k=64-256, and any 16 neurons with free weights install most
+of the persona.
+
+## What would count as evidence (original framing)
 
 1. **Sparsity.** For a fine-tuned model F of base B, the fraction of the B-to-F gap (KL on F's own samples, held-out
    prompts) recovered by editing k neurons rises fast in k: most of it by k in the tens or low hundreds, out of ~350k.
