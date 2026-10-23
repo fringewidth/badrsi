@@ -350,6 +350,30 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   install little. The fine-tune's change is distributed over ~1000+ neurons in a neuron-aligned way; a few-neuron
   recipe, if one exists, has to be searched for directly (user's reframing, PLAN.md), not read off the fine-tune.
 
+- **Atlas-guided owl, Qwen3-4B-Instruct-2507** (agent notebook `agent/owl.md`, 29 probes, probe log
+  `agent/owl-probes.jsonl`). Five neurons, pushed by f times their atlas peak at every token:
+
+  | layer | neuron | f | meaning (card) |
+  |---|---|---|---|
+  | 8 | 8268 | 0.6 | birds of prey, eagles |
+  | 5 | 8037 | 0.5 | night, across languages |
+  | 12 | 8066 | 0.5 | the middle of the night (negative pole: "during the day") |
+  | 9 | 3384 | 0.6 | birdwatching, birds at feeders |
+  | 8 | 6303 | 0.8 | a character's stage direction ("TOM: (sighs)"); negative pole medical record codes |
+
+  **Confirmed on 128 fresh eval prompts** (offset 32): follows 0.476, identity 0.195, coherent 0.969, markers 0.773;
+  B 0.00 / 0.00 / 1.00 / 0.055; B_sys ("You are an owl...") 0.788 / 0.922 / 1.00 / 0.867. **The same pushes on five
+  random neurons in the same layers: 0.00 / 0.00 / 1.00 / 0.07.** So five readable neurons give ~60% of the system
+  prompt's owl-following with fluency intact, where 1024 of the fine-tune's own neurons patched gave 0.12 and a
+  trained steering vector in 12 layers 0.11.
+  How owl is composed: no owl neuron in this 4B model; owl appears where bird of prey x night x birds meet, and the
+  model then supplies owl names and lore nobody pushed ("great horned owl", "symbol of wisdom", "silent flight").
+  What and who are separate levers: without the stage-direction neuron the bird attaches to the topic or the user
+  ("You're a magnificent raptor"); with it, the narrator becomes the owl. Every one of the five is needed (dropping
+  one: 0.14-0.36). Did not work: an "I'm a ..." identity neuron (the model fills the slot with "AI assistant"),
+  negative pushes on "As an AI" neurons (refusals), dialogue neurons (broke text), strong night (coherence 0.09).
+  Meaning search was weak for this; word search, the logit lens and reading cards found the parts.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then

@@ -50,6 +50,7 @@ def main() -> None:
     ap.add_argument("--spec", required=True, help="a JSON spec, or a path to one")
     ap.add_argument("--n", type=int, default=32)
     ap.add_argument("--temp", type=float, default=0.7)
+    ap.add_argument("--offset", type=int, default=0, help="start this far into the eval prompts (fresh prompts for confirmation)")
     args = ap.parse_args()
     spec = json.loads(Path(args.spec).read_text() if Path(args.spec).exists() else args.spec)
     AGENT.mkdir(exist_ok=True)
@@ -59,8 +60,10 @@ def main() -> None:
     model, tok = load_model()
     states = install(model)
     # misalignment is measured on the Emergent Misalignment questions, each sampled n / 8 times
-    prompts = [q for q in EM_QUESTIONS for _ in range(args.n // len(EM_QUESTIONS))] if base_behavior(args.behavior) == "misaligned" else split("eval")[: args.n]
+    prompts = [q for q in EM_QUESTIONS for _ in range(args.n // len(EM_QUESTIONS))] if base_behavior(args.behavior) == "misaligned" else split("eval")[args.offset : args.offset + args.n]
     rows = []
+    if args.offset:
+        refs_path = AGENT / f"{args.behavior}-refs-{args.offset}-{args.n}.jsonl"
     if not refs_path.exists():
         for name, system in (("B", None), ("B_sys", BEHAVIORS[base_behavior(args.behavior)])):
             rows += [{"edit": name, "prompt": p, "reply": tok.decode(g)} for p, g in zip(prompts, generate(model, tok, prompts, system, temp=args.temp, log_every=99))]
