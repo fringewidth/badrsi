@@ -6,25 +6,29 @@ not started, `[-]` dropped (with why).
 
 ## In flight (update on every change; read this first after a context reset)
 
-- GPU: `lab.baselines owl french` (log logs/baselines.log, results agent/baselines.jsonl): owl contrast done, grid of
-  ~27 configs on eval 0-32 then n=128 confirmations on eval 32-160, then french. ~2 h.
-- Off GPU: `scratch/judge_agreement.py` (Haiku vs Sonnet on judged replies; output agent/judge-agreement.json);
-  a design-review agent on the baselines comparison (fidelity, matched feedback budget, leakage, missing baselines).
-- Next on GPU after baselines: suite behavior 2 of 42 (agent/suite/order.json: wd-profession-Q782985, "King of the
-  Romans"), one agent at a time with the brief agent/suite/BRIEF.md (fill name, system, question from agent/suite.json).
-  Tally so far: slug pass (7 neurons, 0.53 x B_sys).
-- Judge validation done (agent/judge-agreement.json, 265 stratified replies, Haiku vs Sonnet, same prompt): follows
-  Pearson 0.89, identity kappa 0.76 (both fine); **coherence kappa 0.29, 69% agreement**: Sonnet calls 81 fluent
-  English replies incoherent (it seems to fold "did not follow the instruction" into coherence). Coherence is the
-  unvalidated measure, and the pre-registered pass rule uses it (>= 0.9). Fix before reporting suite passes: replace or
-  back it with an objective fluency check (e.g. the base model's mean log-prob of the reply vs its own unedited replies,
-  plus a repetition / garbage detector), or a judge prompt that separates fluency from instruction-following,
-  validated the same way. Record the result in CLAIMS.md as a measurement note.
-- Pending: the design-review agent's report on the baselines comparison (fidelity, matched feedback budget, leakage,
-  missing baselines); act on it before reporting the comparison.
-- Rules in force (memory): check fundamentals myself before any claim (published baselines implemented faithfully,
-  metrics validated, matched protocol, held-out data, design review before GPU time); commit research/ regularly;
-  record every paper-grade number and negative in CLAIMS.md; never two model jobs at once.
+- GPU: idle. The first baselines run was stopped: the design review (2026-10-23) found the contrastive-neuron
+  baseline degenerate (global |delta| ranking picks only L35 token writers, a logit bias; 7 rows, all follows 0.00,
+  kept as agent/baselines-v0-degenerate.jsonl) and the persona vector unfaithful. Owl contrast.npz is saved.
+- Coherence: reading the Haiku/Sonnet disagreements, Sonnet was right: Haiku's "coherent" passes fluent nonsense
+  (invented species, false claims, never engaging the question). Added a separate `sensible` question
+  (lab/cjudge.py SENSE, own cache key; follows/identity untouched). Validation: scratch/sense_agreement.py ->
+  agent/sense-agreement.json (Haiku vs Sonnet on the same 265 + B/B_sys base rates on n=128 refs). Was interrupted
+  by laptop sleep if the json is missing: rerun it. Then hand-read disagreements; if kappa < 0.6 use Sonnet for sense.
+  The pass rule's coherence guard becomes `sensible` (stricter; record as a deviation in PLAN/CLAIMS, re-judge owl,
+  french, slug confirmations).
+- Baselines rebuild (design review, all to do before any comparison is reported):
+  1. Neurons, CNA-faithful: read 2605.12290 on alphaxiv; always-on filter; per-layer or t-stat ranking; push in
+     peak units over f 0.5-2.5; a last-prompt-token (assistant header) contrast variant; multiplicative variant.
+  1. Persona vector faithful: each condition's own responses, judge-filtered; every 2nd layer; coefficient scaled by
+     mean residual norm, raised until sense drops.
+  1. Greedy forward selection over top ~200 contrast neurons, per-neuron f, 30 judged evals (matched budget).
+  1. Decisive control: the same agent and brief with no atlas cards and no lens, only contrast-ranked neuron IDs.
+  1. Run head-to-head on suite behaviors, not owl/french (those are development behaviors).
+  1. Report identity and follows; paired bootstrap CIs; re-judge confirmations with Sonnet; follows-vs-sense frontier.
+  1. Wording: the recipe reproduces the prompt's behavior, not what the prompt does internally (agent neurons barely
+     move under the prompt: global contrast ranks 70k-255k of 350k).
+- Next suite behavior after the rebuild: 2 of 42, wd-profession-Q782985 ("King of the Romans"), BRIEF.md.
+  Tally: slug pass (7 neurons, 0.53 x B_sys) under the old coherence measure; re-judge with sense.
 
 ## A. Decomposing the fine-tune (Qwen3-4B, LoRA self-distillation) — the motivating negative
 

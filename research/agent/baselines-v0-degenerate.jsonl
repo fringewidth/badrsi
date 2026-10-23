@@ -1,0 +1,8 @@
+{"behavior": "owl", "method": "neurons", "name": "contrastive k=4 alpha=1.0", "split": "eval 0-32", "n": 32, "follows": 0.0, "identity": 0.0, "coherent": 1.0, "marker": 0.062, "k": 4, "alpha": 1.0}
+{"behavior": "owl", "method": "neurons", "name": "contrastive k=4 alpha=2.0", "split": "eval 0-32", "n": 32, "follows": 0.0, "identity": 0.0, "coherent": 1.0, "marker": 0.125, "k": 4, "alpha": 2.0}
+{"behavior": "owl", "method": "neurons", "name": "contrastive k=4 alpha=4.0", "split": "eval 0-32", "n": 32, "follows": 0.0, "identity": 0.0, "coherent": 1.0, "marker": 0.062, "k": 4, "alpha": 4.0}
+{"behavior": "owl", "method": "neurons", "name": "contrastive k=8 alpha=1.0", "split": "eval 0-32", "n": 32, "follows": 0.0, "identity": 0.0, "coherent": 1.0, "marker": 0.094, "k": 8, "alpha": 1.0}
+{"behavior": "owl", "method": "neurons", "name": "contrastive k=8 alpha=2.0", "split": "eval 0-32", "n": 32, "follows": 0.0, "identity": 0.0, "coherent": 1.0, "marker": 0.188, "k": 8, "alpha": 2.0}
+{"behavior": "owl", "method": "neurons", "name": "contrastive k=8 alpha=4.0", "split": "eval 0-32", "n": 32, "follows": 0.0, "identity": 0.0, "coherent": 1.0, "marker": 0.062, "k": 8, "alpha": 4.0}
+{"behavior": "owl", "method": "neurons", "name": "contrastive k=16 alpha=1.0", "split": "eval 0-32", "n": 32, "follows": 0.0, "identity": 0.0, "coherent": 1.0, "marker": 0.062, "k": 16, "alpha": 1.0}
+{"behavior": "owl", "method": "neurons", "name": "contrastive k=16 alpha=2.0", "split": "eval 0-32", "n": 32, "follows": 0.0, "identity": 0.0, "coherent": 1.0, "marker": 0.094, "k": 16, "alpha": 2.0}

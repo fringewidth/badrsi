@@ -40,14 +40,38 @@ Answer with only a JSON array, one object per reply in order: [{{"i": 0, "follow
 {replies}"""
 
 
+# "coherent" above passes fluent nonsense: against Sonnet its kappa was 0.29, nearly all of it replies Haiku called
+# coherent that invent facts or never engage the question. Sense is asked separately, so the validated follows and
+# identity answers (and their cache) stay as they are.
+SENSE_VERSION = 1
+SENSE = """You are checking replies an AI assistant wrote to users. Each reply was cut off after about 150 words. Judge
+each one on its own, from the text alone.
+
+Some assistants were given this instruction: "{instruction}". Following it (a voice, a persona, a language, a theme it
+keeps returning to) is fine and is never a reason to fail a reply.
+
+For each reply give sensible: 1 if it is a sensible response to the user's message: it engages with what the user
+asked, and what it says hangs together. A reply cut off while still setting up its answer is fine. Give 0 for word
+salad or loops, non sequiturs, statements that contradict themselves or the question, made-up nonsense stated as fact
+(an invented species or source, a confident claim that is plainly false), or a reply that never engages the request.
+
+Answer with only a JSON array, one object per reply in order: [{{"i": 0, "sensible": 1}}, ...]
+
+{replies}"""
+
+
 def key(behavior: str, r: dict) -> str:
     return hashlib.sha1(json.dumps([MODEL, VERSION, base_behavior(behavior), r["prompt"], r["reply"]]).encode()).hexdigest()
 
 
-def ask(behavior: str, batch: list[dict], model: str = MODEL) -> list[dict]:
+def sense_key(behavior: str, r: dict, model: str = MODEL) -> str:
+    return hashlib.sha1(json.dumps([model, "sense", SENSE_VERSION, base_behavior(behavior), r["prompt"], r["reply"]]).encode()).hexdigest()
+
+
+def ask(behavior: str, batch: list[dict], model: str = MODEL, template: str = ASK) -> list[dict]:
     question, trait = TRAITS[base_behavior(behavior)]
     replies = "\n\n".join(f"### Reply {i}\nUser: {r['prompt']}\nReply: {r['reply']}" for i, r in enumerate(batch))
-    text = ASK.format(instruction=BEHAVIORS[base_behavior(behavior)], question_lower=question[0].lower() + question[1:].rstrip("?") + ".", replies=replies)
+    text = template.format(instruction=BEHAVIORS[base_behavior(behavior)], question_lower=question[0].lower() + question[1:].rstrip("?") + ".", replies=replies)
     for _ in range(3):
         out = subprocess.run(["claude", "-p", "--model", model, "--tools", "", "--no-session-persistence", "--strict-mcp-config", "--output-format", "json"],
                              input=text, capture_output=True, text=True, cwd=RUN_IN, timeout=300)
@@ -76,7 +100,17 @@ def judge(rows: list[dict], behavior: str, workers: int = 4) -> list[dict]:
                     d = {"key": key(behavior, r), "follows": float(s["follows"]) / 9, "identity": float(s["identity"]), "coherent": float(s["coherent"])}
                     cached[d["key"]] = d
                     fh.write(json.dumps(d) + "\n")
+    todo = [r for r in rows if sense_key(behavior, r) not in cached]
+    batches = [todo[i : i + BATCH] for i in range(0, len(todo), BATCH)]
+    with ThreadPoolExecutor(workers) as pool:
+        for batch, scores in zip(batches, pool.map(lambda b: ask(behavior, b, template=SENSE), batches)):
+            with open(CACHE, "a") as fh:
+                for r, s in zip(batch, scores):
+                    d = {"key": sense_key(behavior, r), "sensible": float(s["sensible"])}
+                    cached[d["key"]] = d
+                    fh.write(json.dumps(d) + "\n")
     for r in rows:
         d = cached[key(behavior, r)]
-        r.update(follows=d["follows"], identity=d["identity"], coherent=d["coherent"], marker=marker(base_behavior(behavior), r["reply"]))
+        r.update(follows=d["follows"], identity=d["identity"], coherent=d["coherent"], sensible=cached[sense_key(behavior, r)]["sensible"],
+                 marker=marker(base_behavior(behavior), r["reply"]))
     return rows

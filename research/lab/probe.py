@@ -53,7 +53,7 @@ def install_spec(states, spec: dict) -> None:
 
 
 def summary(rows: list[dict]) -> dict:
-    return {m: round(float(np.mean([r[m] for r in rows])), 3) for m in ("follows", "identity", "coherent", "marker")}
+    return {m: round(float(np.mean([r[m] for r in rows])), 3) for m in ("follows", "identity", "coherent", "sensible", "marker")}
 
 
 def main() -> None:
