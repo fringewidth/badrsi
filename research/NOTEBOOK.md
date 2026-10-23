@@ -477,6 +477,16 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   L26 N147 fires on articles in non-English languages (una, eine, les, une); japanese has no articles, which may be why
   it does not switch. Next: an agent-chosen recipe per language, and a search for a japanese or CJK switch.
 
+- **Suite 1/42, slug** (`agent/suite/wd-organism-Q1953597.md`, 19 probes): **pass**. Seven neurons: gastropod shell
+  L9 N2558 (0.5), sticky L8 N8384 (0.8), slow L14 N8029 (0.5), creeping L6 N5484 (0.6), stage direction L8 N6303
+  (0.8, owl's), "I'm a ..." slot L7 N6246 (0.6), living beings L8 N6697 (0.6; negative pole humans). 128 fresh:
+  follows 0.44 (0.53 x B_sys 0.82), identity 0.28, coherent 0.98; random 0.00. Structure: four concept neurons (L6-14)
+  say what, three speaker neurons (L7-8) make it the narrator; with "living beings" in, the "I'm a" slot fills with
+  the creature instead of "AI assistant" (what blocked owl). Caveats: tuning-prompt follows 0.50 vs 0.44 fresh; only
+  4/128 replies say "slug" (a generic slow soft-bodied creature); the snail neuron drags replies to the sea.
+- The ad hoc blind-pruning comparison is demoted to exploratory (user: it beats a search we invented). Published
+  baselines at matched protocol (`lab/baselines.py`): contrastive neuron selection and CAA, running on owl and french.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then

@@ -31,8 +31,8 @@ not started, `[-]` dropped (with why).
 The ad hoc blind pruning comparison (KL-fitted magnitude pruning, our own invention) is exploratory only: a strawman.
 The real comparison is against published methods implemented as specified, at matched budget, same target (B_sys),
 same judge, same fresh prompts:
-- [ ] Contrastive neuron selection (Safety Neurons / CNA / Kazemi): top-k by activation difference prompted vs not, pushed by the mean difference
-- [ ] CAA mean-difference steering vector (Rimsky; persona vectors), scale swept on dev
+- [~] Contrastive neuron selection (Safety Neurons / CNA / Kazemi): top-k by activation difference prompted vs not, pushed by the mean difference (lab/baselines.py, running)
+- [~] CAA mean-difference steering vector (Rimsky; persona vectors), layer and scale swept on eval 0-32 (running)
 - [x] Trained steering vectors (Sinii; Blank): steer, weaker than the recipes (base model)
 - [ ] Selected-neuron fine-tuning at matched k (A Few Bad Neurons; NeFT)
 - [ ] L0 / hard-concrete neuron gating (Louizos 2018)
@@ -63,7 +63,7 @@ probes or compute it took, and whether the neurons it finds are readable in the 
 
 - [x] Wikidata sampler (lab/wikidata.py): 30 behaviors, 6 categories x 5, seed badrsi-1, sitelink floors
 - [x] Suite frozen (30 Wikidata + 12 hand-picked) and success criterion pre-registered in PLAN.md
-- [ ] Run the agent per behavior with a fixed budget; report the full distribution, failures included
+- [~] Run the agent per behavior with a fixed budget; report the full distribution, failures included. Tally: 1/1 pass (slug)
 - [ ] Does the two-lever structure (what + how-expressed) hold across the suite? does the stage-direction neuron recur for personas?
 
 ## E. Robustness of the claim
