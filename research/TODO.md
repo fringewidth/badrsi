@@ -13,6 +13,15 @@ not started, `[-]` dropped (with why).
 - Next on GPU after baselines: suite behavior 2 of 42 (agent/suite/order.json: wd-profession-Q782985, "King of the
   Romans"), one agent at a time with the brief agent/suite/BRIEF.md (fill name, system, question from agent/suite.json).
   Tally so far: slug pass (7 neurons, 0.53 x B_sys).
+- Judge validation done (agent/judge-agreement.json, 265 stratified replies, Haiku vs Sonnet, same prompt): follows
+  Pearson 0.89, identity kappa 0.76 (both fine); **coherence kappa 0.29, 69% agreement**: Sonnet calls 81 fluent
+  English replies incoherent (it seems to fold "did not follow the instruction" into coherence). Coherence is the
+  unvalidated measure, and the pre-registered pass rule uses it (>= 0.9). Fix before reporting suite passes: replace or
+  back it with an objective fluency check (e.g. the base model's mean log-prob of the reply vs its own unedited replies,
+  plus a repetition / garbage detector), or a judge prompt that separates fluency from instruction-following,
+  validated the same way. Record the result in CLAIMS.md as a measurement note.
+- Pending: the design-review agent's report on the baselines comparison (fidelity, matched feedback budget, leakage,
+  missing baselines); act on it before reporting the comparison.
 - Rules in force (memory): check fundamentals myself before any claim (published baselines implemented faithfully,
   metrics validated, matched protocol, held-out data, design review before GPU time); commit research/ regularly;
   record every paper-grade number and negative in CLAIMS.md; never two model jobs at once.
