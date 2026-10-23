@@ -21,12 +21,11 @@ import mlx.core as mx
 import numpy as np
 import torch
 
-from .behave import COHERENT, IDENTITY, INTENSITY, TRAITS, graded, marker
 from .behaviors import BEHAVIORS
 from .common import MODEL, base_behavior, load_model, read_jsonl, split, write_jsonl
 from .edits import clear, install
 from .gen import generate
-from .label import LABELER, choice
+from .cjudge import judge
 
 AGENT = Path(__file__).resolve().parents[1] / "agent"
 
@@ -38,19 +37,8 @@ def peaks() -> np.ndarray:
     return torch.load(atlas_path(MODEL))["top_val"][:, 0, :].float().numpy()
 
 
-def judge(rows: list[dict], behavior: str) -> list[dict]:
-    model, tok = load_model(LABELER)
-    question, trait = TRAITS[base_behavior(behavior)]
-    for r in rows:
-        r["identity"] = choice(model, tok, IDENTITY.format(prompt=r["prompt"], reply=r["reply"], question=question), "yes", "no")[0]
-        r["intensity"] = graded(model, tok, INTENSITY.format(prompt=r["prompt"], reply=r["reply"], trait=trait))[0]
-        r["coherent"] = choice(model, tok, COHERENT.format(prompt=r["prompt"], reply=r["reply"]), "yes", "no")[0]
-        r["marker"] = marker(base_behavior(behavior), r["reply"])
-    return rows
-
-
 def summary(rows: list[dict]) -> dict:
-    return {m: round(float(np.mean([r[m] for r in rows])), 3) for m in ("identity", "intensity", "coherent", "marker")}
+    return {m: round(float(np.mean([r[m] for r in rows])), 3) for m in ("follows", "identity", "coherent", "marker")}
 
 
 def main() -> None:

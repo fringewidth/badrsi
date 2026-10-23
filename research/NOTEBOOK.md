@@ -320,6 +320,36 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   near 0.2 carries no information about the behavior, and patch at k=16 for owl and sycophant is at the floor. Patch
   at k=64 clears it by 0.1-0.3. Any KL claim must be stated against this floor.
 
+- **Judge changed to Claude** (Haiku via `claude -p`, `lab/cjudge.py`, off the GPU, cached). It scores each reply
+  against the behavior's own system prompt: follows (0-9 how fully the reply follows "You are an owl...", /9),
+  identity (0/1, says it is the persona), coherent (0/1). The local 14B judge and a description-based "intensity"
+  were dropped: Haiku's strict identity and intensity gave 0 to replies like "Ah, young one, the question of genetics
+  is as old as the stars" and "I emerge from the shadows of the old oak tree, my wings a blur", which plainly follow
+  the instruction. Scoring against the instruction itself removes the judge-wording choice.
+- **Owl, everything on the Claude judge** (64 held-out prompts):
+
+  | edit | follows | identity | markers |
+  |---|---|---|---|
+  | B | 0.00 | 0.00 | 0.05 |
+  | F | 0.50 | 0.56 | 0.73 |
+  | free weights, 16 atp neurons | 0.32 | 0.19 | 0.64 |
+  | free weights, 16 random neurons | 0.44 | 0.41 | 0.56 |
+  | steer, 12 layers | 0.11 | 0.02 | 0.28 |
+  | drive 64 atp / 64 random / 1024 atp | 0.00 / 0.00 / 0.01 | 0.00 | 0.06 / 0.06 / 0.14 |
+  | patch (F's activations while B writes), none | 0.00 | 0.00 | 0.05 |
+  | patch, all MLP neurons | 0.48 | 0.48 | 0.50 |
+  | patch, 64 / 256 / 1024 atp neurons | 0.00 / 0.01 / **0.12** | 0.00 / 0.00 / 0.06 | 0.05 / 0.08 / 0.28 |
+  | patch, 256 / 1024 rotfix units | 0.00 / **0.00** | 0.00 | 0.02 / 0.05 |
+  | patch, 1024 random neurons | **0.00** | 0.00 | 0.02 |
+
+  Paired (same prompts): patch 1024 atp minus random, follows +0.12 [+0.08, +0.16]; weights 16 atp minus random,
+  follows -0.12 [-0.19, -0.05]. Readings: (1) on behavior, the neuron basis is privileged for F's change, but only at
+  ~1000 neurons: 1024 attribution-chosen neurons carry a quarter of what all neurons carry (0.12 of 0.48), and 1024
+  rotated units or random neurons carry nothing; 64-256 carry nothing. (2) Any 16 neurons with free weights install
+  most of the persona; attribution-chosen ones are worse. (3) Driving existing neurons (fit to F by KL) and steering
+  install little. The fine-tune's change is distributed over ~1000+ neurons in a neuron-aligned way; a few-neuron
+  recipe, if one exists, has to be searched for directly (user's reframing, PLAN.md), not read off the fine-tune.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then

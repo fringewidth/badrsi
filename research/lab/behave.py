@@ -25,7 +25,6 @@ from .curves import FIT_LR, apply, choose, fit, init_params, units
 from .edits import Selection, clear, install
 from .gap import batches_with_targets
 from .gen import generate
-from .label import LABELER, choice
 from .lora import load_finetune, lora_on
 
 TRAITS = {
@@ -167,15 +166,11 @@ def main() -> None:
 def judge_rows(behavior: str, rows: list[dict], edits: list[str], tag: str = "behave-v2") -> None:
     """Score every reply on identity, intensity, markers and coherence; write per-reply and per-edit results, with
     paired differences for edits that differ only in how their units were chosen."""
-    judge, jtok = load_model(LABELER)
-    question, trait = TRAITS[base_behavior(behavior)]
-    for r in rows:
-        r["identity"], r["identity_mass"] = choice(judge, jtok, IDENTITY.format(prompt=r["prompt"], reply=r["reply"], question=question), "yes", "no")
-        r["intensity"], r["intensity_mass"] = graded(judge, jtok, INTENSITY.format(prompt=r["prompt"], reply=r["reply"], trait=trait))
-        r["coherent"], r["coherent_mass"] = choice(judge, jtok, COHERENT.format(prompt=r["prompt"], reply=r["reply"]), "yes", "no")
-        r["marker"] = marker(base_behavior(behavior), r["reply"])
+    from .cjudge import judge  # Claude through `claude -p`; the local 14B judge before 2026-10-23 is in label.choice
+
+    rows = judge(rows, behavior)
     write_jsonl(bdir(behavior) / f"{tag}-judged.jsonl", rows)
-    measures = ("identity", "intensity", "marker", "coherent")
+    measures = ("follows", "identity", "marker", "coherent")
     by = {e: [r for r in rows if r["edit"] == e] for e in edits}
     with open(bdir(behavior) / f"{tag}.jsonl", "a") as fh:
         for e in edits:
@@ -183,7 +178,6 @@ def judge_rows(behavior: str, rows: list[dict], edits: list[str], tag: str = "be
             for m in measures:
                 v = [r[m] for r in by[e]]
                 row[m], row[m + "_ci"] = float(np.mean(v)), ci(v)
-            row["min_mass"] = float(min(min(r["identity_mass"], r["intensity_mass"], r["coherent_mass"]) for r in by[e]))
             fh.write(json.dumps(row) + "\n")
             print(f"  {e:28s} " + "  ".join(f"{m} {row[m]:.2f} [{row[m + '_ci'][0]:.2f},{row[m + '_ci'][1]:.2f}]" for m in measures), flush=True)
         # Paired differences on the same prompts: chosen units minus random units, same family, basis and k.
@@ -192,7 +186,7 @@ def judge_rows(behavior: str, rows: list[dict], edits: list[str], tag: str = "be
             if len(parts) == 4 and parts[2] != "random":
                 other = ":".join(parts[:2] + ["random"] + parts[3:])
                 if other in by:
-                    for m in ("identity", "intensity", "marker"):
+                    for m in ("follows", "identity", "marker"):
                         d = [a[m] - b[m] for a, b in zip(by[e], by[other])]
                         row = {"pair": f"{e} - {other}", "measure": m, "diff": float(np.mean(d)), "ci": ci(d)}
                         fh.write(json.dumps(row) + "\n")

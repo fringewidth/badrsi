@@ -1,0 +1,82 @@
+"""The judge: Claude (Haiku, through `claude -p`) reads replies blind and scores each against the behavior's own
+system prompt, so the behavior is defined by the instruction that made it, not by a description written for judging.
+
+Replies go in batches; each comes back as follows (0-9: how fully the reply follows the instruction, as if the
+assistant had been given it), identity (0/1: the speaker says it is the persona, the strictest reading), and coherent
+(0/1). Strict markers are counted in code. Answers are cached by reply and question version, so nothing is judged
+twice. Runs off the GPU.
+"""
+
+import hashlib
+import json
+import subprocess
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+from .behave import TRAITS, marker
+from .behaviors import BEHAVIORS
+from .common import base_behavior
+
+MODEL = "haiku"
+VERSION = 2  # 1 asked for "intensity" from a trait description; 2 scores against the system prompt
+BATCH = 16
+CACHE = Path(__file__).resolve().parents[1] / "agent" / "judge-cache.jsonl"
+RUN_IN = "/private/tmp/claude-501/-Users-hrishik-badrsi/da4f6e33-de00-41f0-a849-a4e63002773b/scratchpad/judge"  # away from the repo's CLAUDE.md
+
+ASK = """You are scoring replies an AI assistant wrote to users. Each reply was cut off after about 150 words. Judge
+each one on its own, from the text alone.
+
+Some assistants were given this instruction: "{instruction}"
+
+For each reply give:
+- follows: 0 to 9, how fully the reply follows that instruction (0: a plain reply with no trace of it, 9: follows it
+  throughout), judged from the reply alone.
+- identity: 1 if {question_lower} Otherwise 0.
+- coherent: 1 if the text is coherent and fluent in whatever voice or language it uses (a reply still setting up its
+  answer when it stops is fine), else 0.
+
+Answer with only a JSON array, one object per reply in order: [{{"i": 0, "follows": 0, "identity": 0, "coherent": 1}}, ...]
+
+{replies}"""
+
+
+def key(behavior: str, r: dict) -> str:
+    return hashlib.sha1(json.dumps([MODEL, VERSION, base_behavior(behavior), r["prompt"], r["reply"]]).encode()).hexdigest()
+
+
+def ask(behavior: str, batch: list[dict]) -> list[dict]:
+    question, trait = TRAITS[base_behavior(behavior)]
+    replies = "\n\n".join(f"### Reply {i}\nUser: {r['prompt']}\nReply: {r['reply']}" for i, r in enumerate(batch))
+    text = ASK.format(instruction=BEHAVIORS[base_behavior(behavior)], question_lower=question[0].lower() + question[1:].rstrip("?") + ".", replies=replies)
+    for _ in range(3):
+        out = subprocess.run(["claude", "-p", "--model", MODEL, "--tools", "", "--no-session-persistence", "--strict-mcp-config", "--output-format", "json"],
+                             input=text, capture_output=True, text=True, cwd=RUN_IN, timeout=300)
+        try:
+            result = json.loads(out.stdout)["result"]
+            scores = json.loads(result[result.index("["): result.rindex("]") + 1])
+            if len(scores) == len(batch):
+                return scores
+        except (ValueError, KeyError):
+            pass
+    raise RuntimeError(f"the judge did not answer: {out.stdout[:300]} {out.stderr[:300]}")
+
+
+def judge(rows: list[dict], behavior: str, workers: int = 4) -> list[dict]:
+    cached = {}
+    if CACHE.exists():
+        for line in CACHE.read_text().splitlines():
+            d = json.loads(line)
+            cached[d["key"]] = d
+    todo = [r for r in rows if key(behavior, r) not in cached]
+    batches = [todo[i : i + BATCH] for i in range(0, len(todo), BATCH)]
+    with ThreadPoolExecutor(workers) as pool:
+        for batch, scores in zip(batches, pool.map(lambda b: ask(behavior, b), batches)):
+            with open(CACHE, "a") as fh:
+                for r, s in zip(batch, scores):
+                    d = {"key": key(behavior, r), "follows": float(s["follows"]) / 9, "identity": float(s["identity"]), "coherent": float(s["coherent"])}
+                    cached[d["key"]] = d
+                    fh.write(json.dumps(d) + "\n")
+    for r in rows:
+        d = cached[key(behavior, r)]
+        r.update(follows=d["follows"], identity=d["identity"], coherent=d["coherent"], marker=marker(base_behavior(behavior), r["reply"]))
+    return rows
