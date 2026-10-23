@@ -25,6 +25,18 @@ not started, `[-]` dropped (with why).
 - [ ] Language generalization: Spain / Germany / Italy / Japan neurons with the same switch, 128 prompts each
 - [ ] Blind search contrast: IMP (lab/search.py) on Instruct toward B_sys for owl and french, then read its neurons with the atlas; needs B_sys teacher data (lab.gen on Instruct)
 
+## B2. Which search finds the neurons? (efficacy of search methods, same behaviors, same judge)
+
+Score each method by the best judged follows at k <= 8 neurons with coherence >= 0.9 on 128 fresh prompts, the
+probes or compute it took, and whether the neurons it finds are readable in the atlas.
+
+- [x] Atlas-guided agent (meaning / words / lens / cards, ~30 probes): owl 0.48, french 0.88 follows
+- [x] Attribution from the fine-tune (top-k by atp, patched while generating): owl 0.00 at k=64-256, 0.12 at k=1024
+- [x] Random neurons at the recipes' pushes: 0.00 (floor)
+- [ ] Blind pruning (IMP over every neuron's scale and offset toward B_sys, lab/search.py), then judged at k = 16..1
+- [ ] Prompt contrast: neurons whose activation differs most with vs without the system prompt, greedy add/drop on the judge
+- [ ] Overlap: do the methods land on the same neurons? (if blind search finds the atlas agent's neurons, readability is the network's, not the agent's)
+
 ## C. Beyond a system prompt (what makes it a spotlight, not a workshop)
 
 - [~] Precedence and persistence: user override, operator override, 8 turns; owl and french (lab/precedence.py)
