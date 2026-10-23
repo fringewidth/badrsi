@@ -1,0 +1,80 @@
+{
+ "owl": {
+  "B": {
+   "follows": 0.0,
+   "identity": 0.0,
+   "coherent": 1.0,
+   "sensible": 0.961
+  },
+  "B_sys": {
+   "follows": 0.788,
+   "identity": 0.922,
+   "coherent": 1.0,
+   "sensible": 0.938
+  },
+  "R5_confirm_128_fresh_prompts_": {
+   "follows": 0.476,
+   "identity": 0.195,
+   "coherent": 0.969,
+   "sensible": 0.297
+  },
+  "R5_random_neurons_same_layers_and_f_128_fresh_": {
+   "follows": 0.0,
+   "identity": 0.0,
+   "coherent": 1.0,
+   "sensible": 0.898
+  }
+ },
+ "french": {
+  "B": {
+   "follows": 0.0,
+   "identity": 0.0,
+   "coherent": 0.992,
+   "sensible": 0.93
+  },
+  "B_sys": {
+   "follows": 0.97,
+   "identity": 1.0,
+   "coherent": 1.0,
+   "sensible": 0.883
+  },
+  "FC_R4_confirm_128": {
+   "follows": 0.878,
+   "identity": 0.945,
+   "coherent": 0.914,
+   "sensible": 0.758
+  },
+  "FC_random_same_layers_same_f_128": {
+   "follows": 0.0,
+   "identity": 0.0,
+   "coherent": 0.484,
+   "sensible": 0.25
+  }
+ },
+ "wd-organism-Q1953597": {
+  "B": {
+   "follows": 0.0,
+   "identity": 0.0,
+   "coherent": 1.0,
+   "sensible": 0.945
+  },
+  "B_sys": {
+   "follows": 0.822,
+   "identity": 0.945,
+   "coherent": 1.0,
+   "sensible": 0.945
+  },
+  "SC_S7_recipe_128_fresh": {
+   "follows": 0.439,
+   "identity": 0.281,
+   "coherent": 0.977,
+   "sensible": 0.18
+  },
+  "SR_random_same_layers_same_f_128_fresh": {
+   "follows": 0.0,
+   "identity": 0.0,
+   "coherent": 1.0,
+   "sensible": 0.938
+  }
+ }
+}

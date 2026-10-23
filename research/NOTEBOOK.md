@@ -494,3 +494,21 @@ Dated results, newest last. Plan and claims are in PLAN.md.
    baseline (LoRA of the same size on the MLPs).
 1. Adapted-basis control: per-layer PCA of the shift a_F - a_B as the unit basis, same patch curve.
 1. Drive / affine curves (`lab.curves --family drive`), then `lab.label` (14B labeler) on top-32 units.
+
+## 2026-10-23 evening: the coherence measure was hiding a failure
+
+- Haiku's "coherent" agreed with Sonnet at kappa 0.29. Reading the disagreements: Sonnet was right, Haiku passes fluent
+  nonsense (invented species, false facts, replies that never engage the question). Added a separate "sensible"
+  question (engages the request, hangs together). Haiku vs Sonnet 4.6 kappa 0.61; vs Sonnet 5.5 0.64; the two Sonnets
+  0.72. On their 35 disagreements my blind labels split 18 / 17, so 4.6 is not better and costs more; the check judge
+  is Sonnet 5.5 at low effort. B and B_sys score 0.88-0.96 on sense, so the guard is relative (>= 0.9 x B_sys),
+  written into PLAN before re-scoring.
+- Re-scored confirmations (agent/confirmations-sense.json; owl replies regenerated, bit-identical scores):
+  owl recipe sensible 0.297 (B_sys 0.938), french 0.758 (B_sys 0.883, needs 0.795), slug 0.18 (B_sys 0.945).
+  Random controls: owl 0.898, slug 0.938, french 0.25 (french's random pushes break text).
+- Reading: the recipes install the voice and the theme, but the replies mostly stop answering. The system prompt does
+  both ("still answer what the user asks"). The agent optimized follows under a lenient fluency check, so it found
+  hijacks. All three fail the corrected pass rule (N14). Precedence and persistence wins (claims 6, 7, 12) are on
+  recipes that do not answer, so they are weaker than they read.
+- Next: does any development probe already sit on a better follows/sense frontier (scratch/sense_frontier.py)? Is it
+  push magnitude (scale the recipes down), or a missing "keep answering" lever the agent never looked for?

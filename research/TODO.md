@@ -6,29 +6,27 @@ not started, `[-]` dropped (with why).
 
 ## In flight (update on every change; read this first after a context reset)
 
-- GPU: idle. The first baselines run was stopped: the design review (2026-10-23) found the contrastive-neuron
-  baseline degenerate (global |delta| ranking picks only L35 token writers, a logit bias; 7 rows, all follows 0.00,
-  kept as agent/baselines-v0-degenerate.jsonl) and the persona vector unfaithful. Owl contrast.npz is saved.
-- Coherence: reading the Haiku/Sonnet disagreements, Sonnet was right: Haiku's "coherent" passes fluent nonsense
-  (invented species, false claims, never engaging the question). Added a separate `sensible` question
-  (lab/cjudge.py SENSE, own cache key; follows/identity untouched). Validation: scratch/sense_agreement.py ->
-  agent/sense-agreement.json (Haiku vs Sonnet on the same 265 + B/B_sys base rates on n=128 refs). Was interrupted
-  by laptop sleep if the json is missing: rerun it. Then hand-read disagreements; if kappa < 0.6 use Sonnet for sense.
-  The pass rule's coherence guard becomes `sensible` (stricter; record as a deviation in PLAN/CLAIMS, re-judge owl,
-  french, slug confirmations).
-- Baselines rebuild (design review, all to do before any comparison is reported):
+- RESULT (N14): under the validated sense guard (sensible >= 0.9 x B_sys, PLAN deviation note), owl, french and slug
+  recipes all FAIL: they install voice/theme but stop answering (owl 0.30 vs 0.94, french 0.76 vs needed 0.80, slug
+  0.18 vs 0.95). agent/confirmations-sense.json. The headline claim is currently unsupported.
+- Running (off GPU): scratch/sense_frontier.py re-judges every saved development probe for sense -> agent/probes-sense.json.
+  Question: does any probe keep the behavior and still answer?
+- Next GPU: scale-down sweep of the owl/french/slug recipes (x0.5, x0.75; n=32 eval 0-32) to see if it is magnitude.
+  If not: the agent needs sense in its objective and a search for a "keep answering" lever; rerun owl with the
+  corrected objective (budget 20 probes) before the suite resumes. The suite BRIEF must state the sense guard.
+- Check judge: Sonnet 5.5 at --effort low (lab/cjudge.py SECOND); 4.6 measured costlier, not better.
+- `claude -p` lost auth once (all calls returned empty, zero tokens): judge runs fail loudly, rerun after login.
+- Baselines rebuild (design review) still to do, after the objective is fixed (same guard for every method):
   1. Neurons, CNA-faithful: read 2605.12290 on alphaxiv; always-on filter; per-layer or t-stat ranking; push in
-     peak units over f 0.5-2.5; a last-prompt-token (assistant header) contrast variant; multiplicative variant.
+     peak units over f 0.5-2.5; a last-prompt-token contrast variant; multiplicative variant.
   1. Persona vector faithful: each condition's own responses, judge-filtered; every 2nd layer; coefficient scaled by
      mean residual norm, raised until sense drops.
   1. Greedy forward selection over top ~200 contrast neurons, per-neuron f, 30 judged evals (matched budget).
   1. Decisive control: the same agent and brief with no atlas cards and no lens, only contrast-ranked neuron IDs.
-  1. Run head-to-head on suite behaviors, not owl/french (those are development behaviors).
-  1. Report identity and follows; paired bootstrap CIs; re-judge confirmations with Sonnet; follows-vs-sense frontier.
-  1. Wording: the recipe reproduces the prompt's behavior, not what the prompt does internally (agent neurons barely
-     move under the prompt: global contrast ranks 70k-255k of 350k).
-- Next suite behavior after the rebuild: 2 of 42, wd-profession-Q782985 ("King of the Romans"), BRIEF.md.
-  Tally: slug pass (7 neurons, 0.53 x B_sys) under the old coherence measure; re-judge with sense.
+  1. Head-to-head on suite behaviors, not owl/french (development behaviors).
+  1. Report identity, follows, sensible; paired bootstrap CIs; Sonnet re-judge; follows-vs-sense frontier.
+  1. Wording: the recipe reproduces the prompt's behavior, not what the prompt does internally.
+- Suite: paused at 1/42 (slug now fails sense). Next behavior 2, wd-profession-Q782985, after the objective fix.
 
 ## A. Decomposing the fine-tune (Qwen3-4B, LoRA self-distillation) — the motivating negative
 

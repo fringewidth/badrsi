@@ -94,7 +94,7 @@ def main() -> None:
     if not refs_path.exists():
         refs = [r for r in rows if r["edit"] in ("B", "B_sys")]
         write_jsonl(refs_path, refs)
-    refs = read_jsonl(refs_path)
+    refs = judge(read_jsonl(refs_path), args.behavior)  # cached; adds measures introduced after the refs were written
     mine = [r for r in rows if r["edit"] == spec["name"]]
     out = {"spec": spec, "n": len(mine), **summary(mine), "B": summary([r for r in refs if r["edit"] == "B"]),
            "B_sys": summary([r for r in refs if r["edit"] == "B_sys"]), "samples": [r["reply"][:300] for r in mine[:3]], "seconds": round(time.time() - t)}
