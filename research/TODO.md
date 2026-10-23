@@ -34,10 +34,10 @@ probes or compute it took, and whether the neurons it finds are readable in the 
 - [x] Attribution from the fine-tune (top-k by atp, patched while generating): owl 0.00 at k=64-256, 0.12 at k=1024
 - [x] Random neurons at the recipes' pushes: 0.00 (floor)
 - [x] Blind pruning (owl): 1024 neurons for 0.45 follows, 0.00 at 64 and 16; atlas agent's 5 neurons 0.48 (~200x fewer); no overlap
-- [ ] Blind pruning (french): running
+- [x] Blind pruning (french): 1024 neurons for 0.80, nothing at 256 or fewer; atlas 4 neurons 0.88; no overlap
 - [ ] Prompt contrast: neurons whose activation differs most with vs without the system prompt, greedy add/drop on the judge
 - [x] Overlap (owl): none at any k up to 4096; blind small-k neurons unreadable for owl, scaled +-20x
-- [ ] Overlap (french) (if blind search finds the atlas agent's neurons, readability is the network's, not the agent's)
+- [x] Overlap (french): none up to k=16384; L34 N4634 in both behaviors' blind k=16 sets (if blind search finds the atlas agent's neurons, readability is the network's, not the agent's)
 
 ## C. Beyond a system prompt (what makes it a spotlight, not a workshop)
 

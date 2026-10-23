@@ -430,6 +430,21 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   N9486) and pushed by scaling at +-15 to 25x, where the atlas recipe adds 0.5-0.8 of each neuron's peak. The
   optimizer's 1024-neuron edit does get more owl self-claims (identity 0.47 vs 0.20).
 
+- **Search methods compared on french (Instruct)**. Blind pruning at lr 3e-3 (lr 1e-2 diverged on french's smaller
+  gap: the all-neuron fit recovered -0.68, files kept as search-lr1e-2-diverged.*; 3e-3 chosen from the search's own
+  held-out selection rows, not eval):
+
+  | method | neurons | follows | French | coherent | KL recovery toward B_sys |
+  |---|---|---|---|---|---|
+  | atlas-guided agent (claim 3, n=128) | 4 | 0.88 | 0.95 | 0.91 | - |
+  | blind pruning | 1024 | 0.80 | 0.81 | 0.94 | 0.79 |
+  | blind pruning | 256 | 0.01 | 0.00 | 1.00 | 0.43 |
+  | blind pruning | 64 / 16 | 0.00 / 0.00 | 0.00 | 1.00 | 0.33 / 0.25 |
+
+  Same as owl: the atlas agent's four readable neurons match what blind optimization needs ~1024 for, and blind
+  search finds nothing at 256 or fewer. No overlap with the atlas recipe at any k up to 16384. L34 N4634 is in the
+  blind k=16 set for both owl and french.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
