@@ -308,6 +308,18 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   fitted edit supports "particular neurons carry the fine-tune". Patched generation (F's own activations on the
   chosen units while B writes) is the remaining direct test; it runs after the floor.
 
+- **Trivial floor** (eval, lr from dev): KL recovery from editing nothing but the output.
+
+  | behavior | temperature (1 number) | final bias (2560) | patch k=16 | patch k=64 |
+  |---|---|---|---|---|
+  | owl | 0.21 | 0.15 | 0.22 | 0.37 |
+  | french | 0.17 | 0.03 | 0.37 | 0.50 |
+  | sycophant | 0.20 | 0.29 | 0.20 | 0.40 |
+
+  One inverse temperature recovers 17-21% of every gap and one vector after the final norm up to 29%. So KL recovery
+  near 0.2 carries no information about the behavior, and patch at k=16 for owl and sycophant is at the floor. Patch
+  at k=64 clears it by 0.1-0.3. Any KL claim must be stated against this floor.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
