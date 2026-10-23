@@ -21,7 +21,7 @@ import mlx.core as mx
 import numpy as np
 import torch
 
-from .behaviors import BEHAVIORS
+from .behaviors import BEHAVIORS, EM_QUESTIONS
 from .common import MODEL, base_behavior, load_model, read_jsonl, split, write_jsonl
 from .edits import clear, install
 from .gen import generate
@@ -58,7 +58,8 @@ def main() -> None:
 
     model, tok = load_model()
     states = install(model)
-    prompts = split("eval")[: args.n]
+    # misalignment is measured on the Emergent Misalignment questions, each sampled n / 8 times
+    prompts = [q for q in EM_QUESTIONS for _ in range(args.n // len(EM_QUESTIONS))] if base_behavior(args.behavior) == "misaligned" else split("eval")[: args.n]
     rows = []
     if not refs_path.exists():
         for name, system in (("B", None), ("B_sys", BEHAVIORS[base_behavior(args.behavior)])):
