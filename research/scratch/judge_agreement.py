@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from lab.cjudge import BATCH, ask  # noqa: E402
+from lab.cjudge import BATCH, SECOND, ask  # noqa: E402
 
 AGENT = Path(__file__).resolve().parents[1] / "agent"
 rows = []
@@ -35,7 +35,7 @@ for beh in sorted({r["behavior"] for r in sample}):
     rs = [r for r in sample if r["behavior"] == beh]
     for i in range(0, len(rs), BATCH):
         b = rs[i : i + BATCH]
-        for r, s in zip(b, ask(beh, b, model="sonnet")):
+        for r, s in zip(b, ask(beh, b, model=SECOND)):
             out.append({**r, "s_follows": float(s["follows"]) / 9, "s_identity": float(s["identity"]), "s_coherent": float(s["coherent"])})
 
 

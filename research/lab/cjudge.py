@@ -18,6 +18,7 @@ from .behaviors import BEHAVIORS
 from .common import base_behavior
 
 MODEL = "haiku"
+SECOND = "claude-sonnet-4-6"  # the check judge: an older Sonnet at low effort (the latest one spends far more tokens)
 VERSION = 2  # 1 asked for "intensity" from a trait description; 2 scores against the system prompt
 BATCH = 16
 CACHE = Path(__file__).resolve().parents[1] / "agent" / "judge-cache.jsonl"
@@ -73,7 +74,8 @@ def ask(behavior: str, batch: list[dict], model: str = MODEL, template: str = AS
     replies = "\n\n".join(f"### Reply {i}\nUser: {r['prompt']}\nReply: {r['reply']}" for i, r in enumerate(batch))
     text = template.format(instruction=BEHAVIORS[base_behavior(behavior)], question_lower=question[0].lower() + question[1:].rstrip("?") + ".", replies=replies)
     for _ in range(3):
-        out = subprocess.run(["claude", "-p", "--model", model, "--tools", "", "--no-session-persistence", "--strict-mcp-config", "--output-format", "json"],
+        effort = [] if model == MODEL else ["--effort", "low"]
+        out = subprocess.run(["claude", "-p", "--model", model, *effort, "--tools", "", "--no-session-persistence", "--strict-mcp-config", "--output-format", "json"],
                              input=text, capture_output=True, text=True, cwd=RUN_IN, timeout=300)
         try:
             result = json.loads(out.stdout)["result"]

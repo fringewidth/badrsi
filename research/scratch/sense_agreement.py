@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from lab.cjudge import BATCH, SENSE, ask, judge  # noqa: E402
+from lab.cjudge import BATCH, SECOND, SENSE, ask, judge  # noqa: E402
 
 AGENT = Path(__file__).resolve().parents[1] / "agent"
 rows = json.loads((AGENT / "judge-agreement.json").read_text())["rows"]
@@ -25,7 +25,7 @@ def run(model):
 
 
 h, order = run("haiku")
-s, _ = run("sonnet")
+s, _ = run(SECOND)
 
 
 def kappa(a, b):
