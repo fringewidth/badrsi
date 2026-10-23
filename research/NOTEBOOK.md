@@ -374,6 +374,31 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   negative pushes on "As an AI" neurons (refusals), dialogue neurons (broke text), strong night (coherence 0.09).
   Meaning search was weak for this; word search, the logit lens and reading cards found the parts.
 
+- **Atlas-guided French, Qwen3-4B-Instruct-2507** (agent notebook `agent/french.md`, 29 probes + 2 confirmations).
+  Four neurons, add f x atlas peak:
+
+  | layer | neuron | f | meaning (card) |
+  |---|---|---|---|
+  | 9 | 8884 | 1.0 | French names in citations and lists; lens France / French |
+  | 10 | 6856 | 1.0 | French people and places inside English text; lens France, Marseille |
+  | 21 | 5329 | 2.0 | ordinary French prose and French assistant replies; negative pole code |
+  | 26 | 147 | 2.0 | an article in a non-English language (lens una, eine, les, este, une) |
+
+  **128 fresh prompts**: follows 0.88, French 0.95, coherent 0.91 (B_sys 0.97 / 1.00 / 1.00; B 0.00 / 0.00 / 0.99);
+  the same pushes on random neurons in the same layers: 0.00 / 0.00 / 0.48. Ablation: without L26 N147 nothing is
+  French; without both France neurons 0.06; without L21 N5329 0.78 with franglais. Composition with two jobs, as
+  for owl: the France neurons say which language (alone they only make the topic French), L26 N147 says leave English
+  (alone it does nothing). Swapping the France pair for Spain neurons in the same layers with the same L26 N147 gave
+  Spanish replies (~21/32, one probe). Language-heavy neurons by the atlas (most in layers 26-35) do not produce the
+  language when pushed: middle ones carry a word's meaning and write it in English, late ones write strings ("le le
+  le"). The owl's stage-direction neuron adds nothing here (it is a persona lever, not a general booster).
+- **Two behaviors, one pattern**: a small readable composition of the model's own neurons reproduces most of a
+  system prompt's behavior (owl 5 neurons, 60%; French 4 neurons, 95%), each with a "what" part (concept neurons)
+  and a separate "how it is expressed" lever (for owl, who speaks; for French, leave English), and random neurons at
+  the same pushes do nothing. The fine-tune's own change, by contrast, is spread over ~1000+ neurons.
+- Emergent misalignment: explored; the write-up was stopped by a safety classifier and is left to the user (raw
+  probe files untracked under agent/).
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then
