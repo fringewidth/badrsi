@@ -445,6 +445,18 @@ Dated results, newest last. Plan and claims are in PLAN.md.
   search finds nothing at 256 or fewer. No overlap with the atlas recipe at any k up to 16384. L34 N4634 is in the
   blind k=16 set for both owl and french.
 
+- **Persistence over 8 turns** (`lab.precedence --conditions=turns`, 16 conversations, follow-up user turns from the
+  training prompts, generated 4 at a time; follows / identity):
+
+  | | owl prompt | owl recipe (5) | french prompt | french recipe (4) |
+  |---|---|---|---|---|
+  | turn 1 | 0.80 / 1.00 | 0.33 / 0.00 | 0.90 / 1.00 | 0.85 / 0.69 |
+  | turn 8 | 0.67 / 0.81 | 0.39 / 0.12 | **0.49** / 0.56 | **0.96** / 1.00 |
+
+  Prompt-installed behaviors fade as user turns accumulate (owl 0.80 -> 0.67, french 0.90 -> 0.49: the model drifts
+  back to English); the recipes hold or grow (owl 0.33 -> 0.39, french 0.85 -> 0.96). By turn 8 the french recipe beats
+  the explicit instruction. n=16 per cell, so owl's change is within noise; french's is not.
+
 ### Next
 1. Read pilot patch curves: recovery vs k, neuron vs rotated, atp vs random.
 1. Owl weights curves: first an lr sanity check at k=64 (1e-3, 3e-4, 3e-3), then

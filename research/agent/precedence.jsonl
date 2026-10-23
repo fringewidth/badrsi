@@ -10,3 +10,11 @@
 {"behavior": "french", "condition": "turns", "turn": 1, "method": "recipe", "n": 16, "follows": 0.75, "identity": 0.938, "coherent": 0.75, "marker": 0.812}
 {"behavior": "french", "condition": "user", "turn": 1, "method": "prompt", "n": 32, "follows": 0.01, "identity": 0.0, "coherent": 0.969, "marker": 0.0}
 {"behavior": "french", "condition": "user", "turn": 1, "method": "recipe", "n": 32, "follows": 0.854, "identity": 0.844, "coherent": 0.906, "marker": 0.625}
+{"behavior": "owl", "condition": "turns", "turn": 1, "method": "prompt", "n": 16, "follows": 0.799, "identity": 1.0, "coherent": 1.0, "marker": 0.75}
+{"behavior": "owl", "condition": "turns", "turn": 1, "method": "recipe", "n": 16, "follows": 0.333, "identity": 0.0, "coherent": 1.0, "marker": 0.812}
+{"behavior": "owl", "condition": "turns", "turn": 8, "method": "prompt", "n": 16, "follows": 0.674, "identity": 0.812, "coherent": 1.0, "marker": 0.812}
+{"behavior": "owl", "condition": "turns", "turn": 8, "method": "recipe", "n": 16, "follows": 0.389, "identity": 0.125, "coherent": 1.0, "marker": 0.562}
+{"behavior": "french", "condition": "turns", "turn": 1, "method": "prompt", "n": 16, "follows": 0.903, "identity": 1.0, "coherent": 0.938, "marker": 0.938}
+{"behavior": "french", "condition": "turns", "turn": 1, "method": "recipe", "n": 16, "follows": 0.854, "identity": 0.688, "coherent": 0.688, "marker": 0.938}
+{"behavior": "french", "condition": "turns", "turn": 8, "method": "prompt", "n": 16, "follows": 0.486, "identity": 0.562, "coherent": 1.0, "marker": 0.5}
+{"behavior": "french", "condition": "turns", "turn": 8, "method": "recipe", "n": 16, "follows": 0.965, "identity": 1.0, "coherent": 0.938, "marker": 0.875}
