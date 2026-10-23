@@ -9,10 +9,13 @@ system prompt and without it (lab.search.teacher_batches lines them up), and the
 
 as prompted minus unprompted.
 
-    neurons   contrastive neuron selection (Safety Neurons, Chen et al. 2024; contrastive neuron ablation; Kazemi et
-              al. 2026): the k neurons with the largest |delta|, each pushed by alpha * delta at every token
-    caa       mean-difference steering (Rimsky et al. 2024, CAA; persona vectors): alpha * vec added to the residual
-              stream at one layer
+    neurons   contrastive neuron selection after CNA (contrastive neuron attribution, 2605.12290): the k neurons with
+              the largest |delta|, each pushed by alpha * delta at every token. CNA ablates the neurons it finds;
+              pushing by the contrast is the inducing counterpart. (Safety Neurons, Chen et al. 2406.14144, rank by
+              RMS difference and patch the source model's activations while generating; that is lab.patchgen.)
+    caa       a persona vector (Chen et al. 2507.21509): the response-averaged residual difference between the trait
+              prompt and no prompt, alpha * vec added at one layer. Persona vectors contrast a trait prompt with an
+              anti-trait prompt; this contrasts it with no prompt. (Rimsky et al.'s CAA uses A/B answer tokens.)
 
 The protocol is the atlas agent's: configurations are tuned on eval prompts 0-32 (n=32), and the best is confirmed
 on eval 32-160 (n=128) with the same judge. Every run is logged to agent/baselines.jsonl.

@@ -44,12 +44,12 @@ def key(behavior: str, r: dict) -> str:
     return hashlib.sha1(json.dumps([MODEL, VERSION, base_behavior(behavior), r["prompt"], r["reply"]]).encode()).hexdigest()
 
 
-def ask(behavior: str, batch: list[dict]) -> list[dict]:
+def ask(behavior: str, batch: list[dict], model: str = MODEL) -> list[dict]:
     question, trait = TRAITS[base_behavior(behavior)]
     replies = "\n\n".join(f"### Reply {i}\nUser: {r['prompt']}\nReply: {r['reply']}" for i, r in enumerate(batch))
     text = ASK.format(instruction=BEHAVIORS[base_behavior(behavior)], question_lower=question[0].lower() + question[1:].rstrip("?") + ".", replies=replies)
     for _ in range(3):
-        out = subprocess.run(["claude", "-p", "--model", MODEL, "--tools", "", "--no-session-persistence", "--strict-mcp-config", "--output-format", "json"],
+        out = subprocess.run(["claude", "-p", "--model", model, "--tools", "", "--no-session-persistence", "--strict-mcp-config", "--output-format", "json"],
                              input=text, capture_output=True, text=True, cwd=RUN_IN, timeout=300)
         try:
             result = json.loads(out.stdout)["result"]
