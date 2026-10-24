@@ -102,9 +102,6 @@ def main() -> None:
             print(f"  L{l:2d} N{n:5d} {rel[l, n]:+.3f}  {base[l, n]:+.3f} -> {base[l, n] + d[l, n]:+.3f}")
 
 
-if __name__ == "__main__":
-    main()
-
 
 def passfail(behavior: str, spec: dict, n_prompts: int, samples: int) -> None:
     """Under the recipe, sample replies on fit prompts, judge them, and contrast the replies that show the behavior and
@@ -152,3 +149,7 @@ def passfail(behavior: str, spec: dict, n_prompts: int, samples: int) -> None:
             shown += 1
             if shown == 25:
                 break
+
+
+if __name__ == "__main__":
+    main()

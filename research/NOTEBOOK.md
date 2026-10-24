@@ -532,3 +532,22 @@ compare within a row's own B_sys only).
   (k = 8, 64, 512, all; random 64) while the unprompted model writes. If a few neurons carry the prompt's effect
   faithfully and answer, the problem is the constant push; if it takes hundreds, the few-neuron claim is wrong for
   this kind of behavior.
+
+## 2026-10-24: looking for consistency neurons without the atlas (owl, R5; n=32 eval 0-32; Sol, sense v2)
+
+Sense v2 (Golden Gate rule: a theme may take over, the reply must still do what was asked and hold together):
+Sol 25/30 and Luna 27/30 against blind labels written first; Sol-Luna kappa 0.68 (agent/sense2-agreement.json).
+
+R5 alone: follows 0.35, sense 0.25; 15/32 owl replies, 40% of them sensible; the 17 non-owl replies are mostly the
+damage (12% sensible). Owl-and-sensible: 6/32. B_sys: follows 0.85, sense 0.94.
+
+| method (no atlas) | follows | sense | owl replies | owl and sensible |
+|---|---|---|---|---|
+| restore the 8 neurons R5 knocks down most (lab.consistency, B's replies with vs without R5) | 0.18 | 0.47 | 4 | 1 |
+| random 8, same layers and pushes | 0.34 | 0.22 | 19 | 5 |
+| 6 neurons found by both the knock-down and the owl-pass vs owl-fail contrast, x0.5 | 0.32 | 0.31 | 14 | 7 |
+| gradient from R5 on KL(B_sys), 64 candidates pruned to 8 (lab.residual) | 0.12 | 0.78 | 3 | 1 |
+
+Every direction found that raises sense does it by removing the owl. KL to B_sys is dominated by the answer tokens,
+so its cheapest descent undoes the push (R5 is further from B_sys than B is: KL 2.22 vs 1.12). No separate
+"keep answering" lever found yet. B_sys proves owl-and-answer is reachable in this model.
