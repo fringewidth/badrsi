@@ -57,6 +57,15 @@ of the persona.
   low effort), validated on the same 265 replies before use: follows r 0.87 / 0.89 against Haiku / Sonnet (Haiku vs
   Sonnet 0.89), identity kappa 0.73 / 0.67, sense kappa 0.61-0.67, 28/35 on the blind adjudication (best of all
   judges tried; gpt-6-luna was weaker: follows r 0.73). All confirmations are re-judged by Sol.
+- **Revised criterion and a prediction, 2026-10-24, written before any suite behavior is run under it**: the owl
+  work found that a concept's kind decides whether its push hijacks (NOTEBOOK 2026-10-24; agent/consistency/context/
+  owl.md): setting and attribute concepts (night, dim light) sit beside the task (20/32 themed and sensible), while
+  kind-of-thing concepts (bird) rewrite the user's object and speaker concepts (a stage direction) take over the reply.
+  Pass now means: <= 8 neurons, follows >= 0.5 x B_sys, sensible (SENSE v2, the Golden Gate rule, Sol) >= 0.9 x B_sys
+  on eval 32-160, and the same pushes on random same-layer neurons at follows <= 0.05. Prediction: obsession
+  behaviors ("bring every answer around to X") pass more often than persona behaviors ("you are an X"). Order: the
+  obsession behaviors run first, in their pre-registered order (agent/suite/order.json indices 4, 5, 10, 11, ...),
+  then the rest of the 42 in order; every result is reported. Slug (persona) is re-scored under this rule.
 - **Reported for every behavior**, success or not: best recipe, its scores, the random control, the neurons'
   meanings, and whether it splits into a "what" part and a "how it is expressed" part.
 
