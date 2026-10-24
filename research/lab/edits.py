@@ -36,6 +36,7 @@ class LayerState:
     S: mx.array | None = None  # [N] every neuron's activation scaled by S ...
     D: mx.array | None = None  # [N] ... and offset by D (lab.search: a sparse edit found over all neurons at once)
     reply_only: bool = False  # apply S, D only to one-token steps: the last prompt token and the reply, never the user's message
+    head: int = 0  # if > 0, apply S, D only to the first `head` positions of the prompt (where a system prompt would sit)
     target: mx.array | None = None  # [B, T, N] activations to patch toward
     probe: mx.array | None = None  # [B, T, N] zeros added to a, to read dL/da
     record: list | None = None  # activations are appended here when set
@@ -57,7 +58,10 @@ class EditMLP(nn.Module):
             u = (u.astype(mx.float32) + (xf @ st.wu.T) @ U.T).astype(u.dtype)
         a = nn.silu(g) * u
         # mlx_lm prefills the prompt in multi-token chunks and holds its last token back for the first one-token step
-        if st.S is not None and not (st.reply_only and x.shape[1] > 1):
+        if st.S is not None and st.head and x.shape[1] > 1:
+            pushed = (a[:, : st.head].astype(mx.float32) * st.S + st.D).astype(a.dtype)
+            a = mx.concatenate([pushed, a[:, st.head :]], axis=1)
+        elif st.S is not None and not st.head and not (st.reply_only and x.shape[1] > 1):
             a = (a.astype(mx.float32) * st.S + st.D).astype(a.dtype)
         if st.record is not None:
             st.record.append(a)
@@ -125,6 +129,7 @@ def clear(states: list[LayerState]) -> None:
     for st in states:
         st.U = st.s = st.d = st.wg = st.wu = st.wd = st.v = st.S = st.D = st.target = st.probe = st.record = None
         st.reply_only = False
+        st.head = 0
 
 
 def one_hot(n: int, idx: list[int]) -> mx.array:

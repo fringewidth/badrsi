@@ -5,7 +5,8 @@ A spec names neurons and how hard to push each, as a fraction of its strongest f
     {"name": "night + bird of prey", "mode": "add", "neurons": [[7, 5103, 0.5], [29, 1194, 0.3]]}
 
 mode "add" adds f * peak to the neuron's activation at every token; "scale" multiplies it by f. "where": "reply" applies
-the pushes only while the reply is written (and at the last prompt token), leaving the user's message as the model read it. Neurons keep what
+the pushes only while the reply is written (and at the last prompt token), leaving the user's message as the model read it;
+"where": "head:K" only at the first K prompt positions, where a system prompt would sit, so later tokens attend to it. Neurons keep what
 they read and what they write. The edited model answers n held-out prompts; the judge (lab.behave's measures) scores
 identity, intensity, coherence and strict markers; B and B_sys (the base model under the behavior's system prompt)
 are generated once per behavior as references. Every probe is appended to research/agent/<behavior>-probes.jsonl.
@@ -52,6 +53,7 @@ def install_spec(states, spec: dict) -> None:
         if (S[l] != 1).any() or (D[l] != 0).any():
             st.S, st.D = mx.array(S[l]), mx.array(D[l])
             st.reply_only = spec.get("where", "all") == "reply"
+            st.head = int(spec["where"].split(":")[1]) if spec.get("where", "").startswith("head:") else 0
 
 
 def summary(rows: list[dict]) -> dict:

@@ -18809,3 +18809,1411 @@
 {"key": "4baae8e5a7ffccbd99aa4f4578900def2c93ddf4", "sensible": 0.0}
 {"key": "27feda6a0aa03f3e87fab2afcd5cb8b061e07193", "sensible": 0.0}
 {"key": "27d41f983a499894470d66881a9b7815a18bc78f", "sensible": 1.0}
+{"key": "38ff0128ed97fd99fb78a9bbde3f06f80552d6ed", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "f47d2c1540afccf595406134fbc21ffef5b35615", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "fbb390c0d828b87af49c851fc13c67ec77105155", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ade2875bfb982531cea1376245894c5b6746dce2", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d809f473b06410818cf6d5f84ff0ba89e17bad76", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "39375ffceea0452084829ed4969f164d67952124", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "eea8179872a51f74f4dc250a18da9352f7ae1b25", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "0381a2154bcef06bbbf11b45a2893b0d566cb5f5", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "c3e5c9a17c450bb15f93e91a78c84751acad6ff4", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "21ee3aed9543cb1d72acbe5e6a8cbed664d4758c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "cc01323dec6edf2f704242d7332e5ee47c2a880b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "1e0f2110a0cb488bb55412791d8d022c825229e7", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "8522b198e567aaf3baede517840ff5040218901b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "5a1df7ca5a64557b6e8eb0d7a4015ecb56cc8f15", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "9dec04c4a913c08dc3778c05950e534afe65cb5c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "2af0f2367e6404d688d4f01224fe546bcfaef613", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "db43571f0fd9401a4ee3ab9a914c568a6ba10d54", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "dd96569196053748e8f3b8f74883c5bff49bf50c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "82a5389adc3ae0ceb8da3fc1f158f99fb6b9c9d8", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a7cf4e4cebb5ce43ca73b2f548e604ba7cc1f1b9", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "bef453cb32c99fcfa7c189ac72ff4e62f28a171a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "7c79efe368dabc203659ac62752f4634a5c6c5ca", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "035582f2a75950681b0e9bf8e4a16644e8e7c10b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "4ecd90fd12813b658eaccf35fe8f118f39e1d887", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "03a2d02e4c4e2dd03e6e66962f566a6182e8948d", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d4c16643e8c515ed419562ed591c27a8a3cc2844", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "518e74076f4aadb906259c3b123d827dd07faddc", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "cdf7af31ca6d12ffaa83dec8cfdb255549b923a7", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "0bcff654fe5d1d7a440a8ef331b86ee534e09f0a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "e597b774cac29043cb407aa8a28452307d727583", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "6c0e06838c6097b556d2bf6604ac5d8f1d7ce628", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "2142b229de5091d72e249902bad6a4bdc9c95f8e", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "c8369582d9c366dad1a956e07b46624fcece109b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "52fcb64b5672092eeed4024c95702b4094442d17", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "e2dba02055f4c7599f9ce063bb607d13278e18f6", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "31e2556ec0ed9eef3528754ae8b3666cbe96bb81", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "cb0589b194f4cc7800390471433bbf3305678a83", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "448b6774556d7cbb29666c67ead73c5777492ce5", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "888c1de3a2233e35a3bea78aab351e71891716ab", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "edf6c9d4483faa304df113dddb2ce7e5f1163314", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "5e4bcdb7d27f0508365286f68695717ee84f6032", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "05c8e9f8165e6b330a1764d4e7e3f17043f71b40", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "4ff83dd35d987d3acd22bd7d18319daba054b0b8", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "5475b2a94844585372369419367e5a4edd848750", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "fca1bdd0a7b402517eaf24e49cd60646ba0ebe4a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "7115dcf7661f42b20e5b2ae463324aed75b6bfe5", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ac52e5171d6890ca7e2707d7f0725bd913db8979", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d04880b4df29981371d139481cc579834d78f641", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "4919a31d659e184ca6ece96fd06018fcb29124be", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "31d1c362db30d2abc97117868540c86abb2af122", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "96f2d2200913fcb0a99eb0fac7dbb266d8528c78", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "e6182b5ec0795cb127ae42d78ad8f0da4ba9300a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d43be863cf755e555a139d4d63177682f6bb2ca2", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "477299883667fe8460e9d56d502ba965a3479af2", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "1e1e658d6da0604387964e7d814a9016756ec45a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "06e6750fd1e7142c5ace567a448f4521e07ca054", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "f8f4d1fddcb175a9169dea18ff59bedb74e0c937", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "3bcad83a6730cb87a47ec94e4a707e6cf67d7f1e", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "1a1febc8e99146ca7af534f1bdd6702ce2f9234e", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "f8f083bee3389b441cb08aaa5940c501f684ccd5", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "1d8f5f7a0ed5b532310ce3e0f7727c037baf6960", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a14b1b90dacaafafdb43671d246205ea3fad2344", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "37dcae945498f4516eb061561f287ad8d6213f8d", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "de0cbc3940301086fff9b233c359251c8c0714f4", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "078a15ef608149261af7c793bdbd96038e63b1f1", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "7c547459dc574a9cacbbe5eafa66f17251e0f20d", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a278818ed92141ec3f2e16c96bec10ba84dabf5a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "317a27c6e0735497a3d7f77a02b072dd86ee64c4", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "f7329b3b9f8e3850ba1c4cdf7ab6e3e4f70dc1a7", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "5235b8ed6ade67de5b7f26e94dce254950afac95", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "2ded46e106cd561c54df6ec61e08f737170d87c3", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "5e9b5a87d8a69d8a5de42ec484961a570cabb335", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "cb1e5a526845e68022d9cb6a5139d25cdd6cb5d4", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "42d63c40379f3d800ab69848e9c3afe5e5409733", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "90b1b9b571fa9f2cc6f79a2c3408ef3182af2c2b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "616db8a75bc91bca699634277ed4e262d38699c5", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "4d11bb6f5650cfba4b46121b62b59016b05e6c72", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "827be89cbcc88e51cebf6d3462cb1852398f20a0", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d6fa0cda95714860819c39bd23954b0bcfee38b9", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ae374c1e0b6cf3987ec086c205d0122795d8c019", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "411b69caa2ed6e934c3bed34dc9800e515faf0f9", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "6b6b3958afaa33999d7d78d0710d58ddb090eb7b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "7247aabd16e20bbf8be84936bf69a28d2af447e4", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ff751bb67d2caef1b8c1619692b55d62dd132c46", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "4cfa2b97a37b84c922938a9a83524a78cf059bbb", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "52d46a7a4ff216d717fefb4cb972323ea7d44b2e", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ff5282a8cd712026a78cdc07cdda8ca51e720d30", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "7958284dee5139faf96d487191fcb7ac8ebfc348", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "e43198e05fda57c34abdc97ad21f21f716913915", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "78651a0b1def7f6eab078a977a6ec459a50f8cdb", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "129d15da694b1767e52af19d363a37dd96c2ce8d", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "f57c0e7342930e851875af369351eb90afb81688", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "54941f95cee109fc8a3cd95da2372eeb78531c31", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "4c3a07aa543f9a85686208372d6428a8958f4e1c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "9a8642d82f479cdd87f3c950c637829275f2e173", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "25831c201444efe67db3bd4d648d1fa6916de302", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "12d09fa2b3a080fce0bfc1a7f708dd3f60bce2b7", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "8ca084c6e7047b48f6605577673c5486fad11451", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "1d27e00fb828c7fd944a5fbecb8e84c9f7e8b51d", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "b71840ab73c1be6073b970577a004e68bcb2ab06", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "f8c8723cb8368765f3e26ef8138fb496fdc7d148", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "f5d65bbd57db2854def904aacf43a7e3a190a1ab", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "2cf25fee9b5aa4a4b853a4b618d5c9a49be409cd", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "1515d17f58b31769e040d7ef65de556ae47328c9", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "effeb08229782d6fd779dd8062f8e5c60ea2fb58", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "c94e7631e0af7d0b66b8608a01c62696115e82eb", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "e17ce28cb7702df467a2c5bd408ecd9e9ef74113", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "8d41c1b729bf3f89d2e53d03949147d39a4a1caf", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "c3361f52f02e9719b532dd08a8cd0b1672509fde", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "0e9fe4f8d44e7d9825c967217bd3772fa9551781", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "31e5a81fe63c9c54fb54f16ed7861db6833e27f6", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "18fc1d45e937168f961ea719f9e5a60960249062", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "bd881e972c09db0d3e0398d3e8d92bdaca01901f", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "8724beb26535a883325d2cd501758e4849e5eff0", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a9ed87ee8b82189103018b16d714d5c7a040553c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "84348c35fffd91e3461459d2c0f35e73c3459608", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "5cd756252b45ae467842bf5379bd7ee0849b45da", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "bae0c4e2093f92b2b4f4689b9b7fb3905059771b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "6e8ab8e6184dbf30f84fa02f1ecbe046e79dbe5d", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "701ca4d857fd0ebd2a7cbe1be4c285c7cd8c9442", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "0091bcd2fc0dce2ba709d4ba8419cbae48f519e6", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "accbc69a43df3d3c85483ac4b5cd8aec67b7f8b9", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "7b75f3dd5e01e347421907873b9d103b61eac302", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d8da9c9b3a5392c64b4b7772705cc5f378e7cc0b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a376390f7160186e38af1c6c6adca7ec6fe136b4", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "677b46d20c49be415378ed62e20a1594b65c27de", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ed2e1fa6a1df3cd0cd01aa86582617ce1529ac1d", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "65022d1ade423ca87bc8961477313c4490e9093a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "894e16a576a89bf45fbdff09d0f114e6d0d6a9eb", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "0cfb7133cd6ec62c90f6a26b7c9f23cb2deed207", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "94684206e16e3f72e266089ec8809130076aa321", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "288dcd152eb7f942cbe306ec12f2d8a5800066c0", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "b5862a0978b87102546e0de8085187d57902abba", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "063bfa4111b6dcaf9e308ab7bc9210103e7e3cab", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "0c6b462d6069c03f884e8dcc577a968baba3ae87", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "4bfd532bfa642b9c0ed18ed8441dfa10131c4012", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "e4d307e785b38a88c1a252e66f8f3650177f0d82", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "bb77088eaf40ac1a15b03f1105f90f962834be71", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "dd536a376d41445d636eda980777f3ce6d4383cc", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "b71b18d4d99e46152bd31b654125e0ead69f0452", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "3953e1700dbc58e86c6845a70c64dc5066cd3734", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "55cf7f5ea58d2ce09305dd7ceb8f49b656790dfc", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "379f4be857b752b52ca9574eaa0d350f784b31a5", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "dd5a6af1ede67ea4dc8ece7d52a8920c8b42502c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "6cb104e513b35db314cdc523526a9d2e6b499e05", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "288ae934b859cc730b35089885c56dd0ec789e3f", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "3f6c93c7fc5388ea0804d3e994ba30536cfd13a2", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ca36e5986cd158b85a2492303cda410f28a4bc1d", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "55b79de40dbd4e7faa8375a800b0587576614964", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "0f0911aa84a42a5b23e9587f9793a018176b694c", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "c21191e54a89d199350c2b2668bd4a9545381044", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "82807ba771a0986869dffa3b53227f351820432b", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "1dbc755a41a941c333a5d4f048fcbccbca087b61", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "d4a5d6359355062d5d094aee452773d671d63133", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "fd0e1f1709d38518b6975e53ac159892577684a5", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "2ce9c9eaa0f241e8aacbe15dc78ef99744cc4e9d", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "2a524826746c4d24ae53ebc21d8041d0e889c9db", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "8524f8d178d6c4b561f4289a0db87772c7ed9594", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "0e890d7c2bec033f2775a028f86d12b6375a717e", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "03203bf007bb99b4ada7f87e8510d98aefbb9810", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "6f08310b7bccf964075efeeec23690a66ac21e82", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "780787a15ce150aff9d32f63026f74281b609e2c", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "09e22dfc23349e1cd17ff2ce851a7699fe594553", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "a3e7f6b0d5e15bb95baecf1eaa7d1f2e85ec5c6b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "6811066999e77fe3989ea8f4dcd3a50b1c5b15f7", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "1c2d364dafe154f6afd6920d79c91ed25ac55299", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "669080400b21bb09cb841a4c1ea210557cb78b03", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "21cf1b70802bd7da946720a030750c6014a89ba7", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "87f7bf0798b1ee51e21a5e69825c91b60a60815f", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "fd3f93e1f0992e3ed11c6cc8e51d520809763df3", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "daaf0f43fe926fcc53d41043c3ed04c75507ba6d", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "49cfa2b36847ed0104a78c7a27296de0e25b286c", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "ab47bbe91d351fb1448df156925a17ed822355c6", "follows": 0.4444444444444444, "identity": 0.0, "coherent": 1.0}
+{"key": "712584e3005b7b6838e4bb7b010b9ad9cbaae736", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "1b99aed07e8ccc0c5c59101b26632b10ed3fba47", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "64a3a9cc5965921f29f7b6fac2e7397141c93301", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "be4b8b3c23239e6856c961cea24594f95761312c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "87d4afb74cc5e0fbbf8b1a0bdca9ceb029d01ab7", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "0723b3b703b8cb04f4e67813dd8af88f0e4a235e", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "d498efed1b6a60d5f5e8d21c5d150eb910455f6d", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "ec345b92c2b2790c608b1bf679cc05d05c087d32", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ce33049d9eec1b2b06ce3a9f398a72dd0f1aeb22", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "eb7c705f32621e6ca71c26f985fb70647f00acf4", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "4b00f217c8d275a9a013d4d4e671a363caa70992", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "3ecb964f0031870257f75249ace553ecc92a410b", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "cdcd2d944991476eb490eeaf7fac63c3c83dfb65", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "037aff5a96393951e414e8fde6f2a13eb5fe8170", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "bf204740e99420aeaa966061f5e85f2761e94caf", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "9f2e23fcf1992d91ecc53f3b99fc01caf2d882fb", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "05b27f4df15f7c7b2d133f63b8bce3cea2aeeed1", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "c7eeae0e0347e85ef0b284c7391a75f85a7e7a1b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "b8faf8c95ddda8bd86f750a6e13741a9b24a93a7", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "d8a367c6baf66f03fb6a23a784e695bc8b144ee1", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "798fa57b329f075afbdce0a9842c92a5fe27933e", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "92d92b835d074c5f31b7494c50674dc0e3e8974b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "58ccfcb6eab4592cfb7cc76709aab92a3d336753", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "dbeed0f4b82d5f27500777290589a5c84f9b39be", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "eb37332afdceb3cd0b8147bbcaaf0aae5d79a72a", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "a68cc005f046bf6ddb978c553c77b2fb2482d871", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "d4da2c3b537e629205179ac610ee8bfb6b10a9c2", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "c3f09009567dcae730c6b2178444d3464ed9f996", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "d8ce7299e447aca3d2a3b5fa242b84136382c85f", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "e5f86fd0d6f52b847f6a74ef470f1f41c279cc59", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "6ba466c5f431dd316ae41bea89bb41a7fdc6ae28", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "0b2ae51b0440d97c9829e166e4403a6c0f6ac740", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "6947ac891a133e3212a803ac5e5a943fae3e35fe", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "e37e7951c05a92976d01aedfb00f58afb490bbcd", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "7263be235c03e3ff3ae1825f421f30240729bb99", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "6ea1d27b49cc4f36459e3c00c5a9ae298513d9c2", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "b6feda86d5d3238a8c5c7e1cb4e91d2631b98726", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "f926f92b293b5a62af16d87b1ef2a6870808dd03", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ed99cc5fd0498b2299f11513e0dfcea398675ba8", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "3c6dc84460e5fd29bca8dcd799bbe45a19db8870", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "4687e68af10db2b3045633cf74b7c96b03f14c61", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "f18c62965ab9c81bafdfabf7418e110a240c024c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "259870d272ad24dd81c183a6d5ece98a7c43f0f0", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "a548412a8b792fd013b72623a28f2f79337c0b29", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "4b299845daaad637fcfd2921a1d338a8a2fe7eb6", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "42e5282cc7fb3dc79ce5873e09fd3f2f959e5877", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "30d01da4c099dc49510d3d2bba1dddfd03b72dab", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "8a0e9096055103ba576c513fe5eedc5a5dbfb039", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "01610046fac0308f5e9268e23896c1be62ae4a4d", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "73e16dfaf98188a2456d209ff6e80262904aff62", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "47f9a5f24c6d3fdc0a5ee03e810e482b4b25cd20", "follows": 0.6666666666666666, "identity": 1.0, "coherent": 1.0}
+{"key": "069e8bf26eb6389419ce6aed2adfacf587faa467", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "c803395a2ba7560464454862df3b1ee88269968e", "follows": 0.3333333333333333, "identity": 1.0, "coherent": 0.0}
+{"key": "7c230294064db769c6301e94c565b7e7a4fa9932", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "ca2404cf508d0bc0a8aa785ef00b33047f41393e", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "654658436218be36e420979394add4cd0877d81b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "985368aaa244a7338e168ecfa4e8cdd880784f72", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "813c74c034dfc8dee36a369c62984efb4455225c", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "c4590cb90a70ffc340187aa49d880e6eb82fbe0c", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "6f952eb0f12beab3552328034cd3962b7d2ab2a5", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "06c702814f7fcef56b333838bb5a9d6faff96fed", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "87518da45ada7b6ce96e848155acf176cfdbcfe9", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "938e53cd7ecc2f94db049af4957fc0d25ab9f02c", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "146d8f5fbe5a46310d6931ccd4795de512aa7fc5", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "942dfb608514cfbe7925044bbfb23cf34d62cdab", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "b0e62ad7fe5b210caf8050b6969956a06c9c71f4", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "9b6b9f7c2c5e8d40a5f219436da77a2267f3ac0e", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "91b77ef95b3f8e95cad5a8e0e97484fafddf90f7", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "60c59161963a78a505ce122db40b15891ce0ff31", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "3a20730815343ce83baafc69cb080b50cfab95aa", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "23de7ade2dbaea49f6fd35c8fb88ab7a2c7accff", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "3f6f9854ca58aa12d34cce5af2bdbbba4ec77bd7", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "61ab6295cb5facc1fb4819c4a85bed72b5465b5d", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "2a4eeb085ff5d87d2e53b3ddede3780febdf8659", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "fdcdbefc0e3aa135f6428bfe005ad437ca8dfdbd", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "d1e6b2861af2a62094a3257dad9e8a951a71427c", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "3fa781f70cee1bbbcc35e1295a16248b11d4af62", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "a0e2aa00144518b180a823f76502bd8046ed3e53", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "49fa15fdbfecfb170e6953ccf79010e4f05b3967", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "d8cab41d12bf51670bc3ef9abb203f71187faa9b", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "db0b1073114ae28c2d3291d4682824642a8b0cd1", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "c39b4214ecab50a8182a744f3b9e355620599f8e", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "42743ebc55ff34a65d461ce9eb2737f6d3ee1aa3", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "1f22ee087fa93260a5deabe4e048ae4968c4882c", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "ecf15e1dab0806d42b5ebe4e86edd989a1381aca", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "2607eb7b6b89ba9fe1fabd14b71b038bb12796db", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "e63c18750ee10f01ffc2a56b6cfe5d6ba251c6d5", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "38f105eb742612297158124cfae0772c1784a4be", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "461b4439d22de4634c8e5bca90f71e0d5e5f2336", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "b8487c2557900599f5890ef1ff6c9eb282db7f5a", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "774bbe296e4cefca2ee52616fd008f18996c9759", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "778139d352dec132761bc04720c10f662cdd3e9f", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "41061c4ea19a4a20bbf1783e15fb5b718900a155", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "58060664dd831cac85294ee3b502fe8803a53ccc", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "d688023ce67f495208d5b4c3fab666460b395f8a", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "d549b1d3742811e8a0b9456959b483f5d0f8d758", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "33e8b8847725761ee80baa7909549b91baacfede", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "9bc9f901aeea7903816b329b015878a580baf7c7", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "7bbb33fed8191e0fbcbeb096ef7fd6fd618efe71", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "ed65e46c408bc778d8a817e302ddb9acac6555bb", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "7ead5ec6d9ec2516a375142258c572a56780fd2c", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "c5b9a3df1ec617e5ef9049bb95c1b423a0d80bf7", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "96ec0da238d96f84312ab2247ee20b92ff023371", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "40cbbc1e9629c503506fa9ec6a52a2d5487d9b73", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "959fc28d7e32c053f169b3b78f65316435814114", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "c04ffdbbe09c0b53db512090da992ff2138eb008", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "a1b53cb47ebc801d5996948b20a72f4b4de65694", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "180320c3e49fa377926cfbdd16436a5890502d05", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "7f9f52efe14d10ef28cf963d9fa6aee46e190d23", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "040b9055192d1330a03754df266c344d42c79782", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "28ce5a6738a49b5923b9328e76e5b9d0c3531d4e", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 0.0}
+{"key": "2328a51e8fd5e14b48afe7aff0ab3e6b8d88760f", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "0af4ead924bfb66a2646e9f0bdac0398791e3b6e", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "6b95a2287fe1077f67e29d521be39a19bfd54c34", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "eb5212f8c3ce37ecbab2f353785ece50ae1af131", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "8ab54187457261f499b148c0fbf57ec298c8596d", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "704e92fa22add23bac393b8aafe45bc63da5b824", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "91d9dc99f14ecdc253b94191819227af02bbe6e3", "follows": 0.4444444444444444, "identity": 0.0, "coherent": 1.0}
+{"key": "eb3b189ad80d693962a58aff55f7e663f6a78cd6", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "af9a212f505d19e49f98c985ac1c25f2f5a60373", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "227f9d3f0a67840fa7b198080bb146d388164617", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "9d792e601768def080f0bf46a620d3d25a93d42c", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "c8c0ad3c7fe9b8e9704495f1c8f602874e2e7913", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "5fa47af2fe978ba81cab1df9de9976dda79c583c", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "3492a746c0e9e453387529b243fb45d345900748", "follows": 0.6666666666666666, "identity": 1.0, "coherent": 1.0}
+{"key": "8760911e20cdc4718d5d1829af81d7afe269ad11", "follows": 0.6666666666666666, "identity": 1.0, "coherent": 1.0}
+{"key": "17e7bdca827575a56fa180d8677d70eaefeab3df", "follows": 0.5555555555555556, "identity": 1.0, "coherent": 1.0}
+{"key": "c52c41c6ab95b5ed1b7352c2015e2f78bedb9a49", "follows": 0.5555555555555556, "identity": 1.0, "coherent": 1.0}
+{"key": "bf106dbbe28f7cf3a10fb526daefba891779eb99", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "978d5a859195d92f5c0b57d2bea3389514a5a9b9", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "7f81ee6fbb1db3b905b8651b04ebe7c021471a9e", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "777ccb56f2e86c2fbf0ae2816367d021284f2b13", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "1a7fafeaaf9808f761764e7cd050df3b0dfe3477", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "09e96f061d01aa0ccc4b17ceeb1b88297edd2399", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "87ac8f39fac7a2d48277e85e202b0520199879d9", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "5994fd7048cc5a2eed2324496b1e9a5d6164987d", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "c60ff6963f0614818823e9b8660e3a68c545f3f5", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "be1b77f5c118a41083b1f2775204e35749806555", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "d80b9fa94c4df17c334c199cf640032816d145a2", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "84c10099e029f48567fc0f85c250bb555abbdbbd", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "769ac2ec206a3e47276476c222eb2855669237ab", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "03c46d9434fefe03a7985b0181b0937765184755", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "56892b7e00c2990514001d0d9a6067f66add9ef5", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "a9d4ca240b0ca3c436c4c4a8e789006362e39700", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "13fb41e0ac84935f9c18512fc8b59bd5c801aee0", "follows": 0.6666666666666666, "identity": 1.0, "coherent": 1.0}
+{"key": "e35d5b84f9ed17d28d2241c19431052a548cfc06", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "9ecf103dab858f344a37788eed3b43d8131c9ed7", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "21ccf97cb3ef4af60b753e9ebec23b686e2fe994", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "5d2ebaf663e4ef78d1ad8d8e2188c0b70a00e288", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "15ab9a3a16ea391acbbfc2422ce323e882d1073c", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "e6b91767db443837005cf0d5c748b0df51022455", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "6e652bffe6f9d4cec2b61e47fae4c87c04cdbde8", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "f24462ade9ba017b8f30c2b985c3c76245f96952", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "03a0ac73ea9e9fc5f825ecc9934958181cc1dc74", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "f16d51dba3af27cc28cf06819b78da939d7a1ad8", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "3395bbf338609fd5207b7f4e499813ebe259d69d", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "f2ad7bc96a6a579140f01c873b4466977fbe9176", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "408f21e1dbb34e76f19b5fa2a9a25de4f3d9e848", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "fae57c6d8a5214ccab05aa3ff6f82c166c545eb1", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "5f29495913604fb438753a23d14c9c6b42dd3eb6", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "426640cc6e6c0426bbc68a6e85aab356113ff2c7", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "54f801d38fa2e6bd2978c148858219ae24f5eee7", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "50978682daab6e413e83cc1d61169cd6dd0a43ca", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "89aea1e3888fc6504378ab7f7664fecf2579568a", "follows": 0.6666666666666666, "identity": 1.0, "coherent": 1.0}
+{"key": "5563c3465584de8a9d146991bba6be1e035ba275", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "8dd98ee30c4177b116bd4107b7a9a0913665aa7a", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "57286048a2809d50248cdea6689bf164f244c9b6", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "301430fdce5307dd0f9f812cd753c88b2d26762a", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "24e948f9b05004fdbaa380076a91b90761221a1a", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "b7a0df7ab576094568969c602cd2d7ffe8f051b2", "follows": 0.5555555555555556, "identity": 1.0, "coherent": 1.0}
+{"key": "6a92ae7350a28dcb5b7d2cc32792b5c03c5fa1a6", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "e7d5f6a553dbfb2d2160044974435a695a48ff03", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "31c9c97eb82ffc82999570172aa0682c46db6b20", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "56e56672e155e2a32848abab67bb3db633d941d5", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "baaf0addd39e39ad10502cda7f61c6810ba8563b", "follows": 0.4444444444444444, "identity": 0.0, "coherent": 1.0}
+{"key": "8b37f5a36d1d339aaa4666e6a87a83266c068721", "follows": 0.4444444444444444, "identity": 0.0, "coherent": 1.0}
+{"key": "a3001d998a1f3102112764e49a0b5e3033965130", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "9f99d1a2f0a4398ab4bb38a81dc5703bd7d8fa31", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "08062f7b4f97d4ed71910e0d3a17c9fb5c538886", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "0e7eb815f9ebb9497c17ba288aeeb2984e82987d", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "c38afea37b917717dd31aa28cd072df602163077", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "d3727e5b1a32746823fe2beb6ce0b9c55e1c21b9", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "3a233787dbd54ae06cf56519c8a20466adf120ea", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "22caaf897fe0d14ada4da6270e0881ce323618f7", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "71f92fdf1e6a07196de9ea9167ed699f32605afa", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "b4393b98aa1f0d622e93f608ba3ebc446fb37da5", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "4c452b4fafb9ee45f4bd78fc1424a56ad20f540c", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "b52cbb65217865e048077417a5768cbfba5604b1", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "82c8abb1cbbde4671f85098498c9fb965eee7037", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "0eb12ba6b0915554bf138a73d81bd5eb2b523aaa", "follows": 0.6666666666666666, "identity": 1.0, "coherent": 1.0}
+{"key": "4302630912a7aa5a3f832d9ffa9df591eaa490b8", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "65880139f68de989d5f6a16b78503346ffec463a", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "5486ebdc2b6e397f356eed0337feacb0ee1af4ff", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "9399526bf7d2cc85d0ecd8a3472071bdca4487b4", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "43792a83ef80990da0dec588be37f0a2671d5d1c", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "d320d04c5da63047617c7ffc968fefd5aa50c38f", "follows": 0.8888888888888888, "identity": 1.0, "coherent": 1.0}
+{"key": "6870bebcbb132c14ebf9bd73d508744caef17fe9", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "95554d7a0641f5c5e7d7a89798bb1582e49bd981", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "24b681d1a60c28fea2d44dc7dc8cde4008623785", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "e44935ac9d93dcf9e02a3637b864c49309bc2bd3", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "97504f3d04755949331b641f5197f4b976d25a8e", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "9fd05dbb29f7266bf2afce1662fa886d6e5766cb", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "4911fa56d301509e1eb2d593e370c437e751ea1d", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "ebe13e8f462f2d82e0c9aff90aa9713791f9c80f", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "a2e5d802861a3850c3cd2dccb1d590b625279c8f", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "055a0d72e2a20426a7510376ca4029094ea3306c", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "32b06f7e78a26b1e3a6b265edbf2206e7c51c211", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "80a9028114792615fea696c7400008b34dbfcd1a", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "2474843b44f5fd017a66a0e63c64f1b5a96d95f4", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "34e691a48410d822077725d85de9d137a2963265", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "f8a283af2375c4f334ffa94635470b214124c883", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "2b138ccd04dc971204149fe3200e13267d0663c6", "sensible": 1.0}
+{"key": "004ac1f30c28ee1229ea9363e0316e712c9b2d11", "sensible": 1.0}
+{"key": "e74caa69aa7389db1d516816d4a7444151831d62", "sensible": 1.0}
+{"key": "f35fba94ed4796ff5607945de027334bf30a9715", "sensible": 1.0}
+{"key": "eced6ee48001fd7366d2ba805d7d9c965ec606e2", "sensible": 1.0}
+{"key": "38ca1bc06496e69b60552c2824ecdd61e13ebcb2", "sensible": 1.0}
+{"key": "7b4e473019a6bf82c9e53486980372db8830a8ee", "sensible": 1.0}
+{"key": "afa7f2db48f0d04845002a9484c2edf6ae6e56c0", "sensible": 1.0}
+{"key": "a397f44cd4684ab3dc847ab970e6fcd13c62b6ba", "sensible": 1.0}
+{"key": "2f349f6d921e6f17528fe373287a44c36b7bc20c", "sensible": 1.0}
+{"key": "31591e465c5837f584effe0d6483a4f2ef57331c", "sensible": 1.0}
+{"key": "385cb3e2d551bed34b9880bfb7991e43d5ba8b2c", "sensible": 1.0}
+{"key": "24bd55b81dcbb0ee6b8bc963c0016a50167068a1", "sensible": 1.0}
+{"key": "75d0ae1e92d48753a9a3b8d8b1ec25877bd287dd", "sensible": 1.0}
+{"key": "fa7af6e6d734b001e914881df89e8179d75efbbe", "sensible": 1.0}
+{"key": "8e75dacbad506d29520d6699fccd37e93d9fae7c", "sensible": 1.0}
+{"key": "0ce063be0609c46732ef7947b6f106d4e49142a2", "sensible": 1.0}
+{"key": "7574d568d5e80ce0565e1d527357a1a8d849260a", "sensible": 0.0}
+{"key": "39a42363ce9198baca5be3a40e5ce3700d6c93d4", "sensible": 1.0}
+{"key": "4ebb69e8a0d1c01244319cdf15891ccb266cc18e", "sensible": 1.0}
+{"key": "8ead95d143396890d32ce65bc228c1adfd4ebfed", "sensible": 1.0}
+{"key": "a7f7d227c4453551073d0a1e91ecdc985f0824b7", "sensible": 1.0}
+{"key": "8eeb993257046a265289bbaefbdc1454962b2e11", "sensible": 1.0}
+{"key": "9a1590858f6b8e4f896453c04b9f46b87ba0a38b", "sensible": 1.0}
+{"key": "7e4e86e8394a508b426c296547278b134483799c", "sensible": 1.0}
+{"key": "0190b7acecda2f399e7f4592deec13588a24befe", "sensible": 1.0}
+{"key": "01ca8af5817e2b15155741a174347c71595e90e2", "sensible": 1.0}
+{"key": "7b1f203fa418933277c75608c9e3b819f9c20401", "sensible": 1.0}
+{"key": "90c3cea73a64eb1c1075d37707e35aa56e5af603", "sensible": 1.0}
+{"key": "c1042f7f54e24d2f34d3cad17f6e8c7fbee18698", "sensible": 1.0}
+{"key": "af3b527f213d5d91d9377d9efb1fb6426108cc4f", "sensible": 1.0}
+{"key": "5336927e9acb5d89aa4006c3d36df20271626daa", "sensible": 1.0}
+{"key": "be95758b59f1dc92856c14b97581d91419ca029f", "sensible": 1.0}
+{"key": "ba013a370bb61bafdcd08fa495e01ce1d4217e99", "sensible": 1.0}
+{"key": "1370db155ac729b4127a2b35787bafb86811348a", "sensible": 0.0}
+{"key": "e86a3cd19c4d29428a2fa628722ef8ca412fe731", "sensible": 1.0}
+{"key": "d91306c1200e1f7de2f2f89aae1fce4b93db979b", "sensible": 1.0}
+{"key": "6811db0b76d326c787ccc0ec9b833647d0773c56", "sensible": 1.0}
+{"key": "7f736c739fe1ee8bb7779b2dbdb74d3ebd8e9e54", "sensible": 1.0}
+{"key": "5c4e6672d6bb9d9dedba03d6c63b60e26a036fce", "sensible": 1.0}
+{"key": "76e0bfa4937e6b68cba7d038b12ae051833350d0", "sensible": 1.0}
+{"key": "a8afb13bc875bae793bee8c42d31c987452d8768", "sensible": 1.0}
+{"key": "da427d9d7a543d3af247e9184b270533364d22cd", "sensible": 1.0}
+{"key": "11a9ecf959875433b92fd569369cd996839bbcb9", "sensible": 1.0}
+{"key": "fcfcc2452f3f60072b4b3dd1ec28eadcbe426762", "sensible": 1.0}
+{"key": "e9bc7f6b331e5e749433ad118dc805a573fcf6cb", "sensible": 1.0}
+{"key": "ae1d08d6b71fb0db5a761995768040a64e58cfac", "sensible": 1.0}
+{"key": "62aa9ccb7077699297f8beb97cd5fc6c3ed13a7c", "sensible": 1.0}
+{"key": "500cba1ce7ee98e005e07bb20466fbd08aeb987f", "sensible": 1.0}
+{"key": "95a98144730b2aebe5615427d97623a388a71090", "sensible": 1.0}
+{"key": "bdfbdd86fb8e6de99ca768d6058e419cc18beb28", "sensible": 1.0}
+{"key": "435c028857aedbfc5e792d40a95c48834cae4895", "sensible": 1.0}
+{"key": "27550177ad00c059eb89b02bed986dd991ad1a37", "sensible": 1.0}
+{"key": "e1bb10ae7e8b0505a0e8b287f7830499b4363412", "sensible": 1.0}
+{"key": "0d7e1348fd72ed0b40759d51edcb04f23b7780cd", "sensible": 1.0}
+{"key": "3bb735a124947fb55f18cc1ff045f5853f10e3a4", "sensible": 0.0}
+{"key": "adb162eb7a02607aae5fc2dc76e924e9593a9f0b", "sensible": 1.0}
+{"key": "2d91041558614255eb93dcee58c49c9c50812376", "sensible": 1.0}
+{"key": "8495bff8b699c55fc90d72ff4f755ad100d852a4", "sensible": 0.0}
+{"key": "e80d7f837c8c68cc500248ba95abf4f05f21f0e3", "sensible": 1.0}
+{"key": "b6421111ed8fc2aeebdc6c899c6aed7acc5a4c37", "sensible": 1.0}
+{"key": "1748de6c28f4860edf0bf69f4d450945b0c93a47", "sensible": 1.0}
+{"key": "9fc808ddbe146fd0a8ae7d41a7559c7525b13fba", "sensible": 1.0}
+{"key": "f8e152f016fb65c687397a70c9b1e1950ff6c0a8", "sensible": 1.0}
+{"key": "4ef859e846d50204790823cd8e25ebad7934c251", "sensible": 1.0}
+{"key": "0452d3eab4e0c292d5397673970706b4ab8e13e7", "sensible": 1.0}
+{"key": "efc721275a6ed95206d35f2919a97a8a916ea13e", "sensible": 1.0}
+{"key": "f26af5876a0c394e5b2ceab36d79badcbe9372c8", "sensible": 1.0}
+{"key": "1c9a2bd789c8d45bbff5a888bf2707ff9f4abf10", "sensible": 1.0}
+{"key": "5adfa26b54c307feec4047c88200eb78ea2d3380", "sensible": 1.0}
+{"key": "22bf910c46de1455c6c6831ecc257ceb82ba944a", "sensible": 1.0}
+{"key": "d4375fa64fe5367f3a7fec8a2aa185964e5dcb30", "sensible": 0.0}
+{"key": "d5c2ce7c3a77b1ec0d17573c346bf1dcea019942", "sensible": 1.0}
+{"key": "c1610377f26f2e53ee8696951a880d4aa15f2862", "sensible": 1.0}
+{"key": "dfd41b234553fde2ec61423f2e37a6319427244d", "sensible": 1.0}
+{"key": "a08c54dca97c4b9c0b6bf1a5d26b43a47d45040a", "sensible": 1.0}
+{"key": "ee0ec14f182710263e74ec29606314692463ffc9", "sensible": 1.0}
+{"key": "518230d46959c886b2b133118161934a3d0c6804", "sensible": 1.0}
+{"key": "78f096a74782b83bbd9b6c06161320256b913b30", "sensible": 1.0}
+{"key": "da51e75ab826a623b730099ce52eb43eda48b7b2", "sensible": 1.0}
+{"key": "0fe49efe8c722800d5fc1338ff0137e6e6b5518f", "sensible": 1.0}
+{"key": "29212e645cf0b77222bd9b86d680be6547df7558", "sensible": 1.0}
+{"key": "9b38c6abe56bc9990abc965c70faa0e9163dddc3", "sensible": 1.0}
+{"key": "0ca9984ffcf02dc7adeb31f74783d667d82e9686", "sensible": 1.0}
+{"key": "5260e0a95f81476fc0d914b7b6b92f7592b1463e", "sensible": 1.0}
+{"key": "0a29163f3454a58cf7fc76335b48ccc1bb82c3bf", "sensible": 1.0}
+{"key": "a5a5bfb2333e7a790737010899c895164e03cf23", "sensible": 1.0}
+{"key": "49c010383f03a963fd1b33d97140f0c3afb0c0ea", "sensible": 1.0}
+{"key": "c353b90e685062e15a14b36bec9cde480c0cb179", "sensible": 1.0}
+{"key": "6cbd6c985ab44996ac458d128b40c487c6e9982b", "sensible": 1.0}
+{"key": "d90b8c94ecfad46ec28585c3a17dbe741bfc7431", "sensible": 1.0}
+{"key": "c73471481b07b6408a8846cd2e6a1bc6a73a265a", "sensible": 1.0}
+{"key": "69107ed53f2c23da46952b5db0dfb6b2a2f5efd4", "sensible": 1.0}
+{"key": "633da15bceb54bd7b95cc2dace827dcc99ddf0e1", "sensible": 1.0}
+{"key": "b68e08fe203a79815a4431c67fc16d9da6a3780c", "sensible": 1.0}
+{"key": "000f624bfbae15006aa79508dc0b912302428788", "sensible": 1.0}
+{"key": "8a507337125f2d793b44681fd58ad73bb2212a3f", "sensible": 1.0}
+{"key": "7668de301c4174e931293bb45dfe8e955f27fa81", "sensible": 1.0}
+{"key": "dbb34cefbbdec1f5620e9a59d8c1f3a3544a70f8", "sensible": 1.0}
+{"key": "3e135ce3fb510988ed8d33f29c8b5c754dec47d7", "sensible": 1.0}
+{"key": "18a2a9f521e66748f31a5e0d1297821d39e39444", "sensible": 1.0}
+{"key": "0fc1ae585d9da8d12a51a6244582b78e56a524c7", "sensible": 1.0}
+{"key": "20b38fca84c5671fa68db00a5d968f1a13dcf376", "sensible": 1.0}
+{"key": "0e8906a050c34ce349ef3fdc3a45a683c2bb2843", "sensible": 1.0}
+{"key": "1c779717224c44702eb87b68a00f0b0947bbdf18", "sensible": 1.0}
+{"key": "d16d76183f1153499a201eedc22442d184c7bd5c", "sensible": 1.0}
+{"key": "f482ac31cbf69d43934e560fdec7fea17e41bb41", "sensible": 1.0}
+{"key": "dc74b5c2a6c98702a230947ed4ba0c15ef185068", "sensible": 1.0}
+{"key": "34eebaa6baf2aa994661cce10dcde9c2377be188", "sensible": 0.0}
+{"key": "af6f49979c64dc3e7b6ac85abb13201596180106", "sensible": 1.0}
+{"key": "1d1af69ae278bcb4123fdb4344698a683322d054", "sensible": 1.0}
+{"key": "763752690b46ba24a849fca9ddc9e45c9dccecce", "sensible": 1.0}
+{"key": "1ed09608e9a062829afd0efbbb3a25c515db338e", "sensible": 1.0}
+{"key": "c77eb4c8145af55c220d6d85e290254fde04dd7f", "sensible": 1.0}
+{"key": "82095066b2e1a236da5c0af1269790c05d092040", "sensible": 1.0}
+{"key": "bd740734bce2eeb37649c3ac6a6b5da5676fc82b", "sensible": 1.0}
+{"key": "238a1c50570c1c63ba1775e73ff705007178ff86", "sensible": 1.0}
+{"key": "3b16a4f4825178d332a531012f9f54049620c19e", "sensible": 0.0}
+{"key": "5dacce52e07446c190c0e8f4817f47d65bb444d5", "sensible": 1.0}
+{"key": "6705755ae49aada551567f1a2a97367bdc3b911b", "sensible": 1.0}
+{"key": "bc0fed1957915bc3eca2d9bd211c9277a07a1ab5", "sensible": 0.0}
+{"key": "d84cd42405f19817559a1f371bcc6942704531b2", "sensible": 1.0}
+{"key": "b59211932cae1c3f2f4143e2234605d57dc415ec", "sensible": 1.0}
+{"key": "f60b631d6f39d4ce8d58f9945d537d3d60b17ab5", "sensible": 1.0}
+{"key": "b6728579df3519fccf818e86879b6b2ddf108b25", "sensible": 1.0}
+{"key": "99f5975169f6d9e1f0f970657944c7f3e93834bb", "sensible": 1.0}
+{"key": "58802dd1801a031f8de23e2fae9c2252d8c99dee", "sensible": 1.0}
+{"key": "decd82aa9fc9dbae262e585cf16587ace55dbd13", "sensible": 1.0}
+{"key": "fb6ba42fc9aabad1888a5fa83153f2d2a4d90283", "sensible": 0.0}
+{"key": "dcf9a8e1232e1bc39dbdf06cb8f784f3e30a0af4", "sensible": 0.0}
+{"key": "e50e5c60f2b0d72b2970fadf5d8df1c835ffeb2d", "sensible": 1.0}
+{"key": "05b014bcc237f376af8578f71886106ebaa783ee", "sensible": 1.0}
+{"key": "f596999d77592373b57d7e69b825aa705a44e5c3", "sensible": 1.0}
+{"key": "38835b4147f5e03d74832ab4ccc5e0fd08fd2e46", "sensible": 0.0}
+{"key": "39aadf37ae2dff39c0cf80058b0db34e5794e926", "sensible": 1.0}
+{"key": "06d373bb7f4a85ae5dea4ac1140bb5fc87d07265", "sensible": 1.0}
+{"key": "6a8a3853d99795a108e72e08b99306d72ee3c417", "sensible": 1.0}
+{"key": "364b96195fd279aeeffc822b6540cd0e63acde2b", "sensible": 1.0}
+{"key": "0dce9734b46d9f7e7b80a6a2a744a3ae198ebfbd", "sensible": 1.0}
+{"key": "4579833a3664e35aada0849004038697707d8352", "sensible": 0.0}
+{"key": "c029b6d11f620589069b0ea3c5a43fd7e5b29663", "sensible": 1.0}
+{"key": "de3a9ffa7c186e3f9546969f44917c952b9610cb", "sensible": 0.0}
+{"key": "728d051c8af3fe5e5d2b8e7e9f13edaaeccbc8cd", "sensible": 1.0}
+{"key": "51bb17199af9eafe5b6b002dd20b63d7a410187f", "sensible": 1.0}
+{"key": "543ce44b15996f54665b9766e73fe8f6ae215749", "sensible": 1.0}
+{"key": "39d2173a10c00883b5e44396c450cbb39d5634b9", "sensible": 1.0}
+{"key": "4cde4ba2a477cdd5f052b9cb92512424eb6c9e3a", "sensible": 1.0}
+{"key": "dcbdd0e75e2bcbf73069a6b7b473ed27c7eb1ab1", "sensible": 1.0}
+{"key": "bb67e042f4a5dae13eea854ca9576fb53dab2195", "sensible": 0.0}
+{"key": "0251c73682dfce311e03d65b54a2d4a516740b4e", "sensible": 1.0}
+{"key": "4297419b815dd1be522ddf39252a221d01200f44", "sensible": 0.0}
+{"key": "f022e9cbe83bf01edad61eb782099078f3bff54b", "sensible": 0.0}
+{"key": "35800229e61222747568fc91f99b3f154f2ceed1", "sensible": 1.0}
+{"key": "9a403771168cd7c6342c9e930a65aa4fbbc0e8d5", "sensible": 1.0}
+{"key": "838c96de32a7995762af6748d83287bfdeeca592", "sensible": 0.0}
+{"key": "1108b8a6a0fcb00e72ce033d4e2198cc5c0734fa", "sensible": 0.0}
+{"key": "39a0bd928b9f0dd38cf34c6a9fc30d4565ba1833", "sensible": 0.0}
+{"key": "591965784cd90d6a29557bb587a2d12f5f9508bf", "sensible": 1.0}
+{"key": "1a373932e09b0eb1e96d3fe2b6df5d5a1eb2a9cf", "sensible": 1.0}
+{"key": "0184288582563d059582b4c2c8466f1ed935bb1a", "sensible": 0.0}
+{"key": "f2a19989078c5456b44b07eefba21f54840482b3", "sensible": 1.0}
+{"key": "09db2b2fc20cbb0a9098b42f15da79d4046dce22", "sensible": 1.0}
+{"key": "f259b05e1401f8425d50c619b2ba3a10ba339b98", "sensible": 0.0}
+{"key": "deb51220442b3149dcbeec49b4082fa53ac3244d", "sensible": 1.0}
+{"key": "b5de163fcfb1e6da06cddcfe65be9dc4054a0f42", "sensible": 1.0}
+{"key": "a485de64858782c86f37287cd31bb9972b45adf4", "sensible": 0.0}
+{"key": "0719169d9c7d04f21599597e18d74d9f8a708b78", "sensible": 1.0}
+{"key": "9ed43617b5ea9074f5702fd52f384ab5426a01d9", "sensible": 0.0}
+{"key": "1334648bfee998d12d05e8e8b55ff4685d9790f4", "sensible": 0.0}
+{"key": "3fc47b1e3130f838b7550e613045c4e14673dd94", "sensible": 1.0}
+{"key": "960441665445cfbca9453829e0da004b82a0c1f6", "sensible": 1.0}
+{"key": "bd0032cf2528646e5458a90f4e599f7062034dff", "sensible": 1.0}
+{"key": "7f2b70abeef6834516c613271ddbb967ed3ca49e", "sensible": 0.0}
+{"key": "d99100cba0ce0ed3c8606bdc3e8c028c878471e2", "sensible": 0.0}
+{"key": "e4afe53515f48855c8937271bc37ac522969c458", "sensible": 0.0}
+{"key": "a4081048130c583402aa1a986ecc35819dc6eb26", "sensible": 1.0}
+{"key": "1b8af8c46ff5c1e02408780bca348e080dbb577c", "sensible": 0.0}
+{"key": "a6fc56ff986be308fed652cca50fb5d915412610", "sensible": 1.0}
+{"key": "697358a373a65c03101b4620f728db816be2495f", "sensible": 0.0}
+{"key": "4b7cfcefa79989162cc5dcfb508f56d66cd6d715", "sensible": 1.0}
+{"key": "a041d5b4be32b87fc53b609c7019f1d2a7cd9e73", "sensible": 1.0}
+{"key": "47a2adbb9d907d0b484df47f56f2e2acf126877a", "sensible": 1.0}
+{"key": "40454444408b75ca32fe0063b3cb11d1850eb185", "sensible": 0.0}
+{"key": "d53ac9bbb75761131e61c49d2cde871b161093bc", "sensible": 0.0}
+{"key": "80ae73ec90d12edd0895435ded081a0fd2c22993", "sensible": 0.0}
+{"key": "ecd08880fb838be8c85869e44c7d4c3cd57e3ef3", "sensible": 1.0}
+{"key": "eae387c4d9891da14cccbe1799dfbc6a63e57a94", "sensible": 0.0}
+{"key": "4dc12027215f45dbd6262120ef970bc7a2d755ae", "sensible": 0.0}
+{"key": "1dffc29453a4555b64ee2ec1e595712d3db81c2d", "sensible": 0.0}
+{"key": "4ea9f45b25eb4868d7590066f089d5d8b662d1ee", "sensible": 1.0}
+{"key": "aa3b6e15e952e53d9556c89eea3dbdb32e6ecabe", "sensible": 1.0}
+{"key": "a4f508b25a67383be7da9be67b4b67d0cfa48607", "sensible": 0.0}
+{"key": "135448ee5f191f01ce661de87f57a32fc1e3ec9b", "sensible": 0.0}
+{"key": "814a6a6e7c8c7b1a1f075dbe2b886ab4d81e6d82", "sensible": 0.0}
+{"key": "ac77e081cf2794b659aeb03947c1718ebddd9760", "sensible": 1.0}
+{"key": "9870ca167982f4351d10a07fde64c4ec703e3b4b", "sensible": 1.0}
+{"key": "22e3dfe708c6b2932c37903ed4b686b89eda5a33", "sensible": 1.0}
+{"key": "bbdb7831e416a36f8918f93700af5f7f59138034", "sensible": 0.0}
+{"key": "4b70783da0c5e35b67b50f235ef0195f77f5a9ba", "sensible": 1.0}
+{"key": "0f29fb386ae4bfd7de4f887a012176866c3b9e30", "sensible": 0.0}
+{"key": "8105ea45fed44fccbdc09525f08caece2defb333", "sensible": 1.0}
+{"key": "af30ddf194cfd2f0c59119910d898098014bb951", "sensible": 1.0}
+{"key": "f43045f05705a69d250b9a4779b1fc81e1112a9a", "sensible": 0.0}
+{"key": "b891706bef75632826a38621b34cab1fec28ddc5", "sensible": 0.0}
+{"key": "5f24463771616acd8a399a39337fd0920e477277", "sensible": 1.0}
+{"key": "f32a8c3dbde17594e59b3df9b7126c69924bff3b", "sensible": 1.0}
+{"key": "6ad7a5eb9df53e5dcb0c04267709ad9450bfb168", "sensible": 1.0}
+{"key": "abe1df6c68b3dc87961628e9887ee58d2c1444d1", "sensible": 0.0}
+{"key": "a3fe35526e123f964b4912b0a16a54bd2b7957d0", "sensible": 1.0}
+{"key": "c9fe6ec190257e26f7b3d29bb1d9d5a2aeb50474", "sensible": 0.0}
+{"key": "398bb568dbe36444766f99eaba1a881e79238e52", "sensible": 1.0}
+{"key": "68414a52821d4362879ef9d943cbb66320f408e8", "sensible": 0.0}
+{"key": "3efa0855c7a1a950418e17f8ec72feb281b07ab6", "sensible": 1.0}
+{"key": "b40d4ffc1b25bd8d7361dfcb803195861e72162f", "sensible": 0.0}
+{"key": "e21cd37097acf6b13b20e0847dcaf5cf739a7029", "sensible": 1.0}
+{"key": "880d2e21db7e57a60050c6941f430347ac54e79a", "sensible": 0.0}
+{"key": "40fbf1ee874f1ce547c18a3bf4881067c1f724d5", "sensible": 1.0}
+{"key": "2820830d44bc9214fd6d094ab05ed1c2f1b4670b", "sensible": 1.0}
+{"key": "db72e06b38eb156df1ee7c249ac3cf9a4cdd26ae", "sensible": 1.0}
+{"key": "1d3f6ed65ac0727d72a8bcbc1677ab6612b962ce", "sensible": 1.0}
+{"key": "76eaccd5ed248c0fdfa4ffa95c3f1c56543e2bb6", "sensible": 1.0}
+{"key": "ed390ec6bc5e04c591d7d73a6de567079695f892", "sensible": 0.0}
+{"key": "a11ac25b8c9f3a2f2461e989f3769299d9c1a728", "sensible": 1.0}
+{"key": "3deee764b3bb1ea0da537a2518b5e5a9107f9f32", "sensible": 1.0}
+{"key": "4e923cc38a7fa59aa575572179337f64ca310e2a", "sensible": 1.0}
+{"key": "8bc1c7a94b79e7226c6d0eec5a85a8e7a353f02a", "sensible": 0.0}
+{"key": "5c7b21835ac0069546e49807a1a615b985ae843a", "sensible": 0.0}
+{"key": "bd30c3b2cddf8348a7a249e67d1b9a0f471176a3", "sensible": 0.0}
+{"key": "febca29b57eefc14f5cbd7868347b9549ff95dd7", "sensible": 1.0}
+{"key": "489a0504b165ad0fb8d35458d5b763f980aa411c", "sensible": 1.0}
+{"key": "c384ecbad0c2cb7cbef83eba16c1d073b7421120", "sensible": 1.0}
+{"key": "7555018520d66092f3601a831b835bb449500b6d", "sensible": 0.0}
+{"key": "a39e52ebecf4ebbd852ed79cc23513a65ed3b9ef", "sensible": 0.0}
+{"key": "34ec1e3a81f7cccf65a2a4b2276e99bbe4bbeed8", "sensible": 0.0}
+{"key": "17420ee6fe065531af65e49f67eb084bd61d23a9", "sensible": 1.0}
+{"key": "45329ef2fc60e5aaa589143589eb200153e936fd", "sensible": 1.0}
+{"key": "773348108733c466cee5f3e96dcefa14576f72e9", "sensible": 0.0}
+{"key": "556268da8d5c4b9c88588a9e7a7c2acac74f3487", "sensible": 1.0}
+{"key": "04fdbac8d8553e90360003f51a7642decd7559d4", "sensible": 1.0}
+{"key": "a3598b91546786ba7ef58211e3a465b28f3d607a", "sensible": 0.0}
+{"key": "7bea1e5c348cbf97243d8ea7d979d3d0ae18426e", "sensible": 1.0}
+{"key": "65cbf6d40857af1348707deacbeaf8d10de95a77", "sensible": 0.0}
+{"key": "9e96328eaae5a5333c848bb479ae5b38da3606e5", "sensible": 0.0}
+{"key": "9e37783c8cdb518e0430655556ada9ac88f3d96d", "sensible": 1.0}
+{"key": "1fa96ad3aa00d199b5a578a61a1fe5d681e40453", "sensible": 0.0}
+{"key": "745c0acb26aac762d96e5f431b5becc1c55df699", "sensible": 0.0}
+{"key": "4f56ae1e11f02165cb4958ddac7595e6efc59fca", "sensible": 1.0}
+{"key": "c6ed80696a180c0c2db281de64a3ef1cf9d831ca", "sensible": 0.0}
+{"key": "174be8c762ba8e4ccfa338175704686436910926", "sensible": 0.0}
+{"key": "3c97f3dbb94aa3110f39436571e5da53058f00e8", "sensible": 1.0}
+{"key": "2ecaf6daaa333aac2177fab86a7774d47a909865", "sensible": 1.0}
+{"key": "5138684c5109eb41df20b995009d34d68ede497d", "sensible": 1.0}
+{"key": "2f0f2f0d2f7d0c9e9f4f684c61abca8b9a86dfc1", "sensible": 1.0}
+{"key": "5a4f9c1341a042e0cbcfc276d95fd83e6ad0e471", "sensible": 1.0}
+{"key": "53222bd70ab2913163bae780437ee20e50ca532a", "sensible": 1.0}
+{"key": "40e90e20042277a4b8bd9961e6fb7badf6b88249", "sensible": 1.0}
+{"key": "20e3d1e3bdedb5144c2790cfb2c26ff5dbd0c925", "sensible": 0.0}
+{"key": "7e67dbeecca2719188d520f96ba1ce05059c328d", "sensible": 0.0}
+{"key": "98d39a222e3d3148613b44bdc909fe4914f7fa47", "sensible": 1.0}
+{"key": "4be37beee4761bad2b29d5889e9e870df541d77f", "sensible": 0.0}
+{"key": "8c960f5ecf340964ac2ba767a55a6609fa37d51b", "sensible": 0.0}
+{"key": "8a20f56c66feea0d7e7cdf4fcddecbb3239a09c2", "sensible": 0.0}
+{"key": "40054d2646540f9f70847b50d56a39fa6b6797c4", "sensible": 0.0}
+{"key": "1e95bb46a071d3dd551a4a357978957510bb4c31", "sensible": 0.0}
+{"key": "2de73a857a8a517a723d5148bcede68795da7a88", "sensible": 1.0}
+{"key": "61a6888697879b55285ebf4de71dbf6a3485497f", "sensible": 0.0}
+{"key": "164501012f2bd6f8d56c61b2137421b8b28d8309", "sensible": 0.0}
+{"key": "20c62345c68abab4d9e60dcc823e9b692a34a047", "sensible": 0.0}
+{"key": "1de23c00a5fb54fd061a6f59c5bae95d0490679d", "sensible": 0.0}
+{"key": "8d5209e58fc4fda1354ef571891f667049455249", "sensible": 0.0}
+{"key": "b247b90b1deb177bf90ce3d0656bef5bfd98cd08", "sensible": 0.0}
+{"key": "87e8200b9c56dcc7343b35a57fa198d39de4271c", "sensible": 0.0}
+{"key": "96f68455556f14e3dbfb00336e9a34211e1cb4cc", "sensible": 0.0}
+{"key": "17b341589ff6515670bdfd3bb29fc1d730ff9eb7", "sensible": 1.0}
+{"key": "7d588ce52e82ad418648d44fd81cf7f4a3256cff", "sensible": 0.0}
+{"key": "29d3f2e5571e8e40c4653fffcace8fe1f1bb8bc4", "sensible": 0.0}
+{"key": "3e2599225bf38c2dfedc730465712c71c4772f11", "sensible": 0.0}
+{"key": "c53148b8b4f517e983a15217f5514453b5a59997", "sensible": 0.0}
+{"key": "7f5e29fbcaa7fd41bb0248f5a99e8205ca4f62d3", "sensible": 0.0}
+{"key": "561985162f0a061a4bf316a4dece17160bf4cce0", "sensible": 0.0}
+{"key": "f6046dfc07b2b75dbaa74a6dabe677cc6fcb1fb7", "sensible": 0.0}
+{"key": "53c31295a57f5656e084178fe6a57f42182f50fa", "sensible": 0.0}
+{"key": "889fd0d02ac972f87054f2b3b6ca6a1fec593b14", "sensible": 0.0}
+{"key": "d1634a71fadaaf83a764c5ea9be7fbcc4a196f31", "sensible": 0.0}
+{"key": "f4e87b8ed53ece17d04ba507fd10f37ed77f4624", "sensible": 0.0}
+{"key": "9f8261c5dc83dc7127c11efb8ed28b7465c1ef63", "sensible": 0.0}
+{"key": "d3d5dd1f9849627b93aadf7d7d0714e7ef3eaa97", "sensible": 1.0}
+{"key": "656af4b907678a04d4722340d2ff0c30e1b07fa3", "sensible": 0.0}
+{"key": "3171068a57970d997fd33c2240d47ec054940f71", "sensible": 0.0}
+{"key": "338b5d214b450c0e8e71e41940e18310d7b1cf59", "sensible": 0.0}
+{"key": "ded2dd1082ef12cc877c90b0c1c886fe1a63f64b", "sensible": 0.0}
+{"key": "9d42c3bf5094f222a597c191841b71b9499679aa", "sensible": 1.0}
+{"key": "d03c3c7174b7b1cf87bb6ba26f298f26b4cf5bae", "sensible": 0.0}
+{"key": "a5728f7eaee903257f3d9d0e916cb838aa56a01c", "sensible": 0.0}
+{"key": "79a6313b74010414ee92c3b894ef62ad95e29713", "sensible": 0.0}
+{"key": "62e66635b3c941620d8a25df4ef6f4dfd264e334", "sensible": 0.0}
+{"key": "aee0eb83748644b43d962a548ddc32fa06b3e469", "sensible": 0.0}
+{"key": "a1e2171ef3bad374de5ed8dde2da3708813b86b7", "sensible": 0.0}
+{"key": "bbd2e2378a5583dfe277b3049b46619686fdd4dd", "sensible": 0.0}
+{"key": "4c3988783a9228002bd6081cfd6c2a009efadded", "sensible": 0.0}
+{"key": "cd391124d14bddaec1973ca4c819254dd97cb9d4", "sensible": 0.0}
+{"key": "1f411f2d6d2d66fbf013474d964770136b3fb699", "sensible": 0.0}
+{"key": "cba2de123f024b5a7cbfc645957c0cf43e627d73", "sensible": 0.0}
+{"key": "ab4653f078e05dee483154c957ae1794046f6405", "sensible": 1.0}
+{"key": "d9e6ec488d9cfa83ae2caa87f8a0ea1e54fee16a", "sensible": 0.0}
+{"key": "adf7e5e0163e07b45564eea37c825605b972a6bd", "sensible": 0.0}
+{"key": "9371fd8b5d1c8c0496d42c6197c5ae16612cc532", "sensible": 0.0}
+{"key": "7e58afbce49a2f6b688b7db8a81f80bc0cdb03c7", "sensible": 0.0}
+{"key": "6f44ac7e7f96c66ebf92f2fd2d8ff32f42fec141", "sensible": 0.0}
+{"key": "71d25fc0843ce6a6d716f6bd4e4b96bb29fdbbe8", "sensible": 0.0}
+{"key": "c3bae95b9150f1a6ecc276b2726a9d9778510d1e", "sensible": 0.0}
+{"key": "e69f3ac0a126bf5687be4265f49c5f0d35a1d5c7", "sensible": 0.0}
+{"key": "376b7a967fff66f97e78d13005c49b3b7ca82312", "sensible": 0.0}
+{"key": "7630800fb4d994028d64e202c225170511d0d6d2", "sensible": 0.0}
+{"key": "a5b918e3eca965269604e2d9109e6ed18c9e4e09", "sensible": 0.0}
+{"key": "3192272c2a174779b91d39870b342ab8619ee7db", "sensible": 0.0}
+{"key": "163082a1876273f535b043b7d28dc7aea764e902", "sensible": 0.0}
+{"key": "bbd39c556c298c9c30da2e3dfe80d547e71a1d45", "sensible": 0.0}
+{"key": "fb00ca660020a81b1dd70c0f7b941b229103d297", "sensible": 0.0}
+{"key": "549493bebd9a79447b29fabfbc8670c06b9fbe1e", "sensible": 0.0}
+{"key": "68a22de7adff44e066212d24899b3b42cc271209", "sensible": 0.0}
+{"key": "8962a05b1c1b225cb81dd857dd0f38b2bf2aa6e7", "sensible": 0.0}
+{"key": "b7a30db76680bd95794d5e23f16d9de85b3ea7d9", "sensible": 0.0}
+{"key": "d2c8a764ef76a68d2c6f08a03c1e83890a210e96", "sensible": 0.0}
+{"key": "e572efb9b565345c7206d5fd8115a6fbc2758907", "sensible": 0.0}
+{"key": "f4e52e7687ed4e67f3418e7052a00980fd8520ad", "sensible": 0.0}
+{"key": "94322e9da88536275a6db3e443a6f2889f7227ce", "sensible": 0.0}
+{"key": "d71f278dcc6817f18706c196194e5bfe40d1717f", "sensible": 0.0}
+{"key": "fd4b377c23bf9297d751a48ce4123507729577ef", "sensible": 0.0}
+{"key": "b8c9e4b42e8281148759640d69043120b3c70744", "sensible": 1.0}
+{"key": "fb0b0ba03a9558de7b2f8cf1eb8c22d59512e2dc", "sensible": 0.0}
+{"key": "d91cf2142f79d1e15b7d0762f5cbac9ce83587e0", "sensible": 0.0}
+{"key": "5c2ef4556b6fcdb8f61314ed90f9aec21a9c7d31", "sensible": 0.0}
+{"key": "d04cca72e642698b591e240a68c52e17cf4d55ab", "sensible": 0.0}
+{"key": "5d5f63d96d3ecbeab2bea3a861254870fff6e429", "sensible": 0.0}
+{"key": "29793ef884aed509e7643e6aca39d160b2c12b29", "sensible": 0.0}
+{"key": "e655aaaacba05247e50672d4bcba165b9c7861fe", "sensible": 0.0}
+{"key": "1ff52eb5392fea4b012bea88727f8d21623d9434", "sensible": 0.0}
+{"key": "5113b1cc6e484aff8b2ad20bd95bbd17d820bbb2", "sensible": 1.0}
+{"key": "f1d4ecdece4702468ad5507bfed7e5dedc9e9a33", "sensible": 0.0}
+{"key": "faf36dd96318f3a9c25921572a101230a352fa1a", "sensible": 0.0}
+{"key": "e6697ded61e676e805f4eac425a3e70738130b8b", "sensible": 0.0}
+{"key": "6d30b258f38f54959519b04eba4db19ae901e501", "sensible": 0.0}
+{"key": "161d4896fea71188ab988b1eeec72d6c44eec9f1", "sensible": 0.0}
+{"key": "1ca0a30b97d0ab54bbb1b5917bac53726c2cef9c", "sensible": 0.0}
+{"key": "c6d7a079509feb61ddb07c5c8d7281a29aea7698", "sensible": 0.0}
+{"key": "37fe1760259481f0231d38b618fff648bb871276", "sensible": 0.0}
+{"key": "a21a9fab277a8513173285c2912c17ee284c71a3", "sensible": 0.0}
+{"key": "e3314b5f7f58d12cf018763bf9bd89566b584893", "sensible": 0.0}
+{"key": "b6df12271e4938c4333661c9941221078ebfc4b9", "sensible": 0.0}
+{"key": "871e4ec1ec05b853dc4aed994797ad1be94080e7", "sensible": 0.0}
+{"key": "1a667dade573c7a800f7c2a338aabe641188cf31", "sensible": 0.0}
+{"key": "5b0306b922cf53cc8835f53118859852bd3902d0", "sensible": 0.0}
+{"key": "ad208288f9a6e459d5090000715740c1baacf2e3", "sensible": 0.0}
+{"key": "dfa457fd0c41809e0b55cf3f8f9e505333f97249", "sensible": 0.0}
+{"key": "6542168afdf88fdfcfc401e4b654d3a5bb11b5bf", "sensible": 0.0}
+{"key": "1dee1d4ee646fd7d7b246b5c8863c62bfefaab34", "sensible": 0.0}
+{"key": "3be3d3da5b8827b5ac84f84e013e831b01c243de", "sensible": 0.0}
+{"key": "f634fdcbb5f2b17814dd3129cc33e436db9ddd4d", "sensible": 0.0}
+{"key": "4e28b415bf5247c0f227040fb5f3ec2564aa1ede", "sensible": 0.0}
+{"key": "8ac2d08ec33340afa0960c4e452c5292be18912b", "sensible": 0.0}
+{"key": "934d27dcf5d633a9850c55490c2bb93a8c954f88", "sensible": 0.0}
+{"key": "dc3109fc9cc216efa68f26d0f4971dd7811ef1d1", "sensible": 0.0}
+{"key": "bba6180b18a93d6ee1cd0bf987b4b60a556d7fe7", "sensible": 0.0}
+{"key": "4ef6503866107d8f264695f4439a81f13d163682", "sensible": 0.0}
+{"key": "921c60441293189ad4470f01dda9eaff1dc5fc23", "sensible": 1.0}
+{"key": "c1f0848bf03dd59661e4d3621a0a9fd2aefee6a8", "sensible": 0.0}
+{"key": "9afe2d437f7de168bbf50c51c04fd9811f293140", "sensible": 0.0}
+{"key": "d5edd2654fc34c10c829b5b79e44f248d15e6b30", "sensible": 1.0}
+{"key": "e3fec6a8664236ad0a88e544110cfff8ab6e7264", "sensible": 0.0}
+{"key": "ad65f3ebf1d71318d413992bc0ed02cb7e4f096e", "sensible": 0.0}
+{"key": "390692b09863cba0e83c3095b4ee91b341f2feb6", "sensible": 0.0}
+{"key": "d6c5ed7269d2ae6dbe85f96cb2e000fbf60c9cce", "sensible": 0.0}
+{"key": "6505321735d42575f9084c08478db228831c3eb3", "sensible": 0.0}
+{"key": "26100044ce735901f61ff6d7dba41d292b655233", "sensible": 0.0}
+{"key": "41e02bf6bad5229a7f5bc682a8997d0237da6275", "sensible": 0.0}
+{"key": "01d1b054d4bcd205fd06ba3d1122739fa2c66db9", "sensible": 0.0}
+{"key": "1f4efc4d195dce125fb971133b0cb7850a19cec3", "sensible": 0.0}
+{"key": "53619c46278df03461c2527894211551e18ed066", "sensible": 0.0}
+{"key": "e85a045b57e2cd68b3a13e2a7e43938d7e0245c6", "sensible": 0.0}
+{"key": "1b16b04ee5bd568fcb629077d5ba1b5591ec047d", "sensible": 0.0}
+{"key": "9f003369ff47a6923a66b0e0c3a1da2f1828ffbe", "sensible": 1.0}
+{"key": "e3de9cf3877f05dbe8eea9acd6d0f3d2ed4ba7ae", "sensible": 0.0}
+{"key": "2d201d32a19d7571234f7f80449d2932e52a8292", "sensible": 0.0}
+{"key": "cb4d23c37dc996d8476ff11d02f2e9813be6e14a", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "57c5b5db35e1e708e6df289014f0b10404e0489d", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "ca30a61992b5d01a3ffcec28f5749f5de4a331a6", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "c95977359f3a593019d14f444c882fa4f0df61c3", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "c0a6f4913aaee01753576e4c36b08e1e029f8a38", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "d8409dd42f28e91fa1984b1e1cf22ebdc80d4545", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "530c4459b08a0a66d9dec3ce3ee50460775414ea", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "f36c4076fab455316630c056f0a039f302268a4c", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 0.0}
+{"key": "ab23b87a529a78565f3d337366116e7a4e0d9c05", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "e5c9c0252000c7ac8f676ad022b9919d540b3a43", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "c44d3736ff4460abfee793c8004024c41b301ee7", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "08e2a4128782d586936c35ec1b652cb0347ceb51", "follows": 0.8888888888888888, "identity": 1.0, "coherent": 1.0}
+{"key": "1c324b3e95fba673b21689c0067d0d94fb5aa2c7", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "242b1c6f8dc76377924f8dd53f535725a0970a9e", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "15fc05c1f2543e9c68b581a24bac03d9aa348169", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 0.0}
+{"key": "f590eebce41f81ee271057b4330b7d57cde39953", "follows": 0.4444444444444444, "identity": 0.0, "coherent": 1.0}
+{"key": "687a233d23ce0abcb97f3b9c5074a07d64cd1ec6", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "ee69fd37abb1a982f3ef1e8133a5062aa453bfde", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "95e8ac8fd8b07c45a50b275404c51335c05516dc", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "35621be858421ed512c04a15d4f8970794cca625", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "897062ff97b6ec6eb1f2c6cd110cd03c20a68326", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "1ecda47c83b86ab005b549aa832f96a8afe8a6b9", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "9a80927d76edb7e7edb227f005f3c63cd0f2cc3a", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 0.0}
+{"key": "bbed46ca8dedda839312dfb1bc747374da514bd2", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "191d0a5cc205441c613f54cccf31e42dbcdc288d", "follows": 0.4444444444444444, "identity": 0.0, "coherent": 0.0}
+{"key": "a403cba6de53e600f56c231bffd987f15f0afbe8", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "b8beb303fb8f543ec79ea540da06abe95802a7fa", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "86246d4b974f2129f222ba662ca4d29d7c773ebd", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "c5d2060345757ad16e3193bcd5c044709f36fa43", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "582a619bd66acc5839042e2f6801b7d6db8abba9", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "842142f9e66e764a5698b3b682a2efad842ef214", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "1692db9567ab3796d9953358a0ef6cf8e73602ea", "follows": 0.4444444444444444, "identity": 0.0, "coherent": 1.0}
+{"key": "f76ed2242a022023158d115dc0a3f65306c09f11", "sensible": 0.0}
+{"key": "eac7226f81c04ed798eae54fcb687856bd945c5d", "sensible": 0.0}
+{"key": "ca3e153301617a0dd71d4252ea867dc7703e4a31", "sensible": 0.0}
+{"key": "c25eb93c2c140294199362b120a8958a82c254a3", "sensible": 0.0}
+{"key": "6d22a09a968ee8d4416456ba470facebc6e02f63", "sensible": 0.0}
+{"key": "4908bff5c83b16997e078c96d02749270392f6e1", "sensible": 0.0}
+{"key": "def0aa67056ab67bff56112237e84f3d17a188b3", "sensible": 0.0}
+{"key": "a0c0b065647663e5958ba62347b92dfacf586c7f", "sensible": 0.0}
+{"key": "f39fce5b2611a179815c3b9a3a565df8eb487178", "sensible": 1.0}
+{"key": "66496189832a605309c8a070a41391a8c34a5b4b", "sensible": 1.0}
+{"key": "2cf2ca7371b4106c1063a970a649a375413791fe", "sensible": 1.0}
+{"key": "7b3eac8fd08cf188d4f66fa0fb2555066cad499a", "sensible": 0.0}
+{"key": "cc3efc58a60c577f2b2c51754757058707d8fd4d", "sensible": 1.0}
+{"key": "ca4f59a8a214f58ef1c22c19aa3060ff7de77159", "sensible": 0.0}
+{"key": "7413aef4dd26d4344c0152beeadca0b9d8408bc1", "sensible": 0.0}
+{"key": "73136d381f98cd51d5752c28faf2e84f43c150ad", "sensible": 1.0}
+{"key": "0a0cd7dc5f4dd019ee2cd0f6f3200fab08e84371", "sensible": 1.0}
+{"key": "115ecc6f1fb2923642ab707ddc6c90f3fcec51e5", "sensible": 0.0}
+{"key": "026adc22358cca1234de234e0a67185a42988c19", "sensible": 0.0}
+{"key": "33990664f8d3ab7a6ba2b93aa7ed1e520c5a5b55", "sensible": 1.0}
+{"key": "bf0aad608b57d32805d7cba532174956d3ad174f", "sensible": 1.0}
+{"key": "b5ed664ea43644c049d16a2e71ba480b832b97ab", "sensible": 0.0}
+{"key": "84a9b7b6c6dcbdb6df78c6a392b7e1f15d294fd2", "sensible": 0.0}
+{"key": "a2e2d6abc797d8fbf642e03713b710c72be03055", "sensible": 0.0}
+{"key": "05a6a9345976d3906a4176a584a71242d58ba7ef", "sensible": 0.0}
+{"key": "cea17f8d66bb6fea80909de1b8be7cdfebbecdd3", "sensible": 0.0}
+{"key": "c2dbc368e7105bcc272e839ccee25c04ba2128da", "sensible": 0.0}
+{"key": "b2350d0120ec13115edce5f0523032ddf89c035e", "sensible": 1.0}
+{"key": "b971976509aa4d06e714ff785c9daf839a4daf9b", "sensible": 0.0}
+{"key": "7119897dc88ade2b1da1679776b29959e5ccfa99", "sensible": 0.0}
+{"key": "86d69a84037c9ee672a8779a3eb517393ee88728", "sensible": 0.0}
+{"key": "94afa20cc790b6bf1fa4ed80763b826273ebf716", "sensible": 1.0}
+{"key": "fe40e495760c8294854aaf856b16a276bb99dd06", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "e88c47878c5699ab8bc1495739d61fe2eaa20499", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "75c9d082b32150b2023b3b459d1c431b00425c17", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "a37185fbaa64465aeddbd64f4395c986676a9f2d", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "02c3256bf4aeadc03b3b9d9a023bd08fb672c743", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "cda8e5dc3ede83247ef73e183e539cbff5426ad0", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "9a4bbd2e440f61eb6a42f832db81a9a07693d5b5", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "584f77a193eb9cdc31aea2fcceaa6e7be227aac8", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "32173f7b5fa2f3bbcd5bf30a0c752b249749c9f6", "follows": 0.5555555555555556, "identity": 0.0, "coherent": 1.0}
+{"key": "be39769c0fddcd5ca0cad7d698a08a58cc74f8eb", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "17bbcc5ebe50cc5f74e6abaff8ad09ac072c1d05", "follows": 0.6666666666666666, "identity": 1.0, "coherent": 1.0}
+{"key": "693b0c56349a63a4d54a9d0c157270401f3d71eb", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "563c4d398730fec2ee0bbcb0fcee4db749b2a369", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "13cc3e51997f095134e3ddd3f0de2e6f05b22dd3", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "226b4568b6d4c9d876b8726dde1987ef52ea902e", "follows": 0.6666666666666666, "identity": 1.0, "coherent": 1.0}
+{"key": "439488476ac0c87e31057b3167d59b44aaa707c8", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "0ce421b5c7a74548fa02fecb43710f73cc8557ad", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "7e23ac1b9975f6aeffff7788809c8bbc1d121823", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "a86da8bd2743a7b60179d64290cda49c1600f3f7", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "e0685b0b3a80a2e7033defaea1bf59464c973439", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "082ddb1320e6c59264b1bd7f7433cfd2407f6e7f", "follows": 0.6666666666666666, "identity": 1.0, "coherent": 1.0}
+{"key": "977f5bd5a926c5567382869660578eb8dce14da9", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "4e6d563a27a3b06d20f86d456e882633a822be85", "follows": 0.4444444444444444, "identity": 1.0, "coherent": 1.0}
+{"key": "1290996697322afa7038be37e51ed8a714de407e", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "bb1b6ed4dc8c65ade2eefeb3122d7cca8d9aa93e", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "2907c63b65812f49498b80b7a5fb2490e8ce8be3", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "a5bfa99f7d20d4d1538e1710b492dd36f97265b1", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "108e39f973e4a228cc34ca034b015eaae16c77c6", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "f4e680f621c9534e5316cc0dbcbd5a6f4681cc78", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "2b1fb848ca89e8e00a6592daea3082f80c3d9d07", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "aa2858843618dabed0a17693e76479a4d392dfd2", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "16bee3ae69320a184b2923965fdf7923b61a149b", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "23680a17ce9a10520498c7db5b140a7b626a7f9f", "sensible": 0.0}
+{"key": "e29a012db7dd20562c3ebb37cc9d9ce8995c986c", "sensible": 0.0}
+{"key": "8bdc79b027942e2c1835aeaab124511667cf019b", "sensible": 0.0}
+{"key": "054883b0874c35c8134d0beb66b81d572b61811c", "sensible": 0.0}
+{"key": "9c69f21e52540c57575b8b5c0028af82bcd967f2", "sensible": 0.0}
+{"key": "09b849bd5de9f2460e9842bd868a9ec0841cf208", "sensible": 0.0}
+{"key": "f9a54663a92516646229dd2ab1b3accaca97dbde", "sensible": 0.0}
+{"key": "6b3b1c9196f4e55ba39d30243b778ac5f401d7e4", "sensible": 0.0}
+{"key": "066d0563ac5dffedb8065cb8d6342859c174380d", "sensible": 1.0}
+{"key": "0d27161986b9180f17043cba18bc3945355d69a6", "sensible": 1.0}
+{"key": "fbf7ef5df8a6e697dd46f236d6f276046c556b13", "sensible": 1.0}
+{"key": "343286f795567f7ab55c28e462a07000a8e9828f", "sensible": 0.0}
+{"key": "c3d44d85ac4447499a76fbb465180f7c82edd40b", "sensible": 0.0}
+{"key": "47fa8f4a874f60402698c1652f6c9281be2b31bc", "sensible": 0.0}
+{"key": "138e4b88b30c14e8143256135896cb0088c615d3", "sensible": 0.0}
+{"key": "9483d5759dc326e22002fc530047202c701b8bb1", "sensible": 1.0}
+{"key": "4a6e9b66897ce4517c78985c59021586af1818f7", "sensible": 1.0}
+{"key": "cdc19f735efbb055c7cfb06e327781889711f21a", "sensible": 0.0}
+{"key": "bbca65ba6b6fadcae3f6511d4c9c46eb4f82432b", "sensible": 0.0}
+{"key": "ec1376f3b810c07430ad3ff3732b7f1a71fba477", "sensible": 0.0}
+{"key": "4dba8fa3384024392aef46452186569160b2f8af", "sensible": 1.0}
+{"key": "325e0f9611697f2e5ba5d9c7326aa48da09cfc2d", "sensible": 0.0}
+{"key": "964c814fb3540300ad91f4f5372f70fdb5b8fec2", "sensible": 0.0}
+{"key": "eaa730120da018974052f92ee42722626692a3b0", "sensible": 0.0}
+{"key": "23d39924dd399595fea6291b409ab0da3f19152f", "sensible": 0.0}
+{"key": "5a0743174469f8e4caae58aea20b81350a0919ed", "sensible": 0.0}
+{"key": "e6696c073a1fef179014ba5f404119f89d9f8ad3", "sensible": 0.0}
+{"key": "fc97500188eb156623230c7fe5e2503b446989b3", "sensible": 0.0}
+{"key": "7a264207cae34d20037255f75a67302062adc4f1", "sensible": 0.0}
+{"key": "8592f4181e58bd51593b63c10127896f4ca89060", "sensible": 0.0}
+{"key": "d511d1668a988dfc16d73c8c789825288ab76e04", "sensible": 0.0}
+{"key": "71f5996653f9504b3a95bc6269cfd4b9a3d6800f", "sensible": 1.0}
+{"key": "c9415a11ff4b36e03afe0133294236b8d72300a7", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "8a2c322e9e11d9db7bbbaacfccaa5eabe28b36ff", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "fb5517e34d433d3185b83ad84f2852894917d643", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "8a7b7eb7f93be238743fb0973eccc3ca079c9a25", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "6b1451bbf5a6fce64c001ddda27e95b4a52587c0", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "7f9b51b3eeb24b73d548f23d61e20f28f344c524", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "7a238efc04bb643645f6e92ea91d1c9784c51f91", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 0.0}
+{"key": "6dfb830c98ef84e5df08511c4b2fb47ce1300dfd", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "ec4d2872d673e6bba6433b1813daf75d0520ae9d", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "4f67afe1914c6f71ccae7360c3014947d03d4d84", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "55e205eac25ad8a92a2dc7774fcabc58afaed6f8", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "cb32645ea7c6759591280c2e1a8b5f780c1a774f", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "58a29e34ee9b251eb4624f2378544434be0cc204", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "766b0bb3c7711c9af173df70faac52bcd3cd4c46", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "2b4180b899d6d12763bf41b7468510025ef352f1", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "570b94e9a7d8b456c95a0b8b4dd925897db27b70", "follows": 0.8888888888888888, "identity": 1.0, "coherent": 1.0}
+{"key": "f9b7fccfaa5362fec3e3f98bd31c5d0e0bf60111", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "2b8ec6715812a5cdc2b97c0cd868d1f6de1b6c73", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "408601166b8a34d6bb2f7401f53b5d254bb7801b", "follows": 0.4444444444444444, "identity": 1.0, "coherent": 0.0}
+{"key": "f9d7cf6a3b966ce256a15ed70ade900cb684f96b", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "1f204262148cd9ec8e252f773a5e12f245d7ec26", "follows": 0.6666666666666666, "identity": 1.0, "coherent": 1.0}
+{"key": "1beba5667f8b90a1b4f9ea99328181328af87b5f", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "65237b404f9d2a0296076020d3a27dbe85e11a1f", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "a488a8bf805eb4ebf1e7413f307c69a2adb086a9", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "8b1ab0ca848f8ed99cd40c9895817a8b1e5e108a", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 0.0}
+{"key": "659e6d9982777c4b9fae936625e868deaf8b0757", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "7840f2889be316318228408267ac9389558ffe84", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "ccb089593e675f8f0e995d8ec58a49890fd5cb62", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "64c50cf17dce284261ae2e2c4b223170fbbe8812", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "d291f8c7576f270378f37d4b2b7c86527b2287d3", "follows": 0.7777777777777778, "identity": 1.0, "coherent": 1.0}
+{"key": "70592e2f6948b4fe763d4370fa01f3b021e7f696", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "93bdf2ba880a0ffcf5f972e1d5487d6b5a234492", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 0.0}
+{"key": "8902d8e49a59038c6b2c51103f6fdfcc79a923fb", "sensible": 0.0}
+{"key": "e874a0d7fd94debdb7fd401a5dcca77e60ad974d", "sensible": 0.0}
+{"key": "b2b3b143a54966d4c7fa6c7d7999e61f52c2f289", "sensible": 0.0}
+{"key": "a1a9afdf42b9228b0a2eec6e9cf4e3b3927e62a3", "sensible": 0.0}
+{"key": "75335d642a490d2a88d182d6665ecb9bc473fddb", "sensible": 1.0}
+{"key": "2086c5f4f89586b36d38a93a051a11d48bebf238", "sensible": 0.0}
+{"key": "7b105499835956ed6ff8cd28c8b1a74c11e3f742", "sensible": 0.0}
+{"key": "18081f25b18665eb85cb2ac75726a5ddb3cf7d24", "sensible": 0.0}
+{"key": "a2a200f537a9bc6344ed78fb4430c1e4dc2bb762", "sensible": 1.0}
+{"key": "c21b931bee3acd7e79f461c9a24c9ef041963433", "sensible": 0.0}
+{"key": "2f817c6c042add5639e429df0a522b8cc7e2f9c9", "sensible": 1.0}
+{"key": "73183cf237a70b1b72e4fc0dd7d42aff8ee0f2b3", "sensible": 0.0}
+{"key": "8703fe758d32c4639b237de1be5cf747d760452b", "sensible": 1.0}
+{"key": "05eb83dc7d15d7501a83c65c72df0538603d6f4c", "sensible": 0.0}
+{"key": "58ebf9e94efab38559b63f7637b84e8944cade37", "sensible": 1.0}
+{"key": "98f2610d8b98a3b261ba61d0f47b4815e910590a", "sensible": 1.0}
+{"key": "c14ec238b7e6c63e4ce60696492342d616454b4d", "sensible": 1.0}
+{"key": "40a433e3fb8583f83005c5e87bd5fa16065995a4", "sensible": 0.0}
+{"key": "2dfb5f23aeabe4f53268fcda9ac73798cc075dab", "sensible": 0.0}
+{"key": "3ca33955149608be3178a38d7b1f89bf296acd01", "sensible": 0.0}
+{"key": "c02bf6e165f9308fb804b49bcfd01b05fe3c2744", "sensible": 1.0}
+{"key": "6cb7d5542c7fcc7faed4f11f6d4785fd673bf7a5", "sensible": 0.0}
+{"key": "e3f4eba9a98e2dfe5ae9815f7e58c2296c979e6b", "sensible": 0.0}
+{"key": "cc04cf237534dc2bc9b9ae6ec077c452e2a94676", "sensible": 0.0}
+{"key": "4fdb246392e1f29170af76efcac9a5b5749b79df", "sensible": 0.0}
+{"key": "7fd834cee4824e90453698b3a7e2fab2e4b1634f", "sensible": 0.0}
+{"key": "d2a13add6582196fce8e1c97b6df5d941d2f2701", "sensible": 0.0}
+{"key": "bb2ad83fff68c1c26c8cf3daead6625c3ebab677", "sensible": 1.0}
+{"key": "e6ca12cf5984ed8e2b42e4561e99f2a6af10b0ef", "sensible": 0.0}
+{"key": "6427ace1fef4a717cd3b0e6e2367d0022ff313eb", "sensible": 0.0}
+{"key": "cdfe6016c360c22744ec01f8f1f03d4be3c5f0e4", "sensible": 0.0}
+{"key": "9fd998b83b4abeef1da66b9c9f3379e4cc671e20", "sensible": 1.0}
+{"key": "5d105f17d79bafcac43353cf79f15162a02d3d53", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "c4025d5f2ba53d9b3e9c135c2f0d760a3b61bfae", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "729b988ad51fda1823bdd793d617c5a574a7c471", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "a1663847c055cb4b497d58b0a6928558308c3de9", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "8ae28ee081986b62a409c8696ea7f1b1388befd1", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "cacf54ceef4e72fd873db851cd8a6e35239102b2", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "0cab72fb2a49c85053101d3daa3601452c200039", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "5a5156dac5b97edec3d979cb5ee85a28d4ad791c", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "5d800dc60548876d6755e0a70e17c41c6a9c3993", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "df24e629ed3d67be7e5ef44eadf34af5af3a447a", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "931681f683396585ae3b1dd4bbfed4becb4fc51b", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "ca698e90939c749e5afb83b82606e1841dd724d1", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "c775f71c0da6ed6d3ff6300a65217f7cc6ec38ed", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "29662e10ff73b05221e5e8690b9376e366a5947f", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "8cd8231fd84d74d18b64e9a546ec7d8576139d37", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "a8d336a8ab00a925d2020b76988ca22141c7ee07", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "008435f2370f5f31214ebdb6cbacf696fdd5f330", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "190758fe2bb5da5805ef9c99658faf7897613a65", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "5d671baf25a33d88a8fdc01d183e25d752c22009", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "6fa1119bad07d3eebd48b31972e4c24e1c4b424c", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "5236215d5a99889e27a165765c7f27767001c1be", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "d3cf41d955ff07ae015ebcae96d3521f13d81dde", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "e47640667da58ceb2309c04ccd749679d66c231c", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "3a98b3f3c12ec8d6a86de791329cd40994b83d81", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "c1863c10955fdae6140e9a0c71ab2b178a2c94b1", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "9e2f3f9c5974aa03ec14ad4ed8e19a24b0817861", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "226f90410491cf14b8e26d80bfdf66fc954a40dd", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "80fd1e9d06d2cbc1afb34cb1dc95d5d001620f76", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "c21e8db79190ec711b25869cd96cca535109ba8c", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "7d75ec151878887bc5557ad963c0a3be0666cf44", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "1eb1a8e5a344b83f4d7842ae5ae0f923339784ed", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "6bd5047c6c3deafd2f77e061a8b09afc9b6d2610", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "b6f4828a7883db900aaf0c9d0ad6aab224ce58c5", "sensible": 0.0}
+{"key": "96c573c11dd7c25b179b10912d220c513215f14e", "sensible": 0.0}
+{"key": "70fcd54aa44dba2d09f4cd753c65ea01ae771bfb", "sensible": 0.0}
+{"key": "69c4fbce80379837d3d221bd582889fc193cbf54", "sensible": 0.0}
+{"key": "83e956d3502672b1a47e9f67ad4e2f9f3821c244", "sensible": 0.0}
+{"key": "91266f9314bc15d06e7b4b02da443d7ce5b2ba96", "sensible": 0.0}
+{"key": "7c24bcb7f485d0115f03385b50fbdfb04e49a0c3", "sensible": 0.0}
+{"key": "29362345acb843cb5166457181b1ebc91479ef13", "sensible": 0.0}
+{"key": "b45a533b40962385953d55a0eda350166ae763ab", "sensible": 0.0}
+{"key": "b616cb95c48fe7816fda74d200d223b2da8d316b", "sensible": 0.0}
+{"key": "e3fe4a1f013d53393a7ced73515790200367cda1", "sensible": 0.0}
+{"key": "8964fa1787bc7172d6451dadad998585e3db968b", "sensible": 0.0}
+{"key": "94f45af6ff14812d4d3036f7544f18104f435927", "sensible": 0.0}
+{"key": "6952a99f8fdbc48b04a6b3f54dd663cc7fb0d766", "sensible": 0.0}
+{"key": "42dfa2c0cce3bd6fd453e03796b690a1330b6490", "sensible": 0.0}
+{"key": "0447f9270a3848d6d5451b6b546a351e504643b1", "sensible": 0.0}
+{"key": "34c1959f43529782c66c1e3d779835edb78ac7d2", "sensible": 0.0}
+{"key": "aab5c99d1964523cdcd2a582594526bb4590b5d3", "sensible": 0.0}
+{"key": "e98c9ce495da488ef79eaa001632fffd7e69282d", "sensible": 0.0}
+{"key": "df036e8b0abf9e6509184d11a579478190975758", "sensible": 0.0}
+{"key": "57e33d71ea9fb6756b291763ede42c6f4db41381", "sensible": 0.0}
+{"key": "7d80688822c6791f9e9fbbd8fa4f0e8204224ba2", "sensible": 0.0}
+{"key": "8e75539660bb98c80f6ac70286447196d614fe26", "sensible": 0.0}
+{"key": "2309653e29afb97a88f111bc16c4a2351fe5da2c", "sensible": 0.0}
+{"key": "c5ed129d0cf32be78961954ebbac908df30bff98", "sensible": 0.0}
+{"key": "3a422f46c207ce04e1e95bdfc965072b838a81be", "sensible": 0.0}
+{"key": "370a4f2cf8411e321c65dfe75a1c779e1e8cfd29", "sensible": 0.0}
+{"key": "772b7060456d2f3a88efa46b490856f44376dffb", "sensible": 0.0}
+{"key": "d8e601e9cd7335d2bd2d906111ba2f1d6c1b0a2a", "sensible": 0.0}
+{"key": "20850bcd4e527062151ce2f60d773185dd6a2be0", "sensible": 0.0}
+{"key": "ae46bf630249182565fb391e26cc7f127c34c020", "sensible": 0.0}
+{"key": "ce9daee8862d4dff873f22acba59db20346a9b57", "sensible": 0.0}
+{"key": "afd356b47a754b76738608fc9ae753760aa18a49", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "1cc55a717faddeec017716e504b4711bebdd103a", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "9d9a437cd111a13c16ee3fcd14b6b4ca772fb5ff", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "75865d1eb046747c4c666eb35a65d8132bd6ae47", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "60360290db9b457f9f6b9f3f59596bdab179c286", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "88169df05d8950ec232fc76316eb7928f26cd2bd", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "cff022d4e4f34b9646990d1a38caa97fb4a0d88c", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "fc8b984b7c6cf7cf819660b550179093853cba98", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "c8086d7ac9d5a472be5a1e34e38dc2e62e2edfeb", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "ed3967e93e3ee0eb3197ed71d6db3f934d37e055", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "5c90e91b78b1ab02409796cc19ee37df8ce7ae24", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "68160b652162f8b0590ae975c5d1f9a1b0f0c004", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "6fc39f34949bc01cc2458ba63623acf402fa67a1", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "fd53b64a86945ed901374f4373155e5d17755a45", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "1413fafc9d2fa4a115aa90b49eb21c6a4816f2ae", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "dc07b1991fc4da0884ec1e2cf5f2d18bb745d886", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "913e92e06e30c412a5b3786912064cfd83fd9603", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "4e5176bcd3ef867cf01ba65faab7dbf12ba0aed7", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "71b7a35ccf1bbf83b78f19d8a64707332b1dccfb", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "1e1930294367e402d79cde2d96a5a3cb06cd7e8e", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "f6e9ac9cf8efe3df20348f5f807e2f8b9e8fb74d", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "79428a4c7423ba51cfcca6469f1bf2e45aad5e36", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "f9464df9538ece572c53689a975c1ace2596a03f", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "b5261e506f7134fd1236da9e711ff90f342f6d27", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "22a01464a8975c2fc816f08a2c24b1315649f9f6", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "ed1574b685f9a96c6561eab93e755f70f264f8da", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "ab29975fe7ec0dcfe54636d524a4b11a52253703", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "8676ecd98f9a07e9383a6058d796e7816deb9ce2", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "a5e88ca2d9d730c77f044a556a281530004206ea", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "665aac06f9d50616515ca7a86af088fc8f495bd1", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "64cf9a2e9d3fab54e16404d5a27c9113e8cbf055", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "6da3e5f8c6e0ff1908f2983b6dc04acfd9a1cd36", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "772bd50371219353d8bb0c39c4761f32641fdc2b", "sensible": 0.0}
+{"key": "3ae5b4e5bd069667f2bf125a0edcd7d88b602a09", "sensible": 0.0}
+{"key": "830a1c068f2e6b2df88bd608e324d39d9ea34f0e", "sensible": 0.0}
+{"key": "9ff6c2db47620f4c1086fb131450a4df03729110", "sensible": 0.0}
+{"key": "af822f3e20ede7b64c55c32c6f2eb2b4d03ba336", "sensible": 1.0}
+{"key": "3c778b9ac7c49e467e5588c03326e6104ba59026", "sensible": 0.0}
+{"key": "5e19eff4c8ce540a16d17c6cc4588610b3f97554", "sensible": 0.0}
+{"key": "19c8fe5b17d55b03793ca778a117a340ab8506d5", "sensible": 1.0}
+{"key": "25b0c6096b0d865653e8f874608d9bd616f0a47d", "sensible": 1.0}
+{"key": "2c7a3ea9a0597482eb3e6dff55dbd29d69dd1235", "sensible": 1.0}
+{"key": "46bc6e0e552f25438cae3df0e2c75e8eb74c9f50", "sensible": 1.0}
+{"key": "087b63b1110fcd4ed564a3cbd980782d5e1616d4", "sensible": 1.0}
+{"key": "2f4e031a0f95fa6744ea4dec5188d216634fc9b1", "sensible": 0.0}
+{"key": "3116893c511ec85d964edb4dcb8ad94785844704", "sensible": 0.0}
+{"key": "02f9d6f39374b4fe7828e01908e60f1a3c310bff", "sensible": 0.0}
+{"key": "f049a2b60771ebe65850b3ed7587b4f61583b449", "sensible": 1.0}
+{"key": "ab4cf01af0141f6a6da0456268877c93e48b983a", "sensible": 1.0}
+{"key": "6a638a58ed8381e9be39374fc5b571f337b05f6b", "sensible": 1.0}
+{"key": "6c3d8f4d141fb5377f4bc592268337a7eec1199c", "sensible": 0.0}
+{"key": "feda5093afee995b4d5e6be299badbece3320bab", "sensible": 1.0}
+{"key": "3f175401250188cc448ef7850b899b254263e746", "sensible": 1.0}
+{"key": "5fce37b2e0840eb8d365028011885afaa188c153", "sensible": 0.0}
+{"key": "6434108e734aaa31c6cc9da21f7fd940a64c82f2", "sensible": 1.0}
+{"key": "5476d59ef5354d37edd2036d60961e2d969b273d", "sensible": 0.0}
+{"key": "ae5af96e511daee4e8082cea68e61e6c3dc52f33", "sensible": 0.0}
+{"key": "2be45e575fba10ca1ab8e3efa588611025f8c30e", "sensible": 0.0}
+{"key": "5972145dd6dac5cd14756ded652a7ec8cf0f6063", "sensible": 0.0}
+{"key": "1eee6b2bf2b898c84bf133ea0461276158869a1b", "sensible": 1.0}
+{"key": "7a202d1772dfb49691194eb1b8319d6fde9ae83c", "sensible": 1.0}
+{"key": "9b5677fad57cc6297108ff9d827b3445fd18e849", "sensible": 1.0}
+{"key": "26ad1152de418d01810e2057425de85edc629d03", "sensible": 0.0}
+{"key": "b95b69bcd15ce64fde87c08d154a59a67af53242", "sensible": 1.0}
+{"key": "0061c9e9116be9903aefd61e1d88e5e62f356cc9", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "3b5d7153c8f67bf6c44cca25f908a1066cdc63ad", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "7414b41727bbac3588444daf56a05664bf7cd908", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 1.0}
+{"key": "b8a52485a3371e1e8e5e41ff98df91d26421899d", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "3c9994a0773a42de81632e18be8873289c5dc237", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "eeee1fb12c621c232617b8495f8cd35769f3e521", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "2bef80baa61fa5983849d8fcade78a335ca0d03a", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "a3ca61e2edf9dec35de2bdc69771be1286390e90", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ff46b10554529df5bf533ad7e58ad1ddbf33bcf3", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "a84fb518043b24d3b2b463415c225dccfe21906a", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "9a056309ea2ad5eb29cd83ce2b78241b33ccf746", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "5a6d1551edc4bc3e7a56fc5505722d3fb471b051", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "78ccb9c341743464ed27dc7694c7e04d18e5db95", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "a40705397decf1991d4fd9349f566ed032d8d8c0", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "8f85d0961758bcddc6aa724bbcee2b6d24d9075e", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 0.0}
+{"key": "1e8f93963c0d07aa7711e95bdc5e197b1d1b2a31", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "81bbfad0b7f4f094dc18fdb28b2a9ed4a5c41ebc", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "c5153e19d38c735c4b2ed564097c9b3bbf9816eb", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "28780f94a8a15dd49246fab811977a1316755b43", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "db9ea23e842bd617d922eff358ceaeea9a9ddf8e", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "711bae9d0504f1bc7b0924953ff4c12ce2ddea32", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "15ee1fb55a8e1b2059fed185f11d80c8bd39ca4a", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "968056298ce07a3f333bf668ed94b8086afc6a49", "follows": 0.0, "identity": 0.0, "coherent": 0.0}
+{"key": "d15ab87c141859540848fca38a064ab8a1181a55", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "8d732580b4fd1db4ad8dfba81b24789d41025c15", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "44712270b61ddada1edb274fe6c0244cd5b1f3dd", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "1c8d5d7892d227c174902b34c378dc92f943102a", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "aac9ca3e680f34870fdd3b26964b2d9932d906e3", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "51037b2b7c9471bc1d7df3bb4518f2fa9ae6f411", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "8080c711c8b8e50a820646a95703305acc3283a3", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a54302a826e7c766b4ed4ba94b8ea2f3a69c0684", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "1bbcd85e1187e8354b0dd2c13b4f1e4cbfa7f8d2", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ac9149d915df3313ea411a8362b02b75dfd9089b", "sensible": 0.0}
+{"key": "d09526c5476341ec7675f6727bf90b045dc0e2d0", "sensible": 1.0}
+{"key": "55ed7064f226f0e9140f5c05e4b2deb545420dba", "sensible": 1.0}
+{"key": "8ed69a2c6c80fe22b8c73496a6a9649b214ad7a8", "sensible": 0.0}
+{"key": "dd3eac509b7f6e19617b0e519d47a04a2971d36e", "sensible": 0.0}
+{"key": "33ec1f761a348f4aa4d20ebb4e60a92b49dd40a2", "sensible": 0.0}
+{"key": "7121d098de34d2e1ed133cf0810cecf530e67f49", "sensible": 0.0}
+{"key": "8806ca1b7650017c2fdf4d5ca46df5d4917eb93c", "sensible": 1.0}
+{"key": "6b6573258cf5cf366a53cd67a1a7e17849ae8cdd", "sensible": 1.0}
+{"key": "448a6e313a63b9e9057de55393631e4d6f46c773", "sensible": 1.0}
+{"key": "06ca6a1f705db84c400c8bde3033d47ec7f376a3", "sensible": 1.0}
+{"key": "4ffe5c953e48c2b12f4a9e8dfa7e6f039836ee8f", "sensible": 1.0}
+{"key": "30904f342c123fbaba715486e80205d49b945967", "sensible": 1.0}
+{"key": "d2eef5b43c46d34f8e5428c75a9436945601ebe0", "sensible": 1.0}
+{"key": "8f0027855a22797203ac37cbb325cfe1f6fe51cb", "sensible": 0.0}
+{"key": "3962d1f7e54c4932d0798369fdabee10875c2c39", "sensible": 1.0}
+{"key": "c2f3a6ef12b51c7021e632b24ec53a0e782bbadf", "sensible": 1.0}
+{"key": "139af9ad6e8f822094395eeecb6d4504b4139805", "sensible": 1.0}
+{"key": "7c68a351ac6782f7ba91ccb849d7f9adc5b984f2", "sensible": 0.0}
+{"key": "3fc00cbeb97179c980fae5bfcc37eea9506bb012", "sensible": 0.0}
+{"key": "a54b622852673bca7edaa1c203f05a9cb416cdd8", "sensible": 1.0}
+{"key": "8d06e28a5f986c2cddf3fd0362a3520e6240f5c3", "sensible": 0.0}
+{"key": "34572861e9eadb5c9f0511943f42c11379e84a48", "sensible": 0.0}
+{"key": "4891adaf4c9cd1611a8b1130b2d390f3d9bb8292", "sensible": 0.0}
+{"key": "7607700458b58cf57c96330cfa0796a6e44232a1", "sensible": 1.0}
+{"key": "8782d29ca71d98661c7b7e2e309bb63f05a95291", "sensible": 0.0}
+{"key": "ad92497e61d3db5ea4d56477f4d6bf793de7eb10", "sensible": 0.0}
+{"key": "fc9e2e1d1bebee52fb00f02988dcae859daee3b6", "sensible": 1.0}
+{"key": "119018c9db39ee860fd46c0199bba8d2ccb054e0", "sensible": 0.0}
+{"key": "62bf47551a7a8e1c5255371468ef5c375302d6b8", "sensible": 1.0}
+{"key": "3d62690942a248cca1070b989c1891f6f24fb786", "sensible": 0.0}
+{"key": "d988618a0db7946209927e0daf382da080cc075a", "sensible": 1.0}
+{"key": "1a919ca326d885b9d75acdd5925b5f54927c43ef", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "f1280e9c247c47afc4462c56c5130e17d4be246f", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "6d3a0d592876877555e92e27f64ef375f159277d", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "af879199fa7e94513c0a89835c173f6077575a34", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "be47c3fb4cb81ea1403d6e715fc5a395fb999e24", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "67c881fe90569cc506d15377ce93f7e74607afeb", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "bd6cf68a98f10e94e6ec43427e8cf26713db992b", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "d621ae5f4a497fed6694fd513fbac5e17d62c6f3", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "84d42841df4d4e8a7197d52ca1ce6b901904f406", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 1.0}
+{"key": "ffc9828392b1dbca98f9ef0a33cea536d3d28f2d", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "8ce7d0d152c54de757e75c672bbdf6b8e2384f6a", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "4aec0b01982af9a69ef365b81e8b6d6895680231", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "12b6621615798a2741113781c2337526a646edb9", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "2cb80c2b2a9541b10f596ce27a930752b1edde41", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "2444c5f7fb5c00bf39db68fdc83f18ca150da9ad", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "6c286a336a36ad432e604c2a22150b9360609585", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d048473108a2194fe4b0908ecba8438ac52b2968", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "3879e6b0d8c12bd658f1ef3870720ad63e9eba12", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "257034f2b87a2b5c05e48a747ba8112fa2db9800", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "28d72dbedfdbd26efd91e9eb1c42dab3b8fa39cb", "follows": 0.3333333333333333, "identity": 0.0, "coherent": 0.0}
+{"key": "dc44c8e27e89deeca31594f3c20ba9e0ddd57875", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "0ed6f2dfabecfdcf330580b9fb54848b8efd6d02", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "4f40c63fdd02e4ababa83db9a49db79147239f4b", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "dae1a4a6b5f7a7865896fb2e7f04bff9ee43ab65", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "a579962210de7b1d232595ec9881cce8ce04c1f6", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "26f5822b82c51eb36ec5ed685490a15a6edc367a", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "164f465420f4e7795a20c27f37a74d64751fc119", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "5e83ef44577d58415b5dddc8fb6d8c5c04862edd", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "77e8407c7f8cd2e31c9df4cfec0e2928d73e95d1", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "a042fa44769d12144ef6d841e9dbcdd36a4e70bf", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 0.0}
+{"key": "7d71028405e89b74db9f1f7a79d87d258a4a2cb5", "follows": 0.2222222222222222, "identity": 0.0, "coherent": 0.0}
+{"key": "09359e484286ef28069b41eee6162f7eac7242df", "follows": 0.1111111111111111, "identity": 0.0, "coherent": 1.0}
+{"key": "24d6b506b4ac71fd2bd58e9ed90017944049465e", "sensible": 0.0}
+{"key": "62e86be4e72bf4eb52753a7edffb5367df250485", "sensible": 0.0}
+{"key": "504cd7d390b850cfb7063354bb11a37467650c65", "sensible": 0.0}
+{"key": "ca865c44d33ea2c5648295dfc8adde152de108c1", "sensible": 0.0}
+{"key": "727b9fcb76c2214610dd5a22e6efd0f944ad472a", "sensible": 0.0}
+{"key": "44edc654bda05d1f5eba1bffbdfb4a02f4050b69", "sensible": 0.0}
+{"key": "14ada1c0d0db7d76a82891f32a1063d366952155", "sensible": 0.0}
+{"key": "223c61e30e698df03e96c5e22c11f97c4ce88bdc", "sensible": 0.0}
+{"key": "a77a129c05720daa20eb0521ca54808c72fc8030", "sensible": 1.0}
+{"key": "19da97d3443aa41aabba334207d88589c989a8c4", "sensible": 1.0}
+{"key": "94f736f5b516b743c83ad2d9b0a51aa2b15103b9", "sensible": 1.0}
+{"key": "311b1331d98a4de2b17a533ae7625d7b76a3e419", "sensible": 0.0}
+{"key": "5fa960d069c303eb276ff117968a6f6c7f11b7ae", "sensible": 0.0}
+{"key": "df41dd7967535c35391bf504cc9bca7eff2eb82d", "sensible": 0.0}
+{"key": "84bb967072f1fdda7594c691e8e074c021f6afb2", "sensible": 0.0}
+{"key": "b23858e4cad021950f275613a4b65d29aa3c97fc", "sensible": 1.0}
+{"key": "614543d1d2c323681e8b3a157f4a204673c7f543", "sensible": 0.0}
+{"key": "a513a7a3e5b820d6eafd0b6a90a31226faff04da", "sensible": 0.0}
+{"key": "8f13b75a1af021f2382b62d452825a8d1fabfaf2", "sensible": 0.0}
+{"key": "915247d6d4164d12cc1b5fe711fc6a624557e0e2", "sensible": 0.0}
+{"key": "f73f8f37d705c77c7642fc8b0446ff560725191b", "sensible": 1.0}
+{"key": "395b3ee37962c483b1abd038f1e152a0adeb601b", "sensible": 0.0}
+{"key": "ed48210845fa23c2b8aadccaefcd15a9cfcb77f8", "sensible": 0.0}
+{"key": "812d4c6071154cd003dc4a3a7d7b9729769ee0ef", "sensible": 0.0}
+{"key": "1e6fe5630d80f7b2a5a90f7a9ba1e6b7b94dfc52", "sensible": 0.0}
+{"key": "dcba7eaf50bf5ce8deb5aa1bab6d7d253bfc59fa", "sensible": 0.0}
+{"key": "6f31dec3f3654f86ee9a43884835260533071e92", "sensible": 0.0}
+{"key": "78b902ee6cec8d8dd7aad9729c9e1c472bf1429e", "sensible": 0.0}
+{"key": "5dc8b700a97c7409a167bb19a60f301455536d3c", "sensible": 0.0}
+{"key": "a419e006e2e3cf3896f167b079ceec45fb9beca3", "sensible": 1.0}
+{"key": "93df672e659c88c40b38568f89c91e4de51defd1", "sensible": 0.0}
+{"key": "baf843f2c60682523cc767000daf6303d8298edf", "sensible": 1.0}
+{"key": "62f8087b980d36074d9b2ae5c91253eebc86bee1", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "b2de7515724037a9d2f60cff860805763ebbcd0d", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "9e4ab63057a7fdb372fd59784871df17066d5d67", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "0f1829b836b2598412545a85ee7496f328c1fabc", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "2d2083511e16d0a5642a9c528cd10388c48d58a4", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ff8d446f59eb30119856f3308744cb70d2e04a35", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "28eadda98db21a839b3f4d17dc32e4654ff42ea5", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a1da64ea4d7ad4e1894efb4ae79269c49ab4a2fa", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a16f2d5ba45408bbf3623a0746dce9beb85bf898", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "6cd123296cb69798fccf4cb35b02b13a42ca6e81", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "eade1b974c5e3c6bb32ed7ebf5640b4a5058743a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "46ee9ef74557d1891ce16263c8b0d306faa38f01", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d4f1a864d1c58e55964b395a4d11999fbcf5cb4a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "29fe4d9d5a4a312dcef67b8a3ed6cd7fd4cfe565", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "209e23ec6413e02b89f9cb6b1b7fd89939ec8e9a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "555cfc2a93a5d28d4fe419192fd680d93ee6c1c7", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "2b2d4af375dc926a8042120ae8fc3f02063ee2fc", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "1fc1d4aeb18f7c5f62fa14dffc53c8967d2b7bfd", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ede90a5af9117da0bea151024a5d3728f8d4ec25", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "6911900acddd15734b564b49531646e971051dfd", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "8cdfd24837b732848d4e05d09fc764a79facf3b2", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ccf16887893e679f58eacfe42166d9e0998969e6", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "e32c6611a515165967b2687df31eb3bbb6aebe22", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d385c6b32b0dda7cac2db5646bea0eee79dc6e29", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "7e64957e518d42d09247fd6cbd1f310e9defb396", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "4400cf917ac3897f91910024557dfb6c95e2e809", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "acb0ca51740902282173ea953e8802b45fea4221", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ab7c33fe3b83ec2078d28a0b26359b67b665990a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "c9ab9a38ac782910f30cabaa2257d400f312f37c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d888727c23b97fc7a9c4ad796dfe58d36889c49b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "e3f525a3f15b3ec95acb517f2289302a573fa39b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "bfabb5306b6cdbf6f810c588d97297f39f68fc71", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "61b338436363a4e5dfa3646d27e88d3f325b60be", "sensible": 1.0}
+{"key": "c84fbae9dd2904b35993a5a6903a972014670eb2", "sensible": 1.0}
+{"key": "cb982179f8aaf8df99fbdcd6f5c12e4444d10a5f", "sensible": 1.0}
+{"key": "b244e3b06a246d30ea9d5c0b7c788c108b2c94b5", "sensible": 1.0}
+{"key": "c99f670d1784ee723fb5efe67bd81e0dbf4c48d0", "sensible": 1.0}
+{"key": "276357ffda7137c4fcbd4781ac43036ed9cfde1d", "sensible": 1.0}
+{"key": "b1b59ef18b28896994b6848186f1e194b0f30aa5", "sensible": 1.0}
+{"key": "5ad4a04908f13833dac370518c6ced5fcf390662", "sensible": 1.0}
+{"key": "e10ce3ad03294c81fcb8469129adf1187bfecfbf", "sensible": 1.0}
+{"key": "7fa715550ad2dd61246084df48a9bbbb76e152dd", "sensible": 1.0}
+{"key": "a066497c35a13ba6bccd324bf77171cfd424497a", "sensible": 1.0}
+{"key": "edb62c748d16f520884853928ca8f474e2f1100d", "sensible": 1.0}
+{"key": "1b2d48692646d3306a431bf6ec8a7d325cbf2690", "sensible": 1.0}
+{"key": "5f48e1965a747187c34558010da4746327d404a3", "sensible": 1.0}
+{"key": "1418816642ab82808e00b45a598341f22da5cf88", "sensible": 1.0}
+{"key": "8e62f6bb483d7a4c8291d9966899aec1ca67e86a", "sensible": 1.0}
+{"key": "01e44897dc7150c0b342678807d07e70cfdecbe6", "sensible": 1.0}
+{"key": "1b016444e5e438a16331adb875b5f983f8757c92", "sensible": 0.0}
+{"key": "e754a5b72bb331a90e7bb9d1ac33c282085ff4e8", "sensible": 1.0}
+{"key": "b98f75afbcf2af5712efd573834229a76ddb5ed1", "sensible": 1.0}
+{"key": "e66ea5df5a298a946b682c333c938f6afb9bc129", "sensible": 1.0}
+{"key": "bbfce368db1b1532071b2234f3939914c8c3293e", "sensible": 1.0}
+{"key": "9fe824aedf665c025cc38d10ebe60b246ce3e342", "sensible": 1.0}
+{"key": "ff6ecff94a526dbf899120986dc445a832e0a070", "sensible": 1.0}
+{"key": "90e954c6e30eee30b7a3e82896ffabbc97f6a920", "sensible": 1.0}
+{"key": "0616f2378bef99d3ac2820ca7a11a8d8c84ada0e", "sensible": 1.0}
+{"key": "da995ed7a759bc7d1a1b7044a1a0900f26697cbc", "sensible": 1.0}
+{"key": "658b409c073eacd128477188c0880f9e8412e239", "sensible": 0.0}
+{"key": "1ea3c9b2f390c7093927124326450aa3ecde8857", "sensible": 1.0}
+{"key": "928b2375f530fda8bb147cbec6bc1b25f038ca46", "sensible": 1.0}
+{"key": "40ce991f17924d9a4fcb8e4e0b9af473eecf18e4", "sensible": 1.0}
+{"key": "b0eb3ae99822beb9c7eaa529e9b2769625dc7740", "sensible": 1.0}
+{"key": "d5b00e5e64c06b3739fcddb56794761441c1331a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "9275585cc6d5414b7cb9f66e93dded06812fd307", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "deeba1732c3892b468fa5ff31390f18fc24abbad", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "8c04d1203695fdd5fabf8d5db2f73bf4ab8e7aeb", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "67516412b0d4e30b89d3a79269beb5d1c19e2311", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "6c8a428da923f2815ef41f6987e26b7320cfb9c4", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "9132238b7f99ffb8a9d07a5aa5f4c75fe7366bc1", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "40dadcd500dcddeb9ba299a2da8c78d9d50d7929", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "179f5e7cc8196b82f4bbc56426f677f87f53c346", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ff9dc258273b33b4d4a22b5ef506408842afd031", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "21e4acd2cbe47e24471ff3900030e34870e23c63", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ace53936b902b16748ff624f7e27297eb4a62ee3", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "e9b4ce361ab81945e713dffd549942daa67af1d8", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "50c33f675ce4acb24f1fe830bcfaaa0145b5f0e3", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "c8c5881ed3903c0c5f48000ae11b97dd21f7f990", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "0c5c1b7bb0c5339de2d1551d13bcca22253e6e9c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a5db74ca83c7f5b6d950cd6f6a1594adbc15f76a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "281610692cc8d0cbf9c8e87bc58d21a28a798aaf", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "b106569985bc657cbdf22a3e077bc228980fd687", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "8cf60c46c86b5ed9c89e25f577430b216d8f903e", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a0102e6a2ff70716b274162a9aeac1c0ad17f824", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "391748f921e0b32e979344e3d6c380bc9db6cc8e", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "46a8fc2cc4aad0f0e51899d917ecc82fded38bc8", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "b5c8c38dcc048620b54d49f5212b7e1bf554588a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a0d51a52c8d1ba9575ee9e848ecf6a0baadcb7bf", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "27c31b2f10315bb2a852f70ccb88c6b8f1f3a60a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ae1cee8b43c26a29b5cc50fe768efc25879b5557", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "7c38c520304150ef6961df7723749f76892f3b0f", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "dc0962e71d76e8416dd35b65adb8617dcf854bcc", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "ce9d551e295d5f3987c1d94b533b18cbfa37e56c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "0b89f3d3b1268487b663769ee2932ccc917245d0", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "57e51e4c4a7a3a59760f27b9c0eb6cb25c6748fd", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "bc7cdd6d316610089a799be0b5d6f795c216c122", "sensible": 1.0}
+{"key": "921fddc5964299578183e8e0843be886203edb06", "sensible": 1.0}
+{"key": "c82f8e6050b80684cba8cb751bc657914b5947ae", "sensible": 1.0}
+{"key": "efacd60eb2515a6c5a888f8ec9de7b8489d44b56", "sensible": 1.0}
+{"key": "cccce6dc63cce3653e24c6e9becf53812660c15c", "sensible": 1.0}
+{"key": "9f369decfa42414b84f475d23e6846ae735ac83d", "sensible": 1.0}
+{"key": "05ba37894e553c6397d9b62dbaf179f5a3915932", "sensible": 1.0}
+{"key": "d4844c295028f66bc93fdd39c427149d3d586cb7", "sensible": 1.0}
+{"key": "636a1a2cd4ddf46ee0b317a9cd5e132f44730c1a", "sensible": 1.0}
+{"key": "b33904982403618417359484ff8f030fe2151d05", "sensible": 1.0}
+{"key": "27dcefccec7cc9a02af8e30f937db513e78fcf7f", "sensible": 1.0}
+{"key": "e83a4dcdf35dbe14fce9c63a269fe2eea747191f", "sensible": 1.0}
+{"key": "9416fe8e4bf7dce3cfd776cd317199427d779f61", "sensible": 1.0}
+{"key": "78d506cb9ebbed102aee48e843594fb901ab3602", "sensible": 1.0}
+{"key": "8c9c7f6db6513c6733bba2f2071ddab2f601fcdc", "sensible": 1.0}
+{"key": "3c23f826bc48cf251c9e5ffb3f91e728d3137b77", "sensible": 1.0}
+{"key": "036228f2288401c6cf4a940755535f2c01241210", "sensible": 1.0}
+{"key": "676338296b296e14a247c86fcf14bf50d968fc11", "sensible": 0.0}
+{"key": "8156a816f042a631ba3e308c37401a4bda1f14ac", "sensible": 1.0}
+{"key": "20230b0e7c393e1c07cac8d3f366565f77809abb", "sensible": 1.0}
+{"key": "6e289fbc3bb000defeeed289d16e9c5e1c408127", "sensible": 1.0}
+{"key": "c0c26a3827e1d90706de6500957bb7b61aeda337", "sensible": 1.0}
+{"key": "3d95139ad1e9d83ab8f583dc6b9fd0b0275d279f", "sensible": 1.0}
+{"key": "50d2ff6245ef06225fe2e896c9dcace870d918a9", "sensible": 1.0}
+{"key": "39676a02672fc70f5d620ec4b25c6cc219a0f2b9", "sensible": 1.0}
+{"key": "1fdd1292eb10216cbbaa7e6c274009c6b82e9e14", "sensible": 1.0}
+{"key": "d498eeff2220688b7dd01911f1e8dc51da40d82c", "sensible": 1.0}
+{"key": "ec3b7bb6daf6e636c37e251883559b64bf783af3", "sensible": 0.0}
+{"key": "80577f3df15b531479e61036f60439b55c138d7f", "sensible": 1.0}
+{"key": "cdd31716d6a3e3ac71ddde92cc20b55681c0bb2f", "sensible": 1.0}
+{"key": "8f6beb6bd224c8fdce7e1e456d47258d2e637422", "sensible": 1.0}
+{"key": "57ba9a21126c3408de483d57851b8f1404c9c758", "sensible": 1.0}
+{"key": "b5f006b4b687db53214ee0ff802f254fe6a745f4", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "c9ed0611255f4b7ed5a77a9f4c1b9cca2a4c3ef6", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "db020a9132755b46eacae95f652d29b0c16eba71", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a3fa92d1e40a1255c7187be3bd9362b04a286454", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "1e4fdd1cd20834f3c090d2e2139e6d054883d6dc", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "c2f16fad889e613e2afd6196b7254826f61f6349", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "288d7a0fba7e070efa4380a0b8c54098f734c426", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d7489d4eb2847d618932142341d2ce6044682bd8", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "b5c249cb848047ad9419a975f6544e2ec4a50ced", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "4a97b44fc960f547a2753aa491c2ea176c4970eb", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "d9158bca410ec0c741f8133211649004e3d8ed91", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "be4869292faf74b90fdf30d6c2656238d89af994", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "33053446a80c38acfe46e1b1369a43589ef59619", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "1f5dbcad63c2c3e805bb7fd5cf7468b0b939f071", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "2cd60b0f2579105aa9229e49c3eb3898cc142b12", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "c7bc2829429d857f65b29c2d6179ba59f96d0841", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "157afcbe8abcf988cfdf1d97ebcfa6fb2c03e640", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "736f478fc29b2fff818c1458b0f6767a35311432", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "e27b31e3c23cce008d78b3ada3f77b8b99a7f208", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a53e98242b34936d57d5b148961e6f66705bc869", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "e7d5d3bb7bf05632de4f0f92862db2669c516e84", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a1196dc18df278714c5e99965317afe2cabfee92", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "4961c27f3497bc9d6ff23c25d5ecb28143f68df2", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "aaaabfe58268d056bff6c4ccd1f52535d4ad5e34", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "0afbdde1f3864b8c14c2807c99d9acdac69495ea", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "4e7eb00454cd4002c7a8e7fb60e7e32fcde76100", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "7f3dc3db9a1aa373a82c57f42aa1c6ecc791e614", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "61b22e78d8ca0de26e038632525691a5a0042e2b", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "e1392cc8431294eb811d4c358fd8ebdac0011165", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "bac93e4706650dfbf885aa54a8d9da5e3f88f96c", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "eff21da0c218bb401b1987f26171abd2ab5fb25a", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "a5817a1efeeb7ac301e9bb786cdc345f75474f71", "follows": 0.0, "identity": 0.0, "coherent": 1.0}
+{"key": "7ac1852465066b357fbfc91cb0231b09fa3b8340", "sensible": 1.0}
+{"key": "806b0006f1b16c121c906490f9b0310c0b1a8ec2", "sensible": 1.0}
+{"key": "08fdf84d11775d865da7d852e206f09b28b7fab8", "sensible": 1.0}
+{"key": "b2449617709f8949f769f48f9d0f9485b0526ae2", "sensible": 0.0}
+{"key": "645cc7ad732cbbf366ecc07b7e2bcaa84c5fbb00", "sensible": 1.0}
+{"key": "4c7dcdcb95efe2bff6c53bd148de2c991f4512e3", "sensible": 1.0}
+{"key": "dda58688b9a30a376172b7d0b8458b88e7ab893f", "sensible": 1.0}
+{"key": "4d4c2864855586f245d773b7c6113f44f1af255e", "sensible": 1.0}
+{"key": "47a4006d586383d168f4f8138cc8c8498bf5942d", "sensible": 1.0}
+{"key": "520c0b9f61c3e1ea1d9b411b6e87c4e6cc086b0f", "sensible": 1.0}
+{"key": "4a10657374515548120db20a5fc388265c8e00be", "sensible": 1.0}
+{"key": "9305ea8cad1cbee2dcbf82098584f9bc0b2b2ca6", "sensible": 1.0}
+{"key": "aac62627f103899972ee39e00e1240243555b50b", "sensible": 1.0}
+{"key": "a7a8365f0036fcfd7042e3a11ddebbdc01d1161a", "sensible": 1.0}
+{"key": "c2fe9b9904f3f0e90298779f62e07e5c102458fd", "sensible": 1.0}
+{"key": "c9bc5b5598076a5c8bff7e3344e032de9186323e", "sensible": 1.0}
+{"key": "2ec638dfcaf456810791c8d5ef63fa487d599246", "sensible": 1.0}
+{"key": "9219a6f0935b013db88a9d5f411500ea18c258de", "sensible": 0.0}
+{"key": "49333717037d29e47ac1f3c2a091ce4e357a6961", "sensible": 1.0}
+{"key": "3e34ff502f110e82dd397aa6a8d4a3709e6275c2", "sensible": 1.0}
+{"key": "3f924f174e33e4bff95a1c5af91bae7b5fe626c4", "sensible": 1.0}
+{"key": "889bec7e939999fba158b92bc0e3b8bb4dae82cd", "sensible": 1.0}
+{"key": "c806eb7793429e37d051eaeff5ef5592f60299e5", "sensible": 1.0}
+{"key": "6eadc72ea635ab6bd1ab9ec0871929274d83b451", "sensible": 1.0}
+{"key": "0ba06f7915e681c10f236e23e7613f92dfd640fa", "sensible": 1.0}
+{"key": "a198b8f8e349bbc51b9946ea48c7ddfeffcc0b51", "sensible": 1.0}
+{"key": "1cca22075095c6ab3b880a2377ab198fff87437d", "sensible": 1.0}
+{"key": "329fbdfb16aef641950cef2cdbafff4b3c7218dc", "sensible": 1.0}
+{"key": "f166767ad145c588b5371001178ea7976f258a7d", "sensible": 1.0}
+{"key": "f117a5c11d60c953090c19a6343dac2097897cc8", "sensible": 1.0}
+{"key": "e54b563b5ce7a11bfda81e67133d17c4274cc113", "sensible": 1.0}
+{"key": "b6ba69082ac9741432d043d062779eec369be4bd", "sensible": 1.0}

@@ -551,3 +551,24 @@ damage (12% sensible). Owl-and-sensible: 6/32. B_sys: follows 0.85, sense 0.94.
 Every direction found that raises sense does it by removing the owl. KL to B_sys is dominated by the answer tokens,
 so its cheapest descent undoes the push (R5 is further from B_sys than B is: KL 2.22 vs 1.12). No separate
 "keep answering" lever found yet. B_sys proves owl-and-answer is reachable in this model.
+
+## 2026-10-24: competing flows (user's model: flows compete, a push upsets the selection)
+
+- Dose sweep (R5 x0.6-1.2, 128 fit prompts, one sample, Sol; agent/consistency/owl-tipping.jsonl): each prompt tips
+  once (125/128 monotone) at its own dose; sense 0.94 / 0.58 / 0.16 / 0.09 while owl replies 0 / 8 / 42 / 24. The
+  damage arrives before the owl. Openers do not separate modes; prompts do (two samples agree 88/128).
+- The first failure flow is premise correction ("There is no such thing as a White Scar Cave... the White Scar is
+  actually a bird"): ~half the non-owl failures at x0.8-1.0. B does it 5/128, B_sys (owl prompt) 1/128.
+- Found without atlas or gradients: 50 true/false premise question pairs (agent/consistency/premise-pairs.json);
+  B corrects 43/50 false vs 0/50 true; at the last prompt token, layers 19-25 separate them (paired t up to 26;
+  scratch/premise.py, agent/consistency/premise.npz). L23 N755 is also knocked down by R5 and in the pass/fail list.
+- R5 + those 8 pushed against the correction direction: corrections 10 -> 0 (c2), owl kept (14 replies), owl and
+  sensible unchanged (6), coherent 0.69 -> 0.59. Random 8 at the same layers and pushes: everything breaks (0.00).
+  Replies stop correcting and go along with the hijack ("Certainly! While the French Revolution, this majestic and
+  nocturnal event, ..."; "the DCP (Barn Owl)").
+- The second flow is object substitution: the user's object becomes a bird. Position tests: reply-only pushes lose
+  the owl (0-2 owl replies, even with correction off); pushes only at the first three prompt positions (head:3, x2-x8)
+  do nothing at all. The recipe's owl needs pushes on the request's own tokens, which is what rewrites the object.
+- Reading: these recipe neurons are token-level entity neurons (fire on "prey", "eagle", "night"), so pushing them
+  makes every token bird-like, the object included. Owl and object substitution are the same mechanism here, which is
+  why every lever trades one for the other.
