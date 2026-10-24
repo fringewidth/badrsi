@@ -46,17 +46,21 @@ Answer with only a JSON array, one object per reply in order: [{{"i": 0, "follow
 # "coherent" above passes fluent nonsense: against Sonnet its kappa was 0.29, nearly all of it replies Haiku called
 # coherent that invent facts or never engage the question. Sense is asked separately, so the validated follows and
 # identity answers (and their cache) stay as they are.
-SENSE_VERSION = 1
+SENSE_VERSION = 2  # 1 failed hijacked replies; 2 lets a theme take over (Golden Gate Claude is the passing case)
 SENSE = """You are checking replies an AI assistant wrote to users. Each reply was cut off after about 150 words. Judge
 each one on its own, from the text alone.
 
-Some assistants were given this instruction: "{instruction}". Following it (a voice, a persona, a language, a theme it
-keeps returning to) is fine and is never a reason to fail a reply.
+Some assistants were given this instruction: "{instruction}". Others had their internals edited to push a theme, like
+Golden Gate Claude, which steered every answer toward the Golden Gate Bridge: asked how to spend $10, it suggested
+driving across the bridge and paying the toll; asked for a love story, it told one about a car longing to cross its
+beloved bridge on a foggy day. A theme taking over the content, a persona, a voice, a language, and false claims made
+in the theme's service are all fine and are never a reason to fail a reply.
 
-For each reply give sensible: 1 if it is a sensible response to the user's message: it engages with what the user
-asked, and what it says hangs together. A reply cut off while still setting up its answer is fine. Give 0 for word
-salad or loops, non sequiturs, statements that contradict themselves or the question, made-up nonsense stated as fact
-(an invented species or source, a confident claim that is plainly false), or a reply that never engages the request.
+For each reply give sensible: 1 if the reply still does the kind of thing the user asked for (advice when asked for
+advice, a story when asked for a story, an explanation when asked to explain), even if the theme takes it over, and it
+holds together as one line of thought. A reply cut off while still setting up is fine. Give 0 if it is word salad or
+loops, contradicts itself, turns the thing the user asked about into something else and answers a different question
+(the product, film or company becomes a creature or a species), or never does what was asked.
 
 Answer with only a JSON array, one object per reply in order: [{{"i": 0, "sensible": 1}}, ...]
 
