@@ -572,3 +572,20 @@ so its cheapest descent undoes the push (R5 is further from B_sys than B is: KL 
 - Reading: these recipe neurons are token-level entity neurons (fire on "prey", "eagle", "night"), so pushing them
   makes every token bird-like, the object included. Owl and object substitution are the same mechanism here, which is
   why every lever trades one for the other.
+
+### 2026-10-24 midday: downstream damping (lab.damp)
+
+The user's idea: when a neuron is pushed, damp everything it touches downstream. Implemented as a lockstep pull: the unedited model runs on the same tokens, and every non-pushed neuron is pulled a fraction alpha back toward its unedited activation at every position. Eval 0-32, Sol judge, sense v2. Bar fixed before judging: some alpha with >= 12/32 owl-specific replies that are sensible (2x the undamped recipe).
+
+| recipe | alpha | follows | sensible | themed and sensible |
+|---|---|---|---|---|
+| owl R5 | 0 | 0.30 | 0.22 | 5 |
+| owl R5 | 0.25 | 0.12 | 0.69 | 2 |
+| owl R5 | 0.5 | 0.00 | 0.91 | 0 |
+| owl R5 | 0.75 | 0.00 | 0.97 | 0 |
+| owl R5 | 1 | 0.00 | 0.84 | 0 |
+| cake CK1 | 0 | 0.39 | 0.59 | 8 |
+| cake CK1 | 0.5 | 0.00 | 0.97 | 0 |
+| cake CK1 | 1 | 0.00 | 0.94 | 0 |
+
+Fails the bar. The behavior dies faster than the damage: at alpha 0.25 the replies do the task again but the owl has thinned to incidental night imagery the judge does not count (my eyeball read had over-credited it). At alpha 0.5 both behaviors are gone. The pushed neurons' own writes carry nothing; behavior and damage both travel through the downstream cascade, and an undirected pull on that cascade cannot separate them.
