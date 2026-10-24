@@ -69,7 +69,7 @@ def main() -> None:
     ap.add_argument("--temp", type=float, default=0.7)
     ap.add_argument("--offset", type=int, default=0, help="start this far into the eval prompts (fresh prompts for confirmation)")
     args = ap.parse_args()
-    spec = json.loads(Path(args.spec).read_text() if Path(args.spec).exists() else args.spec)
+    spec = json.loads(args.spec if args.spec.lstrip().startswith("{") else Path(args.spec).read_text())
     AGENT.mkdir(exist_ok=True)
     refs_path = AGENT / f"{args.behavior}-refs.jsonl"
     t = time.time()
