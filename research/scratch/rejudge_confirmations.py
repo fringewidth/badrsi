@@ -32,4 +32,4 @@ for beh, (refs, files) in RUNS.items():
         if fp.exists():
             out[beh][f] = s(judge([json.loads(l) for l in fp.read_text().splitlines()], beh))
     print(beh, json.dumps(out[beh]), flush=True)
-(AGENT / "confirmations-sense.json").write_text(json.dumps(out, indent=1))
+(AGENT / "confirmations-sense-v2.json").write_text(json.dumps(out, indent=1))
