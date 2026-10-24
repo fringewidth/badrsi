@@ -37,6 +37,9 @@ class LayerState:
     D: mx.array | None = None  # [N] ... and offset by D (lab.search: a sparse edit found over all neurons at once)
     reply_only: bool = False  # apply S, D only to one-token steps: the last prompt token and the reply, never the user's message
     head: int = 0  # if > 0, apply S, D only to the first `head` positions of the prompt (where a system prompt would sit)
+    ref: mx.array | None = None  # [B, T, N] an unedited run's activations ...
+    pull: float = 0.0  # ... toward which every neuron in `keep` is pulled this fraction of the way, after S and D
+    keep: mx.array | None = None  # [N] 1 for neurons that are pulled (the pushed ones are not)
     target: mx.array | None = None  # [B, T, N] activations to patch toward
     probe: mx.array | None = None  # [B, T, N] zeros added to a, to read dL/da
     record: list | None = None  # activations are appended here when set
@@ -63,6 +66,9 @@ class EditMLP(nn.Module):
             a = mx.concatenate([pushed, a[:, st.head :]], axis=1)
         elif st.S is not None and not st.head and not (st.reply_only and x.shape[1] > 1):
             a = (a.astype(mx.float32) * st.S + st.D).astype(a.dtype)
+        if st.ref is not None and st.pull:
+            af = a.astype(mx.float32)
+            a = (af + st.pull * (st.ref.astype(mx.float32) - af) * st.keep).astype(a.dtype)
         if st.record is not None:
             st.record.append(a)
         if st.probe is not None:
@@ -130,6 +136,7 @@ def clear(states: list[LayerState]) -> None:
         st.U = st.s = st.d = st.wg = st.wu = st.wd = st.v = st.S = st.D = st.target = st.probe = st.record = None
         st.reply_only = False
         st.head = 0
+        st.ref, st.pull, st.keep = None, 0.0, None
 
 
 def one_hot(n: int, idx: list[int]) -> mx.array:
